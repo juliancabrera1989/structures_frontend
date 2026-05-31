@@ -1,0 +1,40 @@
+
+
+.inmediato {
+    transition-property: width,left !important;
+    transition-duration: 0s,0s !important;
+    transition-delay : 0s, 0s !important ;
+    }
+
+  .arrowend-first {
+    transition-property: width, transform, left, top !important;
+    transition-duration: 1s, 0s, 2s, 2s !important;
+    transition-delay: 0s,0s,0s, 0s !important;
+  }
+
+
+  .arrowend-first-ul {
+    transition-property: width, transform, left, top !important;
+    transition-duration: 1s, 0s, 2s, 2s !important;
+    transition-delay: 1s,0s,0s, 0s !important;
+  }
+
+
+
+  .no-mover__flecha {
+    transition-duration : 0s, 0s !important;
+  }
+
+
+  .no-mover {
+    transition-duration: 2s, 0s, 0s, 0s !important;
+  }
+  
+
+  .no-desplazar {
+    transition-property: width, transform, left !important;
+    transition-duration: 2s, 0s, 0s !important;
+  }
+  
+
+  

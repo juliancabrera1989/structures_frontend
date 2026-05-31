@@ -1,0 +1,45 @@
+:root{
+    --contenedor_nodos-height: 400px;
+
+
+    --opacity-cajanodo: 0;
+}
+
+
+
+ #contenedor_nodos {
+    position: relative;
+    display: flex;
+    outline: 2px solid #f0f;
+    width: 100%; /*Cambiar de 828px a 100% */
+    height: var(--contenedor_nodos-height); /*Height base : 300px */
+    border-right: 50px;
+    align-items: center;
+    justify-content: space-evenly;
+   }
+  
+  
+  .caja-nodo {
+      position:relative;
+      display: flex;
+      flex-direction: row;
+      height: calc(0.25 * var(--contenedor_nodos-height));
+      width: 200px;
+      align-items: center;
+      justify-content: space-around;
+      background-color: yellow;
+      opacity: var(--opacity-cajanodo);
+      transition-property: opacity, width, height, left;
+      transition-duration: 2s, 2s, 2s, 2s;
+
+  }
+  
+
+  .circle {
+    width: 5px;
+    height: 5px;
+    background: red;
+    border-radius: 50%;
+}
+
+  

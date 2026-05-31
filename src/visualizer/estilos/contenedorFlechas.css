@@ -1,0 +1,82 @@
+
+:root {
+    --flecha-left: -25px;
+
+    --linea-flecha-width: 0px;
+    --linea-flecha-transform-origin: left;
+    --linea-flecha-margin-sides: 75px;
+  
+    --punta-flecha-left: 0px;
+    --punta-flecha-width: 0px;
+}
+
+
+
+
+
+
+#contenedor_flechas {
+    position: relative;
+    display: flex;
+    top: -800px;
+    width: 100%; /*Cambiar de 828px a 100% */
+    height: 400px; /*Height base : 300px */
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+   }
+  
+  
+  .arrow {
+  position:relative;
+  margin: 0 var(--linea-flecha-margin-sides);
+  width: var(--linea-flecha-width);
+  left: var(--flecha-left);
+  transition-property: left, width;
+  transition-duration: 2s, 2s;
+  }
+  
+  
+ 
+  .underline {
+      width: var(--linea-flecha-width);
+      transform-origin: left;
+      position: relative;
+      height: 5px;
+      background-color: red;
+      overflow: hidden;
+      transition-property: width, left ;
+      transition-duration: 2s, 2s;
+
+  
+  }
+  
+  
+  
+  
+  .linea-s, .linea-i {
+    left: var(--linea-flecha-width);
+    position: absolute;
+    height: 5px;
+    top: 0px;
+    background-color: blue;
+    opacity: 1;
+    transform-origin: left;
+    width: var(--punta-flecha-width);
+    transition-property: width, transform, left, top ;
+    transition-duration: 1s, 0s, 2s, 2s ;
+    transition-delay: 2s,0s,0s, 0s ;
+
+  }
+
+
+
+  .linea-s{
+    transform: rotate(135deg);
+    }
+  
+  .linea-i{
+    transform: rotate(-135deg);
+    }
+  
+  
