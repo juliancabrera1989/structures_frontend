@@ -1,105 +1,3 @@
-// import  {crearFlecha} from "../elementosGraficos/Flecha.ts"
-
-// const root = document.documentElement as HTMLElement;
-// let flechas: HTMLCollectionOf<Element>;
-
-// function agregarFlecha(metodo: number): void {
-            
-//     var n = 0;
-//     var m = 1;
-//     let flecha = crearFlecha();
-//     const contenedor_flechas = document.getElementById("contenedor_flechas") as HTMLDivElement;
-//     root.style.setProperty('--flecha-left',`-25px`); 
-//     if(metodo == 0) 
-//   //    // flecha.classList.add("ultima");
-       
-//        contenedor_flechas.append(flecha);
-
-//     else {
-//         contenedor_flechas.prepend(flecha);
-//         n = 1;
-//         m = contenedor_flechas.childElementCount;
-//     }
-    
-
-
-
-
-//     const listaFlechas = getFlechas();
-
- 
-//         for(let i = (0 + n); i < (listaFlechas.length - (1 - n)); i++) {
-//         listaFlechas[i].classList.add("no-mover__flecha");
-//         }
-
-       
-
-// setTimeout(() => {
-//       const flechaTarget = listaFlechas[listaFlechas.length - m];
-//       if (flechaTarget) {
-//           // Convertimos a array los hijos para usar of
-//           for(let elemento of Array.from(flechaTarget.children) as HTMLElement[]){
-//             elemento.removeAttribute("style");
-//           }
-//       }
-//     }, 100);
-
-// }
-
-
-
-
-
-
-
-
-
-
-
-// function sacarFlecha(indice : number) : void{
-//   const contenedor_flechas = document.getElementById("contenedor_flechas") as HTMLDivElement;
-
-
-//   // contenedor_flechas.removeChild(flechas[indice]);
-//   const listaFlechas = getFlechas();
-
-//    if (listaFlechas[indice]) {
-//     contenedor_flechas.removeChild(listaFlechas[indice]);
-
-//     const flechasActualizadas = getFlechas();
-//     if (listaFlechas.length > 0) {
-//       root.style.setProperty('--flecha-left',`-25px`); 
-//     for(let i = 0; i < flechasActualizadas.length; i++){
-//        flechasActualizadas[i].classList.add("no-mover__flecha");
-//     }
-//   }
-
-// }
-
-// };
-
-
-
-
-
-// function getFlechas() : HTMLCollectionOf<HTMLElement> {
-//   const contenedor_flechas = document.getElementById("contenedor_flechas") as HTMLDivElement;
-
-//       if (!contenedor_flechas) return document.getElementsByClassName("empty") as HTMLCollectionOf<HTMLElement>;
-    
-//     return contenedor_flechas.getElementsByClassName("arrow") as HTMLCollectionOf<HTMLElement>;
-
-// }
-
-
-
-// export {agregarFlecha};
-
-// export {sacarFlecha};
-
-// export {getFlechas};
-
-
 import { crearFlecha } from "../elementosGraficos/Flecha.ts";
 import { contenedorFlechas, verificarDOM } from "../elementosDOM.ts";
 
@@ -117,14 +15,14 @@ function getFlechas(): HTMLCollectionOf<Element> | Element[] {
 }
 
 function agregarFlechaN(indice: number): void {
-
+  
   const flecha = crearFlecha();
   
   root.style.setProperty('--flecha-left', `-25px`);
-
-
-  const flechas = getFlechas();
   
+   
+  const flechas = getFlechas();
+   
   // Si el índice es válido dentro del rango actual de flechas
   if (indice < flechas.length && flechas[indice]) {
     flechas[indice].insertAdjacentElement("afterend", flecha);
@@ -133,13 +31,14 @@ function agregarFlechaN(indice: number): void {
 
 
         for (let i = 0; i < flechas.length; i++) {
-        if (i !== (indice - 2)) {
+        // if (i !== (indice - 2)) {
+        if (i !== (indice)) {
           flechas[i].classList.add("no-mover__flecha");
         }
       }
 
       setTimeout(() => {
-        const objetivo = flechas[indice - 1];
+        const objetivo = flechas[indice+1];
         if (objetivo) {
           for (const elemento of objetivo.children) {
             (elemento as HTMLElement).removeAttribute("style");
@@ -169,10 +68,6 @@ function agregarFlecha(metodo: number): void {
       m = contenedorFlechas.childElementCount;
       break;
     }
-    // default: {
-    //   agregarFlechaN(flecha, indice - 2);
-    //   break;
-    // }
   }
 
   const flechas = getFlechas();
@@ -196,23 +91,6 @@ function agregarFlecha(metodo: number): void {
       break;
     }
 
-    // default: {
-    //   for (let i = 0; i < flechas.length; i++) {
-    //     if (i !== (indice - 2)) {
-    //       flechas[i].classList.add("no-mover__flecha");
-    //     }
-    //   }
-
-    //   setTimeout(() => {
-    //     const objetivo = flechas[indice - 1];
-    //     if (objetivo) {
-    //       for (const elemento of objetivo.children) {
-    //         (elemento as HTMLElement).removeAttribute("style");
-    //       }
-    //     }
-    //   }, 100);
-    //   break;
-    // }
   }
 }
 

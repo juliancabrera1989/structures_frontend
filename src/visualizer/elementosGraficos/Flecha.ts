@@ -1,5 +1,3 @@
-import { contenedorFlechas, verificarDOM } from "../elementosDOM.ts";
-
 function crearFlecha() : HTMLDivElement {
     const flecha = document.createElement("div");
     const linea = document.createElement("div");
@@ -21,18 +19,18 @@ function crearFlecha() : HTMLDivElement {
 
 
 
-function getFlechas(): HTMLCollectionOf<Element> {
-  // Si React no montó el DOM todavía (por seguridad), tiramos un array vacío o cortamos
-  if (!verificarDOM() || !contenedorFlechas) {
-    return document.getElementsByClassName("empty-collection"); 
-  }
+// function getFlechas(): HTMLCollectionOf<Element> {
+//   // Si React no montó el DOM todavía (por seguridad), tiramos un array vacío o cortamos
+//   if (!verificarDOM() || !contenedorFlechas) {
+//     return document.getElementsByClassName("empty-collection"); 
+//   }
 
-  // Como ya sabemos al 100% que existe gracias a la centralización,
-  // la CPU va directo a las flechas sin buscar el contenedor otra vez.
-  return contenedorFlechas.getElementsByClassName("arrow");
-}
+//   // Como ya sabemos al 100% que existe gracias a la centralización,
+//   // la CPU va directo a las flechas sin buscar el contenedor otra vez.
+//   return contenedorFlechas.getElementsByClassName("arrow");
+// }
 
  export { crearFlecha }
 
 
- export {getFlechas} 
+//  export {getFlechas} 

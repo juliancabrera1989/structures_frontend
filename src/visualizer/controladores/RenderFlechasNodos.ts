@@ -139,7 +139,7 @@ export function setFlechasNodos(necesitaTransicion: number, metodo: number, s1: 
   const resultado = 2 * necesitaTransicion + 1 * bFlecha;
 
   const primerNodo = DOM.contenedorNodos.firstElementChild as HTMLElement;
-
+  console.log("el resultado dentro de flechasnodos es "+resultado);
   switch (resultado) {
     case 0: {
       let i = 0;
@@ -147,12 +147,14 @@ export function setFlechasNodos(necesitaTransicion: number, metodo: number, s1: 
         nodos[i].classList.remove("no-mover");
         nodos[i].classList.add("inmediato-nodo");
       }
-
+      console.log(flechas);
       for (const flecha of flechas) {
         flecha.classList.add("no-mover__flecha");
+        console.log("para saber vis");
         const elementos = Array.from(flecha.children) as HTMLElement[];
         for (const elemento of elementos) {
           elemento.classList.add("inmediato");
+          console.log("para saber si entra vis");
         }
 
         i++;
@@ -285,3 +287,7 @@ export function setFlechasNodos2(indice: number, s1: number, s2: number): void {
   root.style.setProperty('--linea-flecha-width', `${flecha_width}px`);
   root.style.setProperty('--punta-flecha-width', `20px`);
 }
+
+
+
+

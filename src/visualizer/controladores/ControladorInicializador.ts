@@ -1,661 +1,3 @@
-
-
-
-
-// import {  crearFlecha } from "../elementosGraficos/Flecha.ts";
-
-
-// const root = document.documentElement;
-
-// // Agrega esto al principio del archivo para que TS no proteste
-// declare global {
-//   interface Window {
-//     banderaFlechaInicial: number;
-//     banderaFlechaFinal: number;
-//   }
-// }
-
-
-
-// function inicializarPuntero(valor: number): void {
-
-//    const inicializador = document.getElementById("inicializador") as HTMLElement;
-
-//    console.log("jaja jodeme")
-//    const flecha_puntero_clone = crearFlecha();
-
-
-//    let original = (valor === 1) 
-//       ? document.getElementById("flecha_puntero_inicial") 
-//       : document.getElementById("flecha_puntero_final");
-
-//    if (valor === 1) {
-//       flecha_puntero_clone.setAttribute("id", "flecha_puntero_inicial");
-//    } else {
-//       flecha_puntero_clone.setAttribute("id", "flecha_puntero_final");
-//    }
-
-
-//    const underline = flecha_puntero_clone.getElementsByClassName("underline")[0] as HTMLElement;
-//    const lineaS = flecha_puntero_clone.getElementsByClassName("linea-s")[0] as HTMLElement;
-//    const lineaI = flecha_puntero_clone.getElementsByClassName("linea-i")[0] as HTMLElement;
-
-//    underline?.classList.add("flecha_puntero__lista-vacia");
-//    underline?.removeAttribute("style");
-//    lineaS?.removeAttribute("style");
-//    lineaI?.removeAttribute("style");
-
-//    // Solo reemplazamos si ambos existen para evitar errores de TS
-//    if (inicializador && original) {
-//       inicializador.replaceChild(flecha_puntero_clone, original);
-//    }
-
-
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function setPuntero(valor: number): void {
-//     const contenedor_nodos = document.getElementById("contenedor_nodos") as HTMLElement;
-//     const str = document.getElementById("str") as HTMLElement;
-
-//     if (!contenedor_nodos || !str) return;
-
-
-// let ptrLeft: number;
-//     let ptrHeight: number;
-//     let ptrOrigin: string;
-
-//     if (valor === 1) {
-//         ptrLeft = 0.03; ptrHeight = -100; ptrOrigin = "center";
-//     } else {
-//         ptrLeft = 0.25; ptrHeight = 0; ptrOrigin = "left";
-//     }
-
-// root.style.setProperty('--str-nulo-top', `${ptrHeight}px`);
-// root.style.setProperty('--str-left', `${ptrLeft*100}%`);
-// root.style.setProperty('--nulo-left', `-${ptrLeft*100}%`);
-
-// var flecha_puntero_inicial_left = ptrLeft * contenedor_nodos.offsetWidth + str.offsetWidth + 5 ;
-
-// var flecha_puntero_inicial_width = contenedor_nodos.offsetWidth -  2 * (flecha_puntero_inicial_left+5) ;
-// root.style.setProperty('--linea-flecha-inicial-transform-origin', `${ptrOrigin}`);
-// root.style.setProperty('--linea-flecha-inicial-width', `${flecha_puntero_inicial_width}px`);
-// root.style.setProperty('--linea-flecha-inicial-left', `${flecha_puntero_inicial_left}px`);
-// root.style.setProperty('--punta-flecha-inicial-top', `${ptrHeight}px`);
-// root.style.setProperty('--punta-flecha-inicial-left', `${ flecha_puntero_inicial_left + flecha_puntero_inicial_width}px`);
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: number): void {
-
- 
-//    const flecha_puntero_inicial = document.getElementById("flecha_puntero_inicial") as HTMLElement;
-//    const contenedor_nodos = document.getElementById("contenedor_nodos") as HTMLElement;
-//    const str = document.getElementById("str") as HTMLElement;
-
-//     console.log(mostrar);
-//    console.log("puta madre 2")
-      
-// if (!flecha_puntero_inicial || !contenedor_nodos || !str) return;
-
-
-//     const root = document.documentElement;
-//     const hijos = flecha_puntero_inicial.children;
-    
-//      switch(mostrar){
-//        case true:{
-
-      
-
-
-//         var resultado = necesitaTransicion * 2 + window.banderaFlechaInicial * 1;
-//         switch(resultado){
-//             case 0: {
-//                 for(let hijo of hijos)
-//                 hijo.classList.add("inmediato");
-//                 window.banderaFlechaInicial = 1;
-//                  break;
-//               }
-            
-//           case 2: {
-//             for(let hijo of hijos){
-//                if(hijo.classList.contains("underline"))
-//                   hijo.classList.remove("arrowend-first-ul");
-//                else
-//                   hijo.classList.remove("arrowend-first");
-//               }
-//             root.style.setProperty('--punta-flecha-inicial-width', `20px`);
-
-//              break;
-//           }
-
-//           case 3: {
-//             for(let hijo of hijos){
-//                hijo.classList.remove("inmediato");
-//                if(hijo.classList.contains("underline"))
-//                   hijo.classList.remove("arrowend-first-ul");
-//                else
-//                   hijo.classList.remove("arrowend-first");
-//               }
-//              window.banderaFlechaInicial = 0;
-//              break;
-//           }
-
-//        }
-
-//         var long : number = contenedor_nodos.childElementCount;
-
-
-//         switch (long){
-
-//            case 0:
-//              {
-
-//                //  root.style.setProperty('--linea-flecha-inicial-top', `${contenedor_nodos.offsetHeight/2}px`);
-//             //   var flecha_puntero_inicial_top = contenedor_nodos.offsetHeight /2;
-//               var flecha_puntero_inicial_left = str.offsetLeft + str.offsetWidth + 5;
-//               var angulo = 0;
-//               var flecha_puntero_inicial_width = contenedor_nodos.offsetWidth -  2 * (str.offsetLeft + str.offsetWidth) - str.offsetWidth/2;
-//               break;
-//              }
-
-//            default:
-//               {
-//                  var firstChild = contenedor_nodos.firstElementChild as HTMLElement; 
-//                  var lastChild = contenedor_nodos.lastElementChild as HTMLElement;
-
-//                   if (!lastChild || !firstChild) return;
-
-
-//                  if (s2 == undefined)
-//                   var x2 = lastChild.offsetLeft;
-//                  else
-//                   var x2 = s2;
-
-
-//                  var x1 : number = str.offsetLeft + str.offsetWidth + 5;
-//                  var flecha_puntero_inicial_left = x1;
-
-//                  var flecha_puntero_inicial_width = Math.sqrt(Math.pow(x2 - x1,2)+ Math.pow(100,2)) ;
-//                 var angulo = (Math.asin((((firstChild.offsetTop+firstChild.offsetHeight/2)-(str.offsetTop+str.offsetHeight-7.5))/flecha_puntero_inicial_width))*180/Math.PI);
-//                 root.style.setProperty('--rotation-angle-fpi', `${angulo}deg`);
-//                 root.style.setProperty('--punta-flecha-inicial-top', `0`);
-//                 if(angulo != 0){
-
-//               }
-//                  break;
-//               }
-//         }
-
-               
-//          if (s2 == undefined) {
-//            lastChild = contenedor_nodos.lastElementChild as HTMLElement;
-//            x2 = lastChild.offsetLeft;
-//          }
-//          else
-//            x2 = s2;
-//          x1 = str.offsetLeft + str.offsetWidth + 5;
-//         var distancia_horizontal;
-//         if(angulo != 0)
-//            distancia_horizontal = x2 - x1;
-//         else
-//            distancia_horizontal = flecha_puntero_inicial_width;
-
-//            root.style.setProperty('--linea-flecha-inicial-width', `${flecha_puntero_inicial_width}px`);
-//            root.style.setProperty('--punta-flecha-inicial-left', `${flecha_puntero_inicial_left + distancia_horizontal}px`);
-//         root.style.setProperty('--linea-flecha-inicial-left', `${flecha_puntero_inicial_left}px`);
-
-
-
-//          //  let hijo;
-//          // for(hijo of hijos){
-//          //  if(hijo.classList.contains("underline"))
-//          //     hijo.classList.remove("arrowend-first-ul");
-//          //  else
-//          //     hijo.classList.remove("arrowend-first");
-//          // }
-
-
-//           break;
-
-//        }
-//        case false:
-//           {
-
-//              root.style.setProperty('--linea-flecha-inicial-width', `0px`);
-//              root.style.setProperty('--punta-flecha-inicial-width', `0px`);
-//              window.banderaFlechaInicial = 0;
-//              for(let hijo of hijos){
-//                 hijo.classList.remove("inmediato");
-//                 if(hijo.classList.contains("underline"))
-//                    hijo.classList.add("arrowend-first-ul");
-//                 else
-//                    hijo.classList.add("arrowend-first");
-//                }
-//           }
-//          }
-// }
-
-
-
-// function setFlechaFinal(mostrar: boolean, necesitaTransicion: number, s2?: number): void {
-
-//    const contenedor_nodos = document.getElementById("contenedor_nodos") as HTMLDivElement;
-//    const flecha_puntero_final = document.getElementById("flecha_puntero_final") as HTMLDivElement;;
-//    const nulo = document.getElementById("nulo") as HTMLDivElement;;
-
-//     const root = document.documentElement;
-//     const hijos = flecha_puntero_final.children;
-//      switch(mostrar){
-//        case true:{
-//          var resultado = necesitaTransicion * 2 + window.banderaFlechaFinal * 1;
-//          console.log("El resultado de la flecha final es: "+resultado)
-//          switch(resultado){
-//              case 0: {
-//                  for(let hijo of hijos)
-//                     hijo.classList.add("inmediato");
-//                  window.banderaFlechaFinal = 1;
-//                   break;
-//                }
-
-//                case 3: {
-//                  for(let hijo of hijos)
-//                     hijo.classList.remove("inmediato");
-//                     window.banderaFlechaFinal = 0;
-//                  break;
-//               }
-//                default:{
-//                 break;
-//                }
-
-//         }
-
-//          const firstChild = contenedor_nodos.firstElementChild as HTMLElement; 
-//          const lastChild = contenedor_nodos.lastElementChild as HTMLElement;
-
-//           if (!lastChild || !firstChild) return;
-
-//           var x1 : number = nulo.offsetLeft - (nulo.offsetWidth / 3);
-//           if (s2 == undefined) {
-//              var cantidadNodos : number = contenedor_nodos.childElementCount;
-//              var s2_f : number = (contenedor_nodos.offsetWidth - cantidadNodos * lastChild.offsetWidth) / (cantidadNodos+1);
-//            }
-//           else
-//              var s2_f : number = s2;
-
-//           var x2 : number = contenedor_nodos.offsetWidth - (s2_f + (lastChild.offsetWidth / 4));
-//           var distancia_horizontal : number = x1 -x2;
-//           var flecha_puntero_final_width : number = Math.sqrt(Math.pow(x1 -x2 ,2)+ Math.pow(100,2)) ;
-//           var angulo : number = - (Math.asin((((lastChild.offsetTop+lastChild.offsetHeight/2)-(nulo.offsetTop+nulo.offsetHeight))/flecha_puntero_final_width))*180/Math.PI);
-
-//           root.style.setProperty('--rotation-angle-fpf', `${angulo}deg`);
-//           root.style.setProperty('--linea-flecha-final-width', `${flecha_puntero_final_width}px`);
-//           root.style.setProperty('--linea-flecha-final-left', `${x2}px`);
-//           root.style.setProperty('--punta-flecha-final-left', `${x2 + distancia_horizontal}px`);
-//           root.style.setProperty('--punta-flecha-final-width', `20px`);
-
-
-
-//          let hijo;
-//          console.log(hijos);
-//          for(hijo of hijos){
-//           if(hijo.classList.contains("underline"))
-//              hijo.classList.remove("arrowend-first-ul");
-//           else
-//              hijo.classList.remove("arrowend-first");
-//          }
-//          console.log(hijos);
-
-//          break;
-//        }
-
-//               case false:
-//            {
-//               root.style.setProperty('--linea-flecha-final-width', `0px`);
-//               root.style.setProperty('--punta-flecha-final-width', `0px`);
-//               window.banderaFlechaFinal = 0;
-//               for(let hijo of hijos){
-//                  hijo.classList.remove("inmediato");
-//                  if(hijo.classList.contains("underline"))
-//                     hijo.classList.add("arrowend-first-ul");
-//                  else
-//                     hijo.classList.add("arrowend-first");
-//                 }
-//            }
-//            break;
-//           }
-
-
-
-//  }
-
-// export {inicializarPuntero}
-
-// export {setPuntero}
-
-// export {setFlechaInicial}
-
-// export {setFlechaFinal}
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { crearFlecha } from "../elementosGraficos/Flecha.ts";
-
-// const root = document.documentElement;
-
-// declare global {
-//   interface Window {
-//     banderaFlechaInicial: number;
-//     banderaFlechaFinal: number;
-//   }
-// }
-
-// // ==========================================
-// // 1. INICIALIZAR PUNTERO
-// // ==========================================
-// function inicializarPuntero(valor: number): void {
-//   const inicializador = document.getElementById("inicializador") as HTMLElement;
-//   console.log("jaja jodeme");
-//   const flecha_puntero_clone = crearFlecha();
-
-//   const original = (valor === 1) 
-//     ? document.getElementById("flecha_puntero_inicial") 
-//     : document.getElementById("flecha_puntero_final");
-
-//   if (valor === 1) {
-//     flecha_puntero_clone.setAttribute("id", "flecha_puntero_inicial");
-//   } else {
-//     flecha_puntero_clone.setAttribute("id", "flecha_puntero_final");
-//   }
-
-//   const underline = flecha_puntero_clone.getElementsByClassName("underline")[0] as HTMLElement;
-//   const lineaS = flecha_puntero_clone.getElementsByClassName("linea-s")[0] as HTMLElement;
-//   const lineaI = flecha_puntero_clone.getElementsByClassName("linea-i")[0] as HTMLElement;
-
-//   underline?.classList.add("flecha_puntero__lista-vacia");
-//   underline?.removeAttribute("style");
-//   lineaS?.removeAttribute("style");
-//   lineaI?.removeAttribute("style");
-
-//   if (inicializador && original) {
-//     inicializador.replaceChild(flecha_puntero_clone, original);
-//   }
-// }
-
-// // ==========================================
-// // 2. SET PUNTERO
-// // ==========================================
-// function setPuntero(valor: number): void {
-//   const contenedor_nodos = document.getElementById("contenedor_nodos") as HTMLElement;
-//   const str = document.getElementById("str") as HTMLElement;
-
-//   if (!contenedor_nodos || !str) return;
-
-//   let ptrLeft: number;
-//   let ptrHeight: number;
-//   let ptrOrigin: string;
-
-//   if (valor === 1) {
-//     ptrLeft = 0.03; ptrHeight = -100; ptrOrigin = "center";
-//   } else {
-//     ptrLeft = 0.25; ptrHeight = 0; ptrOrigin = "left";
-//   }
-
-//   root.style.setProperty('--str-nulo-top', `${ptrHeight}px`);
-//   root.style.setProperty('--str-left', `${ptrLeft * 100}%`);
-//   root.style.setProperty('--nulo-left', `-${ptrLeft * 100}%`);
-
-//   const flecha_puntero_inicial_left = ptrLeft * contenedor_nodos.offsetWidth + str.offsetWidth + 5;
-//   const flecha_puntero_inicial_width = contenedor_nodos.offsetWidth - 2 * (flecha_puntero_inicial_left + 5);
-
-//   root.style.setProperty('--linea-flecha-inicial-transform-origin', `${ptrOrigin}`);
-//   root.style.setProperty('--linea-flecha-inicial-width', `${flecha_puntero_inicial_width}px`);
-//   root.style.setProperty('--linea-flecha-inicial-left', `${flecha_puntero_inicial_left}px`);
-//   root.style.setProperty('--punta-flecha-inicial-top', `${ptrHeight}px`);
-//   root.style.setProperty('--punta-flecha-inicial-left', `${flecha_puntero_inicial_left + flecha_puntero_inicial_width}px`);
-// }
-
-// // ==========================================
-// // 3. SET FLECHA INICIAL
-// // ==========================================
-// function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: number): void {
-//   const flecha_puntero_inicial = document.getElementById("flecha_puntero_inicial") as HTMLElement;
-//   const contenedor_nodos = document.getElementById("contenedor_nodos") as HTMLElement;
-//   const str = document.getElementById("str") as HTMLElement;
-
-//   if (!flecha_puntero_inicial || !contenedor_nodos || !str) return;
-
-//   const hijos = flecha_puntero_inicial.children;
-
-//   switch (mostrar) {
-//     case true: {
-//       const resultado = necesitaTransicion * 2 + window.banderaFlechaInicial * 1;
-//       switch (resultado) {
-//         case 0: {
-//           for (const hijo of hijos) hijo.classList.add("inmediato");
-//           window.banderaFlechaInicial = 1;
-//           break;
-//         }
-//         case 2: {
-//           for (const hijo of hijos) {
-//             if (hijo.classList.contains("underline")) hijo.classList.remove("arrowend-first-ul");
-//             else hijo.classList.remove("arrowend-first");
-//           }
-//           root.style.setProperty('--punta-flecha-inicial-width', `20px`);
-//           break;
-//         }
-//         case 3: {
-//           for (const hijo of hijos) {
-//             hijo.classList.remove("inmediato");
-//             if (hijo.classList.contains("underline")) hijo.classList.remove("arrowend-first-ul");
-//             else hijo.classList.remove("arrowend-first");
-//           }
-//           window.banderaFlechaInicial = 0;
-//           break;
-//         }
-//       }
-
-//       const long: number = contenedor_nodos.childElementCount;
-//       let flecha_puntero_inicial_left = 0;
-//       let flecha_puntero_inicial_width = 0;
-//       let angulo = 0;
-
-//       switch (long) {
-//         case 0: {
-//           flecha_puntero_inicial_left = str.offsetLeft + str.offsetWidth + 5;
-//           flecha_puntero_inicial_width = contenedor_nodos.offsetWidth - 2 * (str.offsetLeft + str.offsetWidth) - str.offsetWidth / 2;
-//           break;
-//         }
-//         default: {
-//           const firstChild = contenedor_nodos.firstElementChild as HTMLElement;
-//           const lastChild = contenedor_nodos.lastElementChild as HTMLElement;
-//           if (!lastChild || !firstChild) return;
-
-//           // Corrección aquí: Determinamos x2 de forma segura sin pisar tipos externos
-//           const x2 = (s2 === undefined) ? lastChild.offsetLeft : s2;
-//           const x1: number = str.offsetLeft + str.offsetWidth + 5;
-          
-//           flecha_puntero_inicial_left = x1;
-//           flecha_puntero_inicial_width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(100, 2));
-//           angulo = (Math.asin((((firstChild.offsetTop + firstChild.offsetHeight / 2) - (str.offsetTop + str.offsetHeight - 7.5)) / flecha_puntero_inicial_width)) * 180 / Math.PI);
-//           root.style.setProperty('--rotation-angle-fpi', `${angulo}deg`);
-//           root.style.setProperty('--punta-flecha-inicial-top', `0`);
-//           break;
-//         }
-//       }
-
-//       // Aseguramos x2 para el cálculo final fuera del switch
-//       const lastChild = contenedor_nodos.lastElementChild as HTMLElement;
-//       const x2_final = (s2 === undefined && lastChild) ? lastChild.offsetLeft : (s2 ?? 0);
-//       const x1_final = str.offsetLeft + str.offsetWidth + 5;
-      
-//       const distancia_horizontal = (angulo !== 0) ? (x2_final - x1_final) : flecha_puntero_inicial_width;
-
-//       root.style.setProperty('--linea-flecha-inicial-width', `${flecha_puntero_inicial_width}px`);
-//       root.style.setProperty('--punta-flecha-inicial-left', `${flecha_puntero_inicial_left + distancia_horizontal}px`);
-//       root.style.setProperty('--linea-flecha-inicial-left', `${flecha_puntero_inicial_left}px`);
-//       break;
-//     }
-
-//     case false: {
-//       root.style.setProperty('--linea-flecha-inicial-width', `0px`);
-//       root.style.setProperty('--punta-flecha-inicial-width', `0px`);
-//       window.banderaFlechaInicial = 0;
-//       for (const hijo of hijos) {
-//         hijo.classList.remove("inmediato");
-//         if (hijo.classList.contains("underline")) hijo.classList.add("arrowend-first-ul");
-//         else hijo.classList.add("arrowend-first");
-//       }
-//       break;
-//     }
-//   }
-// }
-
-// // ==========================================
-// // 4. SET FLECHA FINAL
-// // ==========================================
-// function setFlechaFinal(mostrar: boolean, necesitaTransicion: number, s2?: number): void {
-//   const contenedor_nodos = document.getElementById("contenedor_nodos") as HTMLDivElement;
-//   const flecha_puntero_final = document.getElementById("flecha_puntero_final") as HTMLDivElement;
-//   const nulo = document.getElementById("nulo") as HTMLDivElement;
-
-//   if (!contenedor_nodos || !flecha_puntero_final || !nulo) return;
-
-//   const hijos = flecha_puntero_final.children;
-
-//   switch (mostrar) {
-//     case true: {
-//       const resultado = necesitaTransicion * 2 + window.banderaFlechaFinal * 1;
-//       console.log("El resultado de la flecha final es: " + resultado);
-      
-//       switch (resultado) {
-//         case 0: {
-//           for (const hijo of hijos) hijo.classList.add("inmediato");
-//           window.banderaFlechaFinal = 1;
-//           break;
-//         }
-//         case 3: {
-//           for (const hijo of hijos) hijo.classList.remove("inmediato");
-//           window.banderaFlechaFinal = 0;
-//           break;
-//         }
-//       }
-
-//       const firstChild = contenedor_nodos.firstElementChild as HTMLElement;
-//       const lastChild = contenedor_nodos.lastElementChild as HTMLElement;
-//       if (!lastChild || !firstChild) return;
-
-//       const x1: number = nulo.offsetLeft - (nulo.offsetWidth / 3);
-      
-//       // Control de s2_f tipado de forma estricta como number
-//       let s2_f: number;
-//       if (s2 === undefined) {
-//         const cantidadNodos: number = contenedor_nodos.childElementCount;
-//         s2_f = (contenedor_nodos.offsetWidth - cantidadNodos * lastChild.offsetWidth) / (cantidadNodos + 1);
-//       } else {
-//         s2_f = s2;
-//       }
-
-//       const x2: number = contenedor_nodos.offsetWidth - (s2_f + (lastChild.offsetWidth / 4));
-//       const distancia_horizontal: number = x1 - x2;
-//       const flecha_puntero_final_width: number = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(100, 2));
-//       const angulo: number = -(Math.asin((((lastChild.offsetTop + lastChild.offsetHeight / 2) - (nulo.offsetTop + nulo.offsetHeight)) / flecha_puntero_final_width)) * 180 / Math.PI);
-
-//       root.style.setProperty('--rotation-angle-fpf', `${angulo}deg`);
-//       root.style.setProperty('--linea-flecha-final-width', `${flecha_puntero_final_width}px`);
-//       root.style.setProperty('--linea-flecha-final-left', `${x2}px`);
-//       root.style.setProperty('--punta-flecha-final-left', `${x2 + distancia_horizontal}px`);
-//       root.style.setProperty('--punta-flecha-final-width', `20px`);
-
-//       for (const hijo of hijos) {
-//         if (hijo.classList.contains("underline")) hijo.classList.remove("arrowend-first-ul");
-//         else hijo.classList.remove("arrowend-first");
-//       }
-//       break;
-//     }
-
-//     case false: {
-//       root.style.setProperty('--linea-flecha-final-width', `0px`);
-//       root.style.setProperty('--punta-flecha-final-width', `0px`);
-//       window.banderaFlechaFinal = 0;
-//       for (const hijo of hijos) {
-//         hijo.classList.remove("inmediato");
-//         if (hijo.classList.contains("underline")) hijo.classList.add("arrowend-first-ul");
-//         else hijo.classList.add("arrowend-first");
-//       }
-//       break;
-//     }
-//   }
-// }
-
-// export { inicializarPuntero, setPuntero, setFlechaInicial, setFlechaFinal };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { crearFlecha } from "../elementosGraficos/Flecha.ts";
 import * as DOM from "../elementosDOM.ts"; // Usamos la centralización del DOM
 
@@ -670,33 +12,6 @@ declare global {
   }
 }
 
-// function inicializarPuntero(valor: number): void {
-//   if (!DOM.verificarDOM() || !DOM.inicializador) return;
-
-//   const flecha_puntero_clone = crearFlecha();
-//   let original: HTMLElement | null = null;
-
-//   if (valor === 1) {
-//     original = document.getElementById("flecha_puntero_inicial");
-//     flecha_puntero_clone.setAttribute("id", "flecha_puntero_inicial");
-//   } else {
-//     original = document.getElementById("flecha_puntero_final");
-//     flecha_puntero_clone.setAttribute("id", "flecha_puntero_final");
-//   }
-
-//   const underline = flecha_puntero_clone.getElementsByClassName("underline")[0] as HTMLElement | undefined;
-//   const lineaS = flecha_puntero_clone.getElementsByClassName("linea-s")[0] as HTMLElement | undefined;
-//   const lineaI = flecha_puntero_clone.getElementsByClassName("linea-i")[0] as HTMLElement | undefined;
-
-//   if (underline && lineaS && lineaI && original) {
-//     underline.classList.add("flecha_puntero__lista-vacia");
-//     underline.removeAttribute("style");
-//     lineaS.removeAttribute("style");
-//     lineaI.removeAttribute("style");
-    
-//     DOM.inicializador.replaceChild(flecha_puntero_clone, original);
-//   }
-// }
 
 
 function inicializarPuntero(valor: number): void {
@@ -768,28 +83,250 @@ function setPuntero(valor: number): void {
   root.style.setProperty('--punta-flecha-inicial-left', `${flecha_puntero_inicial_left + flecha_puntero_inicial_width}px`);
 }
 
-function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: number): void {
-  if (!DOM.verificarDOM() || !DOM.str || !DOM.contenedorNodos) return;
+// function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: number): void {
+//   if (!DOM.verificarDOM() || !DOM.str || !DOM.contenedorNodos) return;
 
-  // Obtenemos dinámicamente el elemento actual para leer sus hijos
+//   // Obtenemos dinámicamente el elemento actual para leer sus hijos
+//   const flecha_puntero_inicial = document.getElementById("flecha_puntero_inicial");
+//   if (!flecha_puntero_inicial) return;
+//   const hijos = flecha_puntero_inicial.children;
+
+//   switch (mostrar) {
+//     case true: {
+//       const resultado = necesitaTransicion * 2 + window.banderaFlechaInicial * 1;
+      
+//       switch (resultado) {
+//         case 0: {
+//           for (const hijo of hijos) {
+//             (hijo as HTMLElement).classList.add("inmediato");
+//           }
+//           window.banderaFlechaInicial = 1;
+//           break;
+//         }
+//         case 2: {
+//           for (const hijo of hijos) {
+//             const h = hijo as HTMLElement;
+//             if (h.classList.contains("underline")) {
+//               h.classList.remove("arrowend-first-ul");
+//             } else {
+//               h.classList.remove("arrowend-first");
+//             }
+//           }
+//           root.style.setProperty('--punta-flecha-inicial-width', `20px`);
+//           break;
+//         }
+//         case 3: {
+//           for (const hijo of hijos) {
+//             const h = hijo as HTMLElement;
+//             h.classList.remove("inmediato");
+//             if (h.classList.contains("underline")) {
+//               h.classList.remove("arrowend-first-ul");
+//             } else {
+//               h.classList.remove("arrowend-first");
+//             }
+//           }
+//           window.banderaFlechaInicial = 0;
+//           break;
+//         }
+//       }
+
+//       const long = DOM.contenedorNodos.childElementCount;
+//       const strElem = DOM.str as HTMLElement;
+//       const contenedorElem = DOM.contenedorNodos as HTMLElement;
+      
+//       let flecha_puntero_inicial_left = 0;
+//       let flecha_puntero_inicial_width = 0;
+//       let angulo = 0;
+
+//       switch (long) {
+//         case 0: {
+//           flecha_puntero_inicial_left = strElem.offsetLeft + strElem.offsetWidth + 5;
+//           flecha_puntero_inicial_width = contenedorElem.offsetWidth - 2 * (strElem.offsetLeft + strElem.offsetWidth) - strElem.offsetWidth / 2;
+//           break;
+//         }
+//         default: {
+//           const primerNodo = contenedorElem.firstElementChild as HTMLElement | null;
+//           if (!primerNodo) return;
+
+//           const x2 = s2 === undefined ? primerNodo.offsetLeft : s2;
+//           const x1 = strElem.offsetLeft + strElem.offsetWidth + 5;
+          
+//           flecha_puntero_inicial_left = x1;
+//           flecha_puntero_inicial_width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(100, 2));
+          
+//           const y2 = primerNodo.offsetTop + primerNodo.offsetHeight / 2;
+//           const y1 = strElem.offsetTop + strElem.offsetHeight - 7.5;
+          
+//           angulo = (Math.asin((y2 - y1) / flecha_puntero_inicial_width) * 180) / Math.PI;
+//           root.style.setProperty('--rotation-angle-fpi', `${angulo}deg`);
+//           root.style.setProperty('--punta-flecha-inicial-top', `0`);
+//           break;
+//         }
+//       }
+
+//       const distancia_horizontal = angulo !== 0 ? (s2 === undefined ? (contenedorElem.firstElementChild as HTMLElement).offsetLeft : s2) - (strElem.offsetLeft + strElem.offsetWidth + 5) : flecha_puntero_inicial_width;
+
+//       root.style.setProperty('--linea-flecha-inicial-width', `${flecha_puntero_inicial_width}px`);
+//       root.style.setProperty('--punta-flecha-inicial-left', `${flecha_puntero_inicial_left + distancia_horizontal}px`);
+//       root.style.setProperty('--linea-flecha-inicial-left', `${flecha_puntero_inicial_left}px`);
+//       break;
+//     }
+//     case false: {
+//       root.style.setProperty('--linea-flecha-inicial-width', `0px`);
+//       root.style.setProperty('--punta-flecha-inicial-width', `0px`);
+//       window.banderaFlechaInicial = 0;
+//       for (const hijo of hijos) {
+//         const h = hijo as HTMLElement;
+//         h.classList.remove("inmediato");
+//         if (h.classList.contains("underline")) {
+//           h.classList.add("arrowend-first-ul");
+//         } else {
+//           h.classList.add("arrowend-first");
+//         }
+//       }
+//       break;
+//     }
+//   }
+// }
+
+
+// function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: number): void {
+//   if (!DOM.verificarDOM() || !DOM.str || !DOM.contenedorNodos) return;
+
+//   const flecha_puntero_inicial = document.getElementById("flecha_puntero_inicial");
+//   if (!flecha_puntero_inicial) return;
+//   const hijos = flecha_puntero_inicial.children;
+
+//   switch (mostrar) {
+//     case true: {
+//       const resultado = necesitaTransicion * 2 + window.banderaFlechaInicial * 1;
+      
+//       switch (resultado) {
+//         case 0: {
+//           for (const hijo of hijos) {
+//             (hijo as HTMLElement).classList.add("inmediato");
+//           }
+//           window.banderaFlechaInicial = 1;
+//           break;
+//         }
+//         case 2: {
+//           for (const hijo of hijos) {
+//             const h = hijo as HTMLElement;
+//             if (h.classList.contains("underline")) {
+//               h.classList.remove("arrowend-first-ul");
+//             } else {
+//               h.classList.remove("arrowend-first");
+//             }
+//           }
+//           root.style.setProperty('--punta-flecha-inicial-width', `20px`);
+//           break;
+//         }
+//         case 3: {
+//           for (const hijo of hijos) {
+//             const h = hijo as HTMLElement;
+//             h.classList.remove("inmediato");
+//             if (h.classList.contains("underline")) {
+//               h.classList.remove("arrowend-first-ul");
+//             } else {
+//               h.classList.remove("arrowend-first");
+//             }
+//           }
+//           window.banderaFlechaInicial = 0;
+//           break;
+//         }
+//       }
+
+//       const long = DOM.contenedorNodos.childElementCount;
+//       const strElem = DOM.str as HTMLElement;
+//       const contenedorElem = DOM.contenedorNodos as HTMLElement;
+      
+//       let flecha_puntero_inicial_left = 0;
+//       let flecha_puntero_inicial_width = 0;
+//       let angulo = 0;
+
+//       // 💥 DEFINIMOS LAS COORDENADAS BASE COMO MANDABA TU VANILLA
+//       let x1 = 0;
+//       let x2 = 0;
+
+//       switch (long) {
+//         case 0: {
+//           flecha_puntero_inicial_left = strElem.offsetLeft + strElem.offsetWidth + 5;
+//           flecha_puntero_inicial_width = contenedorElem.offsetWidth - 2 * (strElem.offsetLeft + strElem.offsetWidth) - strElem.offsetWidth / 2;
+//           break;
+//         }
+//         default: {
+//           const primerNodo = contenedorElem.firstElementChild as HTMLElement | null;
+//           if (!primerNodo) return;
+
+//           // Asignación idéntica a tu JS clásico
+//           x2 = s2 === undefined ? primerNodo.offsetLeft : s2;
+//           x1 = strElem.offsetLeft + strElem.offsetWidth + 5;
+          
+//           flecha_puntero_inicial_left = x1;
+//           flecha_puntero_inicial_width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(100, 2));
+          
+//           const y2 = primerNodo.offsetTop + primerNodo.offsetHeight / 2;
+//           const y1 = strElem.offsetTop + strElem.offsetHeight - 7.5;
+          
+//           angulo = (Math.asin((y2 - y1) / flecha_puntero_inicial_width) * 180) / Math.PI;
+//           root.style.setProperty('--rotation-angle-fpi', `${angulo}deg`);
+//           root.style.setProperty('--punta-flecha-inicial-top', `0`);
+//           break;
+//         }
+//       }
+
+//       // 💥 REPARACIÓN DE LA LÍNEA AFECTADA: Usamos los valores planos puros
+//       let distancia_horizontal = 0;
+//       if (angulo !== 0) {
+//         distancia_horizontal = x2 - x1; // Fiel reflejo de tu condicional original
+//       } else {
+//         distancia_horizontal = flecha_puntero_inicial_width;
+//       }
+
+//       root.style.setProperty('--linea-flecha-inicial-width', `${flecha_puntero_inicial_width}px`);
+//       root.style.setProperty('--punta-flecha-inicial-left', `${flecha_puntero_inicial_left + distancia_horizontal}px`);
+//       root.style.setProperty('--linea-flecha-inicial-left', `${flecha_puntero_inicial_left}px`);
+//       break;
+//     }
+//     case false: {
+//       root.style.setProperty('--linea-flecha-inicial-width', `0px`);
+//       root.style.setProperty('--punta-flecha-inicial-width', `0px`);
+//       window.banderaFlechaInicial = 0;
+//       for (const hijo of hijos) {
+//         const h = hijo as HTMLElement;
+//         h.classList.remove("inmediato");
+//         if (h.classList.contains("underline")) {
+//           h.classList.add("arrowend-first-ul");
+//         } else {
+//           h.classList.add("arrowend-first");
+//         }
+//       }
+//       break;
+//     }
+//   }
+// }
+
+
+function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: number): void {
+  const root = document.documentElement;
+  
   const flecha_puntero_inicial = document.getElementById("flecha_puntero_inicial");
   if (!flecha_puntero_inicial) return;
   const hijos = flecha_puntero_inicial.children;
 
   switch (mostrar) {
     case true: {
-      const resultado = necesitaTransicion * 2 + window.banderaFlechaInicial * 1;
-      
+      var resultado = necesitaTransicion * 2 + window.banderaFlechaInicial * 1;
       switch (resultado) {
         case 0: {
-          for (const hijo of hijos) {
+          for (let hijo of hijos) {
             (hijo as HTMLElement).classList.add("inmediato");
           }
           window.banderaFlechaInicial = 1;
           break;
         }
         case 2: {
-          for (const hijo of hijos) {
+          for (let hijo of hijos) {
             const h = hijo as HTMLElement;
             if (h.classList.contains("underline")) {
               h.classList.remove("arrowend-first-ul");
@@ -801,7 +338,7 @@ function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: num
           break;
         }
         case 3: {
-          for (const hijo of hijos) {
+          for (let hijo of hijos) {
             const h = hijo as HTMLElement;
             h.classList.remove("inmediato");
             if (h.classList.contains("underline")) {
@@ -815,41 +352,56 @@ function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: num
         }
       }
 
-      const long = DOM.contenedorNodos.childElementCount;
-      const strElem = DOM.str as HTMLElement;
-      const contenedorElem = DOM.contenedorNodos as HTMLElement;
-      
-      let flecha_puntero_inicial_left = 0;
-      let flecha_puntero_inicial_width = 0;
-      let angulo = 0;
+      // Referencias a elementos globales desde tu módulo DOM
+      const contenedor_nodos = DOM.contenedorNodos;
+      const str = DOM.str;
+      if (!contenedor_nodos || !str) return;
 
+      var long = contenedor_nodos.childElementCount;
       switch (long) {
         case 0: {
-          flecha_puntero_inicial_left = strElem.offsetLeft + strElem.offsetWidth + 5;
-          flecha_puntero_inicial_width = contenedorElem.offsetWidth - 2 * (strElem.offsetLeft + strElem.offsetWidth) - strElem.offsetWidth / 2;
+          var flecha_puntero_inicial_left = str.offsetLeft + str.offsetWidth + 5;
+          var angulo = 0;
+          var flecha_puntero_inicial_width = contenedor_nodos.offsetWidth - 2 * (str.offsetLeft + str.offsetWidth) - str.offsetWidth / 2;
           break;
         }
         default: {
-          const primerNodo = contenedorElem.firstElementChild as HTMLElement | null;
-          if (!primerNodo) return;
+          const firstChild = contenedor_nodos.firstElementChild as HTMLElement;
+          if (!firstChild) return;
 
-          const x2 = s2 === undefined ? primerNodo.offsetLeft : s2;
-          const x1 = strElem.offsetLeft + strElem.offsetWidth + 5;
-          
-          flecha_puntero_inicial_left = x1;
-          flecha_puntero_inicial_width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(100, 2));
-          
-          const y2 = primerNodo.offsetTop + primerNodo.offsetHeight / 2;
-          const y1 = strElem.offsetTop + strElem.offsetHeight - 7.5;
-          
-          angulo = (Math.asin((y2 - y1) / flecha_puntero_inicial_width) * 180) / Math.PI;
+          if (s2 == undefined) {
+            var x2 = firstChild.offsetLeft;
+          } else {
+            var x2 = s2;
+          }
+                 console.log("S2 es:"+x2);
+                 console.log("str.offsetLeft es es: "+str.offsetLeft);
+                 console.log("str.offsetWidth es es: "+str.offsetWidth);         
+                 
+                 
+          var x1 = str.offsetLeft + str.offsetWidth + 5;
+          var flecha_puntero_inicial_left = x1;
+
+          var flecha_puntero_inicial_width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(100, 2));
+
+                  console.log("flecha_puntero_inicial_width es: "+flecha_puntero_inicial_width);
+                  console.log("str.offsetHeight es:"+str.offsetHeight);
+                  console.log("str.offsetTop es:"+str.offsetTop);
+
+          var angulo = (Math.asin((((firstChild.offsetTop + firstChild.offsetHeight / 2) - (str.offsetTop + str.offsetHeight - 7.5)) / flecha_puntero_inicial_width)) * 180 / Math.PI);
+          console.log("En angulo es: "+angulo);
           root.style.setProperty('--rotation-angle-fpi', `${angulo}deg`);
           root.style.setProperty('--punta-flecha-inicial-top', `0`);
           break;
         }
       }
 
-      const distancia_horizontal = angulo !== 0 ? (s2 === undefined ? (contenedorElem.firstElementChild as HTMLElement).offsetLeft : s2) - (strElem.offsetLeft + strElem.offsetWidth + 5) : flecha_puntero_inicial_width;
+      var distancia_horizontal;
+      if (angulo != 0) {
+        distancia_horizontal = x2! - x1!;
+      } else {
+        distancia_horizontal = flecha_puntero_inicial_width;
+      }
 
       root.style.setProperty('--linea-flecha-inicial-width', `${flecha_puntero_inicial_width}px`);
       root.style.setProperty('--punta-flecha-inicial-left', `${flecha_puntero_inicial_left + distancia_horizontal}px`);
@@ -860,7 +412,7 @@ function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: num
       root.style.setProperty('--linea-flecha-inicial-width', `0px`);
       root.style.setProperty('--punta-flecha-inicial-width', `0px`);
       window.banderaFlechaInicial = 0;
-      for (const hijo of hijos) {
+      for (let hijo of hijos) {
         const h = hijo as HTMLElement;
         h.classList.remove("inmediato");
         if (h.classList.contains("underline")) {

@@ -470,19 +470,23 @@ export function borrarUltimoNodo(): void {
   document.addEventListener("click", handler, true);
   setFlechaFinal(false, 1);
 
-  const ulFinal = obtenerSubElemento(DOM.flechaPunteroFinal, "underline");
-  const ulInicial = obtenerSubElemento(DOM.flechaPunteroInicial, "underline");
+  // const ulFinal = obtenerSubElemento(DOM.flechaPunteroFinal, "underline");
+  // const ulInicial = obtenerSubElemento(DOM.flechaPunteroInicial, "underline");
 
-  ulFinal.addEventListener("transitionend", function fbpn() {
+  const finalUl = DOM.finalUl();
+  const inicialUl = DOM.inicialUl();
+  const inicialLs = DOM.inicialLs();
+  const inicialLi = DOM.inicialLi();
+
+  finalUl?.addEventListener("transitionend", function fbpn() {
     setFlechaInicial(false, 1);
-    ulFinal.removeEventListener("transitionend", fbpn);
+    finalUl.removeEventListener("transitionend", fbpn);
   });
 
-  ulInicial.addEventListener("transitionend", function f2() {
-    ulInicial.classList.remove("arrowend-first-ul");
-    obtenerSubElemento(DOM.flechaPunteroInicial, "linea-s").classList.remove("arrowend-first");
-    obtenerSubElemento(DOM.flechaPunteroInicial, "linea-i").classList.remove("arrowend-first");
-
+  inicialUl?.addEventListener("transitionend", function f2() {
+    inicialUl.classList.remove("arrowend-first-ul");
+    inicialLs?.classList.remove("arrowend-first");
+    inicialLi?.classList.remove("arrowend-first");
     const angulo = 0;
     const fpiLeft = 0.05 * DOM.contenedorNodos.offsetWidth + DOM.str.offsetWidth;
     const fpiWidth = DOM.contenedorNodos.offsetWidth - 2 * fpiLeft;
@@ -498,7 +502,7 @@ export function borrarUltimoNodo(): void {
       if (primerHijo) primerHijo.style.opacity = "0";
     }, 1000);
 
-    ulInicial.removeEventListener("transitionend", f2);
+    inicialUl.removeEventListener("transitionend", f2);
   });
 
   const primerNodo = DOM.contenedorNodos.firstElementChild as HTMLElement;
@@ -573,8 +577,10 @@ export function borrarNodoAlComienzo(data: string): void {
     });
   }
 
-  const ulInicial = obtenerSubElemento(DOM.flechaPunteroInicial, "underline");
-  ulInicial.addEventListener("transitionend", function fpu() {
+  // const ulInicial = obtenerSubElemento(DOM.flechaPunteroInicial, "underline");
+  const inicialUl = DOM.inicialUl();
+
+  inicialUl?.addEventListener("transitionend", function fpu() {
     setTimeout(() => {
       const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement;
       if (primerHijo) {
@@ -595,7 +601,7 @@ export function borrarNodoAlComienzo(data: string): void {
         primerHijo.removeEventListener("transitionend", fn);
       });
     }
-    ulInicial.removeEventListener("transitionend", fpu);
+    inicialUl.removeEventListener("transitionend", fpu);
   });
 
   const ultimoHijoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement;
@@ -617,9 +623,11 @@ export function borrarNodoAlComienzo(data: string): void {
         }
       }, 1000);
 
-      const ulInicialLast = DOM.flechaPunteroInicial.lastElementChild as HTMLElement;
-      if (ulInicialLast) {
-        ulInicialLast.addEventListener("transitionend", function g() {
+      // const ulInicialLast = DOM.flechaPunteroInicial.lastElementChild as HTMLElement;
+
+      const inicialLi = DOM.inicialLi();
+      // if (ulInicialLast) {
+        inicialLi?.addEventListener("transitionend", function g() {
           document.removeEventListener("click", handler, true);
           DOM.agregarComienzo.disabled = false;
           DOM.agregarFinal.disabled = false;
@@ -636,9 +644,9 @@ export function borrarNodoAlComienzo(data: string): void {
               DOM.selectorPares.removeChild(DOM.selectorPares.lastChild);
             }
           }
-          ulInicialLast.removeEventListener("transitionend", g);
+          inicialLi?.removeEventListener("transitionend", g);
         });
-      }
+      // }
       ultimoHijoNodo.removeEventListener("transitionend", fnf);
     });
   }
@@ -722,7 +730,10 @@ export function borrarNodoIntermedio(data: string, indice: number): void {
       setFlechaFinal(true, necesitaTransicion, s2);
       setFlechasNodos2(indice + 2, s1, s2);
 
-      obtenerSubElemento(DOM.flechaPunteroFinal, "underline").classList.add("no-desplazar");
+      
+      const finalUl = DOM.finalUl();
+      finalUl?.classList.add("no-desplazar");
+      // obtenerSubElemento(DOM.flechaPunteroFinal, "underline").classList.add("no-desplazar");
       nodoIndexado.removeEventListener("transitionend", fn);
     });
   }
@@ -785,8 +796,12 @@ export function borrarNodoAlFinal(data: string): void {
   necesitaTransicion = 1;
   setFlechaFinal(false, necesitaTransicion);
 
-  const ulFinal = obtenerSubElemento(DOM.flechaPunteroFinal, "underline");
-  ulFinal.addEventListener("transitionend", function fpu() {
+
+
+  const finalUl = DOM.finalUl();
+      
+  // const ulFinal = obtenerSubElemento(DOM.flechaPunteroFinal, "underline");
+  finalUl?.addEventListener("transitionend", function fpu() {
     const flechaUltima = flechas[flechas.length - 1];
     if (flechaUltima) {
       const ul = obtenerSubElemento(flechaUltima, "underline");
@@ -815,7 +830,7 @@ export function borrarNodoAlFinal(data: string): void {
         ul.removeEventListener("transitionend", fu);
       });
     }
-    ulFinal.removeEventListener("transitionend", fpu);
+    finalUl.removeEventListener("transitionend", fpu);
   });
 
   const ultimoHijoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement;
@@ -830,7 +845,9 @@ export function borrarNodoAlFinal(data: string): void {
       setFlechaInicial(true, necesitaTransicion, s2);
       setFlechasNodos(1, 0, s1, s2);
 
-      obtenerSubElemento(DOM.flechaPunteroFinal, "underline").classList.add("no-desplazar");
+      // obtenerSubElemento(DOM.flechaPunteroFinal, "underline").classList.add("no-desplazar");
+      // const finalUl = DOM.finalUl();
+      finalUl?.classList.add("no-desplazar");
       ultimoHijoNodo.removeEventListener("transitionend", fn);
     });
   }
@@ -853,13 +870,16 @@ export function borrarNodoAlFinal(data: string): void {
         }
       }, 100);
 
-      const fpfLast = DOM.flechaPunteroFinal.lastElementChild as HTMLElement;
-      if (fpfLast) {
-        fpfLast.addEventListener("transitionend", function g() {
+      // const fpfLast = DOM.flechaPunteroFinal.lastElementChild as HTMLElement;
+      const finalLi = DOM.finalLi();
+      // if (fpfLast) {
+        finalLi?.addEventListener("transitionend", function g() {
           document.removeEventListener("click", handler, true);
           DOM.agregarComienzo.disabled = false;
           DOM.agregarFinal.disabled = false;
-          obtenerSubElemento(DOM.flechaPunteroFinal, "underline").classList.remove("no-desplazar");
+
+          finalUl?.classList.remove("no-desplazar");
+          // obtenerSubElemento(DOM.flechaPunteroFinal, "underline").classList.remove("no-desplazar");
 
           if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
             DOM.principal.removeAttribute("style");
@@ -873,9 +893,9 @@ export function borrarNodoAlFinal(data: string): void {
               DOM.selectorPares.removeChild(DOM.selectorPares.lastChild);
             }
           }
-          fpfLast.removeEventListener("transitionend", g);
+          finalLi.removeEventListener("transitionend", g);
         });
-      }
+      // }
       primerHijoNodo.removeEventListener("transitionend", fnf);
     });
   }
