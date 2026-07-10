@@ -1,0 +1,194 @@
+
+:root {
+
+    /* --principal-height: 400px; */
+
+
+    --inicializador-align-items: center;
+
+    --str-left : 25%;
+    --nulo-left : -25%;
+    --str-top: 0;
+    --nulo-top: 0;
+
+
+    --rotation-angle-fpi: 0deg;
+
+    --linea-flecha-inicial-width : 0px;
+    --linea-flecha-inicial-left: 0px;
+    --linea-flecha-inicial-top: 0px;
+    --linea-flecha-inicial-transform-origin: left;
+  
+    --punta-flecha-inicial-width : 0px;
+    --punta-flecha-inicial-left: 0px;
+    --punta-flecha-inicial-top: 0px;
+
+
+    --rotation-angle-fpf: 0deg;
+
+    --linea-flecha-final-width: 0px;
+    --linea-flecha-final-left: 0px;
+    --linea-flecha-final-top: 0px;
+  
+    --punta-flecha-final-width: 0px;
+    --punta-flecha-final-top: 0px;
+    --punta-flecha-final-left: 0px;
+}
+
+
+
+#inicializador {
+    position: absolute;
+    /* display: flex; */
+
+
+    /* top: calc(var(--principal-height) * -1);  */
+
+
+    width: 100%; 
+
+    height: 100%;
+
+
+
+    /* width: var(--principal-width); 
+    height: var(--principal-height);  */
+    /* align-items: var(--inicializador-align-items);
+    justify-content: space-between;  */
+    pointer-events: none;
+   }
+
+
+  
+  
+   #str, #nulo {
+    position: absolute;
+    /* top: var(--str-nulo-top); */
+    transition-property: left, top; 
+    transition-duration: 2s, 2s;
+  }
+  
+
+
+  
+  #str { 
+    left: var(--str-left);
+    top: var(--str-top);
+  }
+  
+  #nulo {
+    left: var(--nulo-left);
+    top: var(--nulo-top);
+  }
+  
+  #str,#nulo {
+  /* 1. Forzamos la tipografía clásica y limpia de los navegadores */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  font-size: 16px !important; /* Ajustá al tamaño exacto que usabas en Vanilla si era diferente */
+  font-weight: normal !important;
+  
+  /* 2. El truco maestro: Matamos el line-height heredado de Bootstrap */
+  line-height: 1 !important; 
+  
+  /* 3. Limpiamos cualquier padding o margen parásito */
+  margin: 0 !important;
+  padding: 0 !important;
+  
+  /* Aseguramos el modelo de caja estándar */
+  box-sizing: content-box !important;
+}
+  
+  
+  #flecha_puntero_inicial, #flecha_puntero_final{
+    position: absolute;
+    left : 0;
+    margin: 0;
+    
+  }
+  
+  
+  #flecha_puntero_inicial .underline{
+    position: absolute;
+    /* top: var(--str-top); */
+    top: var(--linea-flecha-inicial-top);
+    left: var(--linea-flecha-inicial-left); 
+    width: var(--linea-flecha-inicial-width);
+    transform-origin: var(--linea-flecha-inicial-transform-origin);
+    transform : rotate(var(--rotation-angle-fpi));
+    transition-property: width, transform, left, top;
+    transition-duration: 2s, 2s, 2s, 2s;
+  
+  }
+  
+  .cambio_top {
+    top : var(--str-top) !important;
+  }
+  
+  
+  #flecha_puntero_final .underline{
+    position: absolute;
+    /* top: -2.5px;  */
+    top:var(--linea-flecha-final-top);
+    left: var(--linea-flecha-final-left);
+    width: var(--linea-flecha-final-width);
+    transform :rotate(var(--rotation-angle-fpf));
+    transition-property: width, transform, left, top;
+    transition-duration: 2s, 2s, 2s, 2s;
+  }
+  
+
+  .flecha_puntero__lista-vacia {
+    transition-property: width, transform, left, top !important;
+    transition-duration: 2s, 0s, 0s, 0s !important;
+  }
+
+
+
+  #flecha_puntero_inicial .linea-i, #flecha_puntero_inicial .linea-s {
+    position: absolute;
+    margin: 0px 0px;
+    left: var(--punta-flecha-inicial-left);
+    top: var(--punta-flecha-inicial-top); 
+    width: var(--punta-flecha-inicial-width);
+  }
+  
+  #flecha_puntero_final .linea-i, #flecha_puntero_final .linea-s {
+    position: absolute;
+    margin: 0px 0px;
+    left: var(--punta-flecha-final-left) ;
+    /* top: var(--str-nulo-top); */
+    /* top: calc(var(--str-nulo-top) + 7.5px); */
+    top: var(--punta-flecha-final-top);
+    width: var(--punta-flecha-final-width);
+  }
+
+  #flecha_puntero_inicial .linea-s, #flecha_puntero_final .linea-s{
+
+    transform: rotate(calc(var(--rotation-angle-fpi) + 225deg)) ;
+  }
+
+  #flecha_puntero_inicial .linea-i, #flecha_puntero_final .linea-i{
+
+    transform: rotate(calc(var(--rotation-angle-fpi) + 135deg));
+  }
+
+
+  #flecha_puntero_inicial .linea-s{
+
+    transform: rotate(calc(var(--rotation-angle-fpi) + 225deg)) ;
+  }
+
+  #flecha_puntero_inicial .linea-i{
+
+    transform: rotate(calc(var(--rotation-angle-fpi) + 135deg));
+  }
+
+  #flecha_puntero_final .linea-s{
+
+    transform: rotate(calc(var(--rotation-angle-fpf) + 225deg)) ;
+  }
+
+  #flecha_puntero_final .linea-i{
+
+    transform: rotate(calc(var(--rotation-angle-fpf) + 135deg));
+  }

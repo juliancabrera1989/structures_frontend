@@ -1,0 +1,76 @@
+:root{
+    /* --contenedor_nodos-height: 400px; */
+
+
+    --opacity-cajanodo: 0;
+}
+
+
+
+/* #contenedor_nodos {
+    position: relative;
+    display: flex;
+    /~ outline: 2px solid #f0f; ~/
+    width: var(--principal-width); /~Cambiar de 828px a 100% ~/
+    height: var(--principal-height); /~Height base : 300px ~/
+    border-right: 50px;
+    align-items: center;
+    justify-content: space-evenly;
+
+
+
+   }
+
+
+  .caja-nodo {
+      position:relative;
+      display: flex;
+      flex-direction: row;
+      /~ height: calc(0.25 * var(--principal-height));
+      width: calc(0.5 * var(--principal-height)); ~/
+      height: 100px;
+      width: 200px;
+      align-items: center;
+      justify-content: space-around;
+      background-color: yellow;
+      opacity: var(--opacity-cajanodo);
+      transition-property: opacity, width, height, left;
+      transition-duration: 2s, 2s, 2s, 2s;
+  }
+*/
+  /* @media screen and (max-width: ) {
+
+  } */
+
+#contenedor_nodos {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap; /* Permitimos el quiebre de filas nativo */
+    width: var(--principal-width); 
+    height: var(--principal-height); 
+    border-right: 50px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.caja-nodo {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    height: 100px;
+    width: 200px;
+    align-items: center;
+    justify-content: space-around;
+    background-color: yellow;
+    opacity: var(--opacity-cajanodo);
+    transition-property: opacity, width, height, left;
+    transition-duration: 2s, 2s, 2s, 2s;
+}
+
+  .circle {
+    width: 5px;
+    height: 5px;
+    background: red;
+    border-radius: 50%;
+}
+
