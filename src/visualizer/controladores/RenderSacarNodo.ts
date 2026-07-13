@@ -121,23 +121,227 @@ export function borrarNodoAlComienzo(data: string): void {
   const nodos = getNodos() as HTMLDivElement[];
   const flechas = getFlechas() as HTMLDivElement[];
 
-  const ultimoHijo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-  s1 = ((DOM.contenedorNodos.offsetWidth - (nodos.length) * ultimoHijo.offsetWidth) / (nodos.length + 1));
-  s2 = ((DOM.contenedorNodos.offsetWidth - (nodos.length + 1) * ultimoHijo.offsetWidth) / (nodos.length + 2));
-
-  if (DOM.contenedorNodos.childElementCount >= 5) {
-    document.body.removeAttribute("style");
-    renderizar();
-  }
-
-  const ancho = DOM.principal.offsetWidth;
-  DOM.principal.style.width = ancho + 'px';
 
   document.addEventListener("click", handler, true);
   DOM.agregarComienzo.disabled = true;
   DOM.agregarFinal.disabled = true;
 
   necesitaTransicion = 1;
+
+
+
+
+if(nodos.length == 3) {
+      console.log("Iniciando reversión: Desvaneciendo punta de flecha curva...");
+      document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '0');
+
+      const pathCurva = document.getElementById("flecha_curva_dinamica") as SVGPathElement | null;
+
+      if (pathCurva) {
+        const largoTotal = pathCurva.getTotalLength();
+        
+        const animacionContraccion = pathCurva.animate(
+          [
+            { strokeDashoffset: 0 }, 
+            { strokeDashoffset: largoTotal }
+          ], 
+          {
+            duration: 2000,
+            easing: "ease-in-out",
+            fill: "forwards"
+          }
+        );
+
+        animacionContraccion.onfinish = () => {
+          console.log("La animación del path terminó. Eliminando contenedor SVG...");
+          const svgContenedor = pathCurva.closest(".svg-flecha-interfila");
+          svgContenedor?.remove();
+
+
+        // -------------------------------------------------------------------------
+          // PASO 2: Contraer la flecha inicial (StrPtr)
+          // -------------------------------------------------------------------------
+          necesitaTransicion = 1;
+          setFlechaInicial(false, necesitaTransicion);
+
+          const inicialUl = DOM.inicialUl();
+
+          inicialUl?.addEventListener("transitionend", function a() { 
+            // -------------------------------------------------------------------------
+            // PASO 3: Hacer invisible el primer nodo
+            // -------------------------------------------------------------------------
+            const primerNodo = nodos[0];
+            if (primerNodo) {
+              primerNodo.classList.remove("inmediato-nodo");
+              primerNodo.style.transition = "opacity 0.8s ease-in-out";
+              primerNodo.style.opacity = "0";
+
+              primerNodo.addEventListener("transitionend", function handlerOcultarNodo(ev) {
+              if (ev.propertyName === 'opacity') {
+                primerNodo.removeEventListener("transitionend", handlerOcultarNodo);
+                console.log("🚀 PASO 3 Terminado: El nodo es invisible. Listo para congelar abajo (Paso 4).");
+                
+                // Aquí vas a meter tu Paso 4 de mutación limpia del DOM
+                // A. Mutación física del DOM (Borramos nodo y el salto flex)
+                sacarNodo(data);
+                const salto = DOM.contenedorNodos.querySelector(".salto-flex");
+                if (salto) salto.remove();
+
+                // B. Achicamos principal y contenedores a 400px de golpe (sin transición todavía)
+                if (DOM.principal) DOM.principal.style.height = "400px";
+                if (DOM.contenedorNodos) DOM.contenedorNodos.style.height = "400px";
+                if (DOM.contenedorFlechas) DOM.contenedorFlechas.style.height = "400px";
+                if (DOM.inicializador) DOM.inicializador.style.height = "400px";
+                document.documentElement.style.setProperty('--principal-height', '400px');
+
+                // C. Congelamos los nodos restantes abajo usando los márgenes de la Fase 2 original
+                const nodosRestantes = Array.from(getNodos() as HTMLElement[]);
+                nodosRestantes.forEach(nodo => {
+                  nodo.style.transition = "none";
+                  nodo.style.setProperty("margin-top", "400px", "important");
+                });
+
+                
+                const contenedorFlechas = document.getElementById("contenedor_flechas");
+                if (contenedorFlechas) {
+
+                  const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
+                  flechasExistentes.forEach((flecha) => {
+                    // (flecha as HTMLElement).style.transition = "none";
+                    // (flecha as HTMLElement).style.transform = "none";
+                  (flecha as HTMLElement).setAttribute("style","");
+                  (flecha as HTMLElement).style.setProperty("margin-top", "500px", "important");
+                    // (flecha as HTMLElement).style.transition = "transform 2s ease-in-out";
+                    // // Aplicamos el desfase vertical estático para que calcen con los nodos en margin-top 300px
+                    // (flecha as HTMLElement).style.transform = "translateY(250px)"; 
+                  });
+                }
+
+                setTimeout(()=> {
+
+                        if (DOM.principalWrapper) {
+                          DOM.principalWrapper.style.transition = "height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out";
+                          DOM.principalWrapper.style.height = "400px";
+                          DOM.principalWrapper.style.minHeight = "400px";
+                          DOM.principalWrapper.style.maxHeight = "400px";
+                        }
+                  
+                  const nodosRestantes = Array.from(getNodos() as HTMLElement[]);
+                  nodosRestantes.forEach(nodo => {
+                    
+                    nodo.style.transition = "transform 2s ease-in-out";
+                    nodo.style.transform = "translateY(-250px)"; // 🔥 Tu corrección
+                  });
+
+                      //  const contenedorFlechas = document.getElementById("contenedor_flechas");
+                       const contenedorFlechas = DOM.contenedorFlechas;
+                        if (contenedorFlechas) {
+                          const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
+                          
+                          flechasExistentes.forEach((flecha) => {
+                            // Replicamos la limpieza de tu setFlechasNodos() para permitir la transición suave
+                            // Ahora sí le aplicamos la animación de bajada
+                            (flecha as HTMLElement).style.transition = "transform 2s ease-in-out";
+                            (flecha as HTMLElement).style.transform = "translateY(-250px)";
+                          });
+                        }
+                                    
+                  if (DOM.nulo) {
+                          DOM.nulo.style.transition = "top 2s ease-in-out";
+                          // DOM.nulo.style.transform = "translateY(-250px)";
+                    }
+                  
+                          const flecha_puntero_final = document.getElementById("flecha_puntero_final");
+                          if (!flecha_puntero_final) return;
+                          const hijos = flecha_puntero_final.children;
+                        
+                                  for (const hijo of hijos) {
+                                    (hijo as HTMLElement).style.transition = "top 2s ease-in-out";
+                                    
+                                  }    
+          root.style.setProperty('--linea-flecha-final-top', `${197.5}px`);
+          root.style.setProperty('--nulo-top', `${92}px`);
+          root.style.setProperty('--punta-flecha-final-top', `${108}px`);
+          
+
+
+
+                            DOM.principalWrapper.addEventListener("transitionend", function ultimaParte() {
+                       
+                    
+                    if (DOM.contenedorNodos) {
+                    DOM.contenedorNodos.style.height = "";
+                    DOM.contenedorNodos.style.minHeight = "";
+                    DOM.contenedorNodos.style.flexWrap = "";
+                    DOM.contenedorNodos.style.alignContent = "";
+                    DOM.contenedorNodos.style.alignItems = "";
+                  }
+                  
+                    const nodosRestantes = Array.from(getNodos() as HTMLElement[]);
+                  nodosRestantes.forEach(nodo => {
+                    nodo.style.transition = "none";
+                    nodo.style.removeProperty("transform");
+                    nodo.style.alignSelf = "";
+                    nodo.style.marginTop = ""; 
+                    nodo.style.left = "";
+                  });
+
+                  
+                  const contenedorFlechas = document.getElementById("contenedor_flechas");
+                  if (contenedorFlechas) {
+                    contenedorFlechas.style.height = "";
+                    contenedorFlechas.style.minHeight = "";
+                    const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
+                    flechasExistentes.forEach((flecha) => {
+                      (flecha as HTMLElement).style.removeProperty("transform");
+                      (flecha as HTMLElement).style.removeProperty("margin-top");
+                      (flecha as HTMLElement).style.removeProperty("transition");
+                    });
+                  }
+
+
+                                        setFlechaInicial(true, necesitaTransicion);
+                    
+                                        // Aseguramos las variables CSS de la punta de la flecha curva en su destino exacto
+                                        // document.documentElement.style.setProperty('--punta-flecha-curva-left', `${x2}px`);
+                                        // document.documentElement.style.setProperty('--punta-flecha-curva-top', `${y2}px`);
+                                        // document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '1');
+                    
+                    
+                                        // Liberamos los controles de la UI al terminar la secuencia completa
+                                        document.removeEventListener("click", handler, true);
+                                        DOM.agregarComienzo.disabled = false;
+                                        DOM.agregarFinal.disabled = false;
+                    DOM.principalWrapper.removeEventListener("transitionend", ultimaParte);
+                                        
+                  });
+
+                },100);
+
+                  
+
+
+
+
+              }
+            });
+
+              }
+
+
+          inicialUl.removeEventListener("transitionend", a);
+            });
+        }
+      }
+
+
+
+
+
+
+  //Aca va todo para contraer de nuevo a una fila
+} else {
+
 
   const flechaObjetivo = flechas[0];
   if (flechaObjetivo) {
@@ -238,6 +442,9 @@ export function borrarNodoAlComienzo(data: string): void {
       ultimoHijoNodo.removeEventListener("transitionend", fnf);
     });
   }
+
+} // Fin del else si no hay tres nodos
+   
 }
 
 /* ==========================================================================

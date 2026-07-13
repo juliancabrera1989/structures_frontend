@@ -148,31 +148,10 @@ function agregarPrimerNodo(): void {
 
 function agregarNodoAlComienzo(): void {
   if (!DOM.verificarDOM()) return;
-
+  
   const nodos = getNodos() as HTMLElement[];
   const ultimoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement | null;
   if (!ultimoNodo) return;
-
-  s1 = (DOM.contenedorNodos.offsetWidth - nodos.length * ultimoNodo.offsetWidth) / (nodos.length + 1);
-  s2 = (DOM.contenedorNodos.offsetWidth - (nodos.length + 1) * ultimoNodo.offsetWidth) / (nodos.length + 2);
-
-  const x = s2 - DOM.str.offsetWidth - DOM.str.offsetLeft;
-  const y = DOM.contenedorNodos.offsetHeight / 2 - DOM.str.offsetTop - DOM.str.offsetHeight;
-  const relacion = y / x;
-
-  if (relacion > 1.192 || relacion < 0) {
-    const nuevo_ancho = (ultimoNodo.offsetWidth * (nodos.length + 1) + (y / 1.192 + DOM.str.offsetWidth) * (nodos.length + 2)) / 0.91;
-    root.style.setProperty('--principal-width-min', `${nuevo_ancho}px`);
-    renderizar();
-    setTimeout(() => {
-      DOM.principalWrapper.style.minWidth = `${nuevo_ancho}px`;
-      DOM.principalWrapper.style.maxWidth = `${nuevo_ancho}px`;
-    }, 1000);
-  }
-
-  if (root.style.getPropertyValue("--principal-height") === '50vw') {
-    root.style.setProperty("--principal-height", `${DOM.principal.offsetHeight}px`);
-  }
 
   document.addEventListener("click", handler, true);
   DOM.agregarComienzo.disabled = true;
@@ -181,75 +160,355 @@ function agregarNodoAlComienzo(): void {
   necesitaTransicion = 1;
   setFlechaInicial(false, necesitaTransicion);
 
-  
   const inicialUl = DOM.inicialUl();
-
   inicialUl?.addEventListener("transitionend", function nfpi_aC() {
-    const nodosActualizados = getNodos() as HTMLElement[];
-    const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-    s1 = (DOM.contenedorNodos.offsetWidth - nodosActualizados.length * ultimo.offsetWidth) / (nodosActualizados.length + 1);
-    s2 = (DOM.contenedorNodos.offsetWidth - (nodosActualizados.length + 1) * ultimo.offsetWidth) / (nodosActualizados.length + 2);
+    
 
-    setFlechaFinal(true, necesitaTransicion, s2);
+if (nodos.length === 2) {
+      console.log("🔵 FASE 1: Bajada suave del Wrapper y Nodos por transform.");
 
+      // 1. Estiramos el búnker exterior suavemente
+      if (DOM.principalWrapper) {
+        DOM.principalWrapper.style.transition = "height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out";
+        DOM.principalWrapper.style.height = "600px";
+        DOM.principalWrapper.style.minHeight = "600px";
+        DOM.principalWrapper.style.maxHeight = "600px";
+      }
 
-    console.log("Necesita transicion antes de entrar en setflechasnodos :");
-    console.log(necesitaTransicion);
-    setFlechasNodos(necesitaTransicion, 1, s1, s2);
+      if (DOM.principal) DOM.principal.style.transition = "none";
+      if (DOM.contenedorNodos) DOM.contenedorNodos.style.transition = "none";
 
-    inicialUl.removeEventListener("transitionend", nfpi_aC);
-  });
-
-  ultimoNodo.addEventListener("transitionend", function nald() {
-    agregarNodo(DOM.inputNodo.value, 1);
-    const nuevosNodos = getNodos() as HTMLElement[];
-
-    for (let i = 1; i < nuevosNodos.length; i++) {
-      nuevosNodos[i].classList.add("no-mover");
-      nuevosNodos[i].style.left = '0px';
-    }
-
-    setTimeout(() => {
-      const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
-      if (primerHijo) primerHijo.style.opacity = "1";
-    }, 100);
-
-    const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
-    primerHijo?.addEventListener("transitionend", function na() {
-      window.banderaFlechaInicial = 0;
-      setFlechaInicial(true, necesitaTransicion);
-      
-      const inicialLi = DOM.inicialLi();
-      inicialLi?.addEventListener("transitionend", function af() {
-        agregarFlecha(1);
-
-        const primerFlecha = DOM.contenedorFlechas.firstElementChild as HTMLElement | null;
-        primerFlecha?.addEventListener("transitionend", function g() {
-          document.removeEventListener("click", handler, true);
-          DOM.agregarComienzo.disabled = false;
-          DOM.agregarFinal.disabled = false;
-
-          actualizarSelectoresIntermedios();
-
-          if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
-            DOM.principalWrapper.removeAttribute("style");
-            renderizar();
-            setFlechaInicial(true, 0);
-            setFlechaFinal(true, 0);
-          } else {
-            DOM.principalWrapper.removeAttribute("style");
-          }
-
-          primerFlecha.removeEventListener("transitionend", g);
-        });
-
-        inicialLi.removeEventListener("transitionend", af);
+      // 2. Bajada con tu valor corregido de transform
+      const nodosActuales = Array.from(getNodos() as HTMLElement[]);
+      nodosActuales.forEach(nodo => {
+        nodo.classList.remove("inmediato-nodo", "inmediato", "inmediato_reacomodo", "no-mover");
+        nodo.style.transition = "transform 2s ease-in-out";
+        nodo.style.transform = "translateY(250px)"; // 🔥 Tu corrección
       });
 
-      primerHijo.removeEventListener("transitionend", na);
-    });
+     const contenedorFlechas = document.getElementById("contenedor_flechas");
+      if (contenedorFlechas) {
+        const flechasExistentes = Array.from(contenedorFlechas.querySelectorAll(".arrow")) as HTMLElement[];
+        
+        flechasExistentes.forEach((flecha) => {
+          // Replicamos la limpieza de tu setFlechasNodos() para permitir la transición suave
+          flecha.classList.remove("no-mover__flecha");
+          
+          const elementosHijos = Array.from(flecha.children) as HTMLElement[];
+          elementosHijos.forEach((elemento) => {
+            elemento.classList.remove("inmediato");
+          });
 
-    ultimoNodo.removeEventListener("transitionend", nald);
+          // Ahora sí le aplicamos la animación de bajada
+          flecha.style.transition = "transform 2s ease-in-out";
+          flecha.style.transform = "translateY(250px)";
+        });
+      }
+
+      // B. Mover el nodo NULL (DOM.nulo)
+      if (DOM.nulo) {
+        DOM.nulo.style.transition = "transform 2s ease-in-out";
+        DOM.nulo.style.transform = "translateY(250px)";
+      }
+
+        const flecha_puntero_final = document.getElementById("flecha_puntero_final");
+        if (!flecha_puntero_final) return;
+        const hijos = flecha_puntero_final.children;
+      
+                for (const hijo of hijos) {
+                  (hijo as HTMLElement).classList.remove("inmediato");
+                  (hijo as HTMLElement).style.transition = "top 2s ease-in-out";
+                  
+                }
+            const finalUl = DOM.finalUl();
+            const finalLi = DOM.finalLi();
+            const finalLs = DOM.finalLs();
+
+            
+         if (finalUl && finalLi && finalLs) {
+          const altura = finalUl?.offsetTop;
+            finalUl.style.top = `${altura + 250}px`;
+            finalLi.style.top = `${DOM.str.offsetTop + DOM.nulo.offsetHeight + 250}px`;
+            finalLs.style.top = `${DOM.str.offsetTop + DOM.nulo.offsetHeight + 250}px`;
+         }
+      // const finalUl = DOM.finalUl();
+      // if (finalUl) {
+      //   finalUl.style.transition = "transform 2s ease-in-out";
+      //   finalUl.style.transform = "translateY(250px)";
+      // }
+
+      // =========================================================================
+      // FASE 2: RETENCIÓN (A los 2000ms, clavamos los nodos en el fondo)
+      // =========================================================================
+      setTimeout(() => {
+        console.log("⚡ FASE 2: Retención instantánea en contenedor de una fila.");
+        
+        document.documentElement.style.setProperty('--principal-height', '600px');
+        if (DOM.principal) DOM.principal.style.height = "600px";
+        if (DOM.contenedorNodos) DOM.contenedorNodos.style.height = "600px";
+        if (DOM.contenedorFlechas) DOM.contenedorFlechas.style.height = "600px";
+        if (DOM.inicializador) DOM.inicializador.style.height = "600px";
+
+        nodosActuales.forEach(nodo => {
+          nodo.style.transition = "none"; 
+          nodo.style.transform = "none";  
+          nodo.style.setProperty("margin-top", "300px", "important"); // 🔥 Tu corrección
+        });
+
+
+        const contenedorFlechas = document.getElementById("contenedor_flechas");
+        if (contenedorFlechas) {
+
+          const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
+          flechasExistentes.forEach((flecha) => {
+            (flecha as HTMLElement).style.transition = "none";
+            // Aplicamos el desfase vertical estático para que calcen con los nodos en margin-top 300px
+            (flecha as HTMLElement).style.transform = "translateY(150px)"; 
+          });
+        }
+
+        const flecha_puntero_final = document.getElementById("flecha_puntero_final");
+        if (!flecha_puntero_final) return;
+        const hijos = flecha_puntero_final.children;
+      
+                for (const hijo of hijos) {
+                  (hijo as HTMLElement).removeAttribute("style");
+                }
+
+        if (DOM.nulo) {
+          DOM.nulo.style.transition = "none";
+          DOM.nulo.style.transform = "none";
+          // Actualizamos su variable CSS o top si lo requiere tu layout para congelarlo abajo
+          //  root.style.setProperty('--nulo-top', `${DOM.str.offsetTop+(DOM.principal.offsetHeight/2)}px`);
+          const ultimoNodo = DOM.contenedorNodos.lastElementChild;
+          const topUN = (ultimoNodo as HTMLElement).offsetTop;
+          root.style.setProperty('--linea-flecha-final-top', `${DOM.principal.offsetHeight*3/4 - 2.5}px`);
+          root.style.setProperty('--nulo-top', `${( topUN - 50 - DOM.nulo.offsetHeight/2)}px`);
+          root.style.setProperty('--punta-flecha-final-top', `${( topUN + DOM.nulo.offsetHeight/2 - 50)}px`);
+          
+          // root.style.setProperty('--punta-flecha-final-top', `${DOM.str.offsetTop+DOM.nulo.offsetHeight+DOM.principal.offsetHeight/2}px`);
+        // root.style.setProperty('--punta-flecha-final-top', `${DOM.principal.offsetHeight*2/3 - (DOM.str.offsetTop - DOM.nulo.offsetHeight)}px`);
+        }
+        
+      
+        
+       // =========================================================================
+        // 🛠️ FASE 3: Pasando a modo multi-fila e insertando elementos.
+        // =========================================================================
+        setTimeout(() => {
+          console.log("🛠️ FASE 3: Pasando a modo multi-fila e insertando elementos.");
+
+          // 1. Convertimos el contenedor a dos filas (Wrap) justo en este frame
+          if (DOM.contenedorNodos) {
+            DOM.contenedorNodos.style.flexWrap = "wrap";
+            DOM.contenedorNodos.style.alignContent = "flex-start";
+            DOM.contenedorNodos.style.alignItems = "flex-start";
+          }
+
+          // 2. Tu función pura mete el nuevo nodo al principio (índice 0)
+          agregarNodo(DOM.inputNodo.value, 1);
+
+          const todosLosNodos = Array.from(getNodos() as HTMLElement[]);
+          const nodoNuevo = todosLosNodos[0]; // El recién inyectado arriba
+          
+          // 🔥 Identificamos al nodo que antes estaba primero y ahora bajó a la segunda fila
+          const nodoOrigenReal = todosLosNodos[1]; 
+
+          // 🟢 Seteamos la opacidad en 0 e iniciamos la transición justo acá, antes del salto
+          if (nodoNuevo) {
+            nodoNuevo.style.opacity = "0";
+            nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
+          }
+
+          // 3. Creamos el bloque divisor
+          const saltoDeLinea = document.createElement("div");
+          saltoDeLinea.className = "salto-flex";
+          saltoDeLinea.style.flexBasis = "100%";
+          saltoDeLinea.style.height = "0";
+
+          // 4. Lo insertamos exactamente DESPUÉS del nuevo nodo para partir la grilla
+          if (DOM.contenedorNodos && nodoNuevo) {
+            DOM.contenedorNodos.insertBefore(saltoDeLinea, nodoNuevo.nextSibling);
+          }
+
+          // 5. Con las dos filas armadas por el salto, pasamos todo al layout final
+          todosLosNodos.forEach(nodo => {
+            nodo.style.alignSelf = "flex-start";
+            nodo.style.setProperty("margin-top", "150px", "important");
+          });
+
+          // Forzamos el reflow y disparamos la animación suave hacia 1
+          if (nodoNuevo) {
+            void nodoNuevo.offsetWidth; // Truco mecánico
+            nodoNuevo.style.opacity = "1";
+
+            // 🎯 AGREGADO: Escuchamos el final de la opacidad para disparar la flecha curva
+            nodoNuevo.addEventListener('transitionend', function dispararFlechaCurvaComienzo(e) {
+              if (e.propertyName === 'opacity') {
+                nodoNuevo.removeEventListener('transitionend', dispararFlechaCurvaComienzo);
+
+                const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
+                if (!contenedorCurvas) {
+                  document.removeEventListener("click", handler, true);
+                  DOM.agregarComienzo.disabled = false;
+                  DOM.agregarFinal.disabled = false;
+                  return;
+                }
+
+                // Si ambos nodos existen, calculamos la geometría rígida sin deformaciones
+                if (nodoNuevo && nodoOrigenReal) {
+                  const contRect = DOM.contenedorNodos.getBoundingClientRect();
+                  const emisorRect = nodoNuevo.getBoundingClientRect();
+                  const receptorRect = nodoOrigenReal.getBoundingClientRect();
+                  const radioRulo = 130; 
+
+                  // Coordenadas calculadas en base a la posición real en pantalla
+                  const x1 = emisorRect.left - contRect.left + (emisorRect.width * 0.75);
+                  const y1 = emisorRect.top - contRect.top + (emisorRect.height / 2);
+                  const x2 = receptorRect.left - contRect.left;
+                  const y2 = receptorRect.top - contRect.top + (receptorRect.height / 2);
+                  const y_pasillo = y1 + ((y2 - y1) / 2);
+
+                  const de_x1_borde = emisorRect.right - contRect.left;
+                  const de_cpx1 = de_x1_borde + radioRulo;
+                  const de_cpy1 = y1;
+                  const de_cpx2 = de_x1_borde + radioRulo;
+                  const de_cpy2 = y_pasillo;
+
+                  const a_cpx1 = x2 - radioRulo;
+                  const a_cpy1 = y_pasillo;
+                  const a_cpx2 = x2 - radioRulo;
+                  const a_cpy2 = y2;
+
+                  const d = `
+                    M ${x1} ${y1} 
+                    C ${de_cpx1} ${de_cpy1}, ${de_cpx2} ${de_cpy2}, ${de_x1_borde} ${y_pasillo}
+                    L ${x2} ${y_pasillo}
+                    C ${a_cpx1} ${a_cpy1}, ${a_cpx2} ${a_cpy2}, ${x2} ${y2}
+                  `.replace(/\s+/g, ' ').trim();
+
+                  const svgCurva = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                  svgCurva.setAttribute("style", "position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;");
+                  svgCurva.setAttribute("class", "svg-flecha-interfila");
+
+                  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                  path.setAttribute("id", "flecha_curva_dinamica");
+                  path.setAttribute("d", d);
+                  path.setAttribute("stroke", "red");
+                  path.setAttribute("stroke-width", "4");
+                  path.setAttribute("fill", "none");
+
+                  svgCurva.appendChild(path);
+                  contenedorCurvas.appendChild(svgCurva);
+
+                  // Animación por strokeDashoffset (Efecto de dibujado óptico progresivo)
+                  const largoTotal = path.getTotalLength();
+                  path.style.strokeDasharray = `${largoTotal}`;
+                  path.style.strokeDashoffset = `${largoTotal}`;
+
+                  const animacionFlecha = path.animate([{ strokeDashoffset: largoTotal }, { strokeDashoffset: 0 }], {
+                    duration: 2000,
+                    easing: "ease-in-out",
+                    fill: "forwards"
+                  });
+
+                  animacionFlecha.onfinish = () => {
+                    console.log("La animación del path terminó. Seteando flecha final...");
+                    
+
+                    setFlechaInicial(true, necesitaTransicion);
+
+                    // Aseguramos las variables CSS de la punta de la flecha curva en su destino exacto
+                    document.documentElement.style.setProperty('--punta-flecha-curva-left', `${x2}px`);
+                    document.documentElement.style.setProperty('--punta-flecha-curva-top', `${y2}px`);
+                    document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '1');
+
+
+                    // Liberamos los controles de la UI al terminar la secuencia completa
+                    document.removeEventListener("click", handler, true);
+                    DOM.agregarComienzo.disabled = false;
+                    DOM.agregarFinal.disabled = false;
+
+                    actualizarSelectoresIntermedios();
+                  };
+                }
+              }
+            });
+          }
+
+          console.log("🛑 Estructura DOM armada y escuchador de flecha curva activo.");
+
+        }, 100);
+      }, 2000); 
+    }
+    // =========================================================================
+    // EL ELSE CON TU FLUJO HORIZONTAL PROTEGIDO
+    // =========================================================================
+    else {
+      console.log("🟢 Ejecutando flujo horizontal...");
+
+      const nodosActualizados = getNodos() as HTMLElement[];
+      const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+      s1 = (DOM.contenedorNodos.offsetWidth - nodosActualizados.length * ultimo.offsetWidth) / (nodosActualizados.length + 1);
+      s2 = (DOM.contenedorNodos.offsetWidth - (nodosActualizados.length + 1) * ultimo.offsetWidth) / (nodosActualizados.length + 2);
+
+      setFlechaFinal(true, necesitaTransicion, s2);
+      setFlechasNodos(necesitaTransicion, 1, s1, s2);
+
+      ultimoNodo.addEventListener("transitionend", function nald() {
+        agregarNodo(DOM.inputNodo.value, 1);
+        const nuevosNodos = getNodos() as HTMLElement[];
+
+        for (let i = 1; i < nuevosNodos.length; i++) {
+          nuevosNodos[i].classList.add("no-mover");
+          nuevosNodos[i].style.left = '0px';
+        }
+
+        setTimeout(() => {
+          const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
+          if (primerHijo) primerHijo.style.opacity = "1";
+        }, 100);
+
+        const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
+        primerHijo?.addEventListener("transitionend", function na() {
+          window.banderaFlechaInicial = 0;
+          setFlechaInicial(true, necesitaTransicion);
+          
+          const inicialLi = DOM.inicialLi();
+          inicialLi?.addEventListener("transitionend", function af() {
+            agregarFlecha(1);
+
+            const primerFlecha = DOM.contenedorFlechas.firstElementChild as HTMLElement | null;
+            primerFlecha?.addEventListener("transitionend", function g() {
+              document.removeEventListener("click", handler, true);
+              DOM.agregarComienzo.disabled = false;
+              DOM.agregarFinal.disabled = false;
+
+              actualizarSelectoresIntermedios();
+
+              if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
+                DOM.principalWrapper.removeAttribute("style");
+                renderizar();
+                setFlechaInicial(true, 0);
+                setFlechaFinal(true, 0);
+              } else {
+                DOM.principalWrapper.removeAttribute("style");
+              }
+
+              primerFlecha.removeEventListener("transitionend", g);
+            });
+
+            inicialLi.removeEventListener("transitionend", af);
+          });
+
+          primerHijo.removeEventListener("transitionend", na);
+        });
+
+        ultimoNodo.removeEventListener("transitionend", nald);
+      });
+    }
+
+    inicialUl.removeEventListener("transitionend", nfpi_aC);
   });
 }
 
@@ -346,7 +605,6 @@ function agregarNodoAlFinal(): void {
   if (!DOM.verificarDOM()) return;
 
   const nodos = getNodos() as HTMLElement[];
-  // const flechas = getFlechas() as HTMLElement[];
   const ancho = DOM.principal.offsetWidth;
   
   DOM.principal.style.width = `${ancho}px`;
@@ -354,6 +612,7 @@ function agregarNodoAlFinal(): void {
     root.style.setProperty("--principal-height", `${DOM.principal.offsetHeight}px`);
   }
 
+  // 1. Bloqueamos clicks al iniciar la acción
   document.addEventListener("click", handler, true);
   DOM.agregarComienzo.disabled = true;
   DOM.agregarFinal.disabled = true;
@@ -361,354 +620,276 @@ function agregarNodoAlFinal(): void {
   necesitaTransicion = 1;
   setFlechaFinal(false, necesitaTransicion);
 
-
   const finalUl = DOM.finalUl();
 
-  // finalUl?.addEventListener("transitionend", function nfpf_aC() {
-  //   const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-  //   s1 = (DOM.contenedorNodos.offsetWidth - nodos.length * ultimo.offsetWidth) / (nodos.length + 1);
-  //   s2 = (DOM.contenedorNodos.offsetWidth - (nodos.length + 1) * ultimo.offsetWidth) / (nodos.length + 2);
+  finalUl?.addEventListener("transitionend", function nfpf_aC() {
+    const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+    const totalNodosActuales = nodos.length;
 
-  //   setFlechaInicial(true, necesitaTransicion, s2);
-  //   setFlechasNodos(necesitaTransicion, 0, s1, s2);
+    if (totalNodosActuales < 2) {
+      // =========================================================================
+      // 🟢 CAMINO ORIGINAL: ENCAPSULADO POR COMPLETO AQUÍ DENTRO
+      // =========================================================================
+      s1 = (DOM.contenedorNodos.offsetWidth - totalNodosActuales * ultimo.offsetWidth) / (totalNodosActuales + 1);
+      s2 = (DOM.contenedorNodos.offsetWidth - (totalNodosActuales + 1) * ultimo.offsetWidth) / (totalNodosActuales + 2);
 
-  //   finalUl.classList.add("no-desplazar");
-  //   finalUl.removeEventListener("transitionend", nfpf_aC);
-  // });
+      setFlechaInicial(true, necesitaTransicion, s2);
+      setFlechasNodos(necesitaTransicion, 0, s1, s2);
 
-finalUl?.addEventListener("transitionend", function nfpf_aC() {
-  const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-  const totalNodosActuales = nodos.length; // Cuántos hay antes de meter el nuevo
+      // MUDAMOS AQUÍ TODO LO QUE ANTES ESTABA SUELTO ABAJO:
+      const primerNodo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
+      primerNodo?.addEventListener("transitionend", function nald() {
+        agregarNodo(DOM.inputNodo.value, 0);
+        const nuevosNodos = getNodos() as HTMLElement[];
 
-  if (totalNodosActuales < 5) {
-    // 🟢 CAMINO ORIGINAL: De 1 a 4 nodos (el próximo entra en la Fila 1)
-    s1 = (DOM.contenedorNodos.offsetWidth - totalNodosActuales * ultimo.offsetWidth) / (totalNodosActuales + 1);
-    s2 = (DOM.contenedorNodos.offsetWidth - (totalNodosActuales + 1) * ultimo.offsetWidth) / (totalNodosActuales + 2);
-
-    setFlechaInicial(true, necesitaTransicion, s2);
-    setFlechasNodos(necesitaTransicion, 0, s1, s2);
-} else {
-  console.log("Paso 1: Expansión escalable a 600px con contra-desplazamiento interno.");
-
-  DOM.agregarComienzo.disabled = true;
-  DOM.agregarFinal.disabled = true;
-
-  // =========================================================================
-  // FASE A: EXPANSIÓN DEL WRAPPER (ANIMACIÓN SUAVE DE 2 SEGUNDOS)
-  // =========================================================================
-  // if (DOM.principalWrapper) {
-  //   DOM.principalWrapper.style.transition = "height 2s ease-in-out, min-height 2s ease-in-out";
-  //   DOM.principalWrapper.style.overflow = "hidden"; 
-  //   DOM.principalWrapper.style.height = "600px";
-  //   DOM.principalWrapper.style.minHeight = "600px";
-  // }
-
-
-  if (DOM.principalWrapper) {
-  // 1. Le agregamos 'max-height' a la transición para que también se suavice
-  DOM.principalWrapper.style.transition = "height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out";
-  DOM.principalWrapper.style.overflow = "hidden"; 
-  
-  // 2. Expandimos las tres cotas en paralelo para anular el tope del CSS
-  DOM.principalWrapper.style.height = "600px";
-  DOM.principalWrapper.style.minHeight = "600px";
-  DOM.principalWrapper.style.maxHeight = "600px"; // 👈 Sumamos esto para romper el techo del CSS
-}
-
-  // Esperamos los 2 segundos de la transición del Wrapper
-  setTimeout(() => {
-
-    // =========================================================================
-    // FASE B: TODAS LAS CAJAS FÍSICAS CRECEN A 600PX (ESCALABLE)
-    // =========================================================================
-    document.documentElement.style.setProperty('--principal-height', '600px');
-
-    if (DOM.principal) {
-      DOM.principal.style.transition = "none";
-      DOM.principal.style.height = "600px";
-      DOM.principal.style.minHeight = "600px";
-    }
-
-    if (DOM.contenedorNodos) {
-      DOM.contenedorNodos.style.transition = "none";
-      DOM.contenedorNodos.style.height = "600px";
-      DOM.contenedorNodos.style.minHeight = "600px";
-      DOM.contenedorNodos.style.flexWrap = "wrap";
-      DOM.contenedorNodos.style.alignContent = "flex-start";
-      DOM.contenedorNodos.style.alignItems = "flex-start";
-    }
-
-    if (DOM.inicializador) {
-      DOM.inicializador.style.transition = "none";
-      DOM.inicializador.style.height = "600px"; 
-    }
-
-    const contenedorFlechas = document.getElementById("contenedor_flechas");
-    if (contenedorFlechas) {
-      contenedorFlechas.style.transition = "none";
-      contenedorFlechas.style.height = "600px";
-      contenedorFlechas.style.minHeight = "600px";
-    }
-
-
-    const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
-if (contenedorCurvas) {
-  contenedorCurvas.style.height = "600px";
-  contenedorCurvas.style.minHeight = "600px";
-}
-
-    // =========================================================================
-    // FASE C: CONTRA-DESPLAZAMIENTO PARA MANTENER LA FILA 1 INMÓVIL
-    // =========================================================================
-    const desvioCentro = (600 - 400) / 2; // = 100px
-
-    // const divStr = document.getElementById("str");
-    // if (divStr) {
-    //   divStr.style.transform = `translateY(-${desvioCentro}px)`;
-    // }
-
-    // const flechaInicial = document.getElementById("flecha_puntero_inicial");
-    // if (flechaInicial) {
-    //   flechaInicial.style.transform = `translateY(-${desvioCentro}px)`;
-    // }
-
-    if (contenedorFlechas) {
-      const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
-      flechasExistentes.forEach((flecha) => {
-        (flecha as HTMLElement).style.transform = `translateY(-${desvioCentro}px)`;
-      });
-    }
-
-    // =========================================================================
-    // FASE D: TU FÓRMULA DEL NULL (SE MUEVE A SU POSICIÓN REAL)
-    // =========================================================================
-    // const divNulo = document.getElementById("nulo");
-    // if (divNulo) {
-    //   divNulo.style.transition = "transform 1.5s ease-in-out";
-      
-    //   const posicionInicialDOM = divNulo.offsetTop || 92;
-    //   const offsetHeightNulo = divNulo.offsetHeight || 16; 
-    //   const cantidadFilas = 2;
-    //   const alturaContenedor = 600;
-
-    //   const posicionAbsolutaDeseada = (300 * (cantidadFilas - 1)) + ((alturaContenedor / cantidadFilas) / 4) - (offsetHeightNulo / 2);
-    //   const trasladarY = posicionAbsolutaDeseada - posicionInicialDOM;
-
-    //   divNulo.style.transform = `translateY(${trasladarY}px)`;
-    // }
-
-        root.style.setProperty('--nulo-top', `${DOM.str.offsetTop+(DOM.principal.offsetHeight/2)}px`);
-        root.style.setProperty('--linea-flecha-final-top', `${DOM.principal.offsetHeight*3/4 - 5}px`);
-        root.style.setProperty('--punta-flecha-final-top', `${DOM.nulo.offsetTop+DOM.nulo.offsetHeight+DOM.principal.offsetHeight/2}px`);
-
-    
-
-    // =========================================================================
-    // FASE E: REACOMODO DE NODOS EXISTENTES
-    // =========================================================================
-    const nodosActuales = Array.from(getNodos() as HTMLElement[]);
-    nodosActuales.forEach(nodo => {
-      nodo.style.transition = "none";
-      nodo.style.alignSelf = "flex-start";
-      nodo.style.marginTop = "150px"; 
-    });
-
-    const saltoDeLinea = document.createElement("div");
-    saltoDeLinea.className = "salto-flex";
-    saltoDeLinea.style.flexBasis = "100%";
-    saltoDeLinea.style.height = "0";
-    DOM.contenedorNodos.appendChild(saltoDeLinea);
-
-   setTimeout(() => {
-      // 1. Capturamos el último nodo real de la Fila 1 antes de romper índices
-      const nodosAntesDeAgregar = Array.from(getNodos() as HTMLElement[]);
-      const nodoOrigenReal = nodosAntesDeAgregar[nodosAntesDeAgregar.length - 1]; // Tu nodoCinco (A)
-
-      // 2. Inyectamos el nodo nuevo en la Fila 2
-      agregarNodo(DOM.inputNodo.value, 0);
-
-      const todosLosNodos = Array.from(getNodos() as HTMLElement[]);
-      const nodoNuevo = todosLosNodos[todosLosNodos.length - 1]; // Tu nodoSeis (G)
-
-      if (nodoNuevo) {
-        nodoNuevo.style.alignSelf = "flex-start";
-        nodoNuevo.style.marginTop = "150px"; 
-
-        nodoNuevo.style.opacity = "0";
-        nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
-        void nodoNuevo.offsetWidth; 
-        nodoNuevo.style.opacity = "1";
-
-        nodoNuevo.addEventListener('transitionend', function dispararFlechaCurva(e) {
-          if (e.propertyName === 'opacity') {
-            nodoNuevo.removeEventListener('transitionend', dispararFlechaCurva);
-
-            // Apuntamos al contenedor aislado que ya tiene position: relative arriba
-            const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
-            if (!contenedorCurvas) {
-              DOM.agregarComienzo.disabled = false;
-              DOM.agregarFinal.disabled = false;
-              return;
-            }
-
-            const nodoCinco = nodoOrigenReal;
-            const nodoSeis = nodoNuevo;
-
-            if (nodoCinco && nodoSeis) {
-              const contRect = DOM.contenedorNodos.getBoundingClientRect();
-              const emisorRect = nodoCinco.getBoundingClientRect();
-              const receptorRect = nodoSeis.getBoundingClientRect();
-              const radioRulo = 130; 
-
-              // TU MATEMÁTICA EXACTA DE ANCLAJES Y PUNTOS DE CONTROL
-              const x1 = emisorRect.left - contRect.left + (emisorRect.width * 0.75);
-              const y1 = emisorRect.top - contRect.top + (emisorRect.height / 2);
-              const x2 = receptorRect.left - contRect.left;
-              const y2 = receptorRect.top - contRect.top + (receptorRect.height / 2);
-              const y_pasillo = y1 + ((y2 - y1) / 2);
-
-              const de_x1_borde = emisorRect.right - contRect.left;
-              const de_cpx1 = de_x1_borde + radioRulo;
-              const de_cpy1 = y1;
-              const de_cpx2 = de_x1_borde + radioRulo;
-              const de_cpy2 = y_pasillo;
-
-              const a_cpx1 = x2 - radioRulo;
-              const a_cpy1 = y_pasillo;
-              const a_cpx2 = x2 - radioRulo;
-              const a_cpy2 = y2;
-
-              // Tu dAttribute original con rulo de salida, recta y rulo de entrada
-              const d = `
-                M ${x1} ${y1} 
-                C ${de_cpx1} ${de_cpy1}, ${de_cpx2} ${de_cpy2}, ${de_x1_borde} ${y_pasillo}
-                L ${x2} ${y_pasillo}
-                C ${a_cpx1} ${a_cpy1}, ${a_cpx2} ${a_cpy2}, ${x2} ${y2}
-              `.replace(/\s+/g, ' ').trim();
-
-              const svgCurva = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-              svgCurva.setAttribute("style", "position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;");
-              svgCurva.setAttribute("class", "svg-flecha-interfila");
-
-              const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-              path.setAttribute("id", "flecha_curva_dinamica");
-              path.setAttribute("d", d);
-              path.setAttribute("stroke", "red");
-              path.setAttribute("stroke-width", "4");
-              path.setAttribute("fill", "none");
-
-              svgCurva.appendChild(path);
-              
-              // Lo inyectamos en tu contenedor aislado para que no herede problemas elásticos
-              contenedorCurvas.appendChild(svgCurva);
-
-              // Tu animación nativa por .animate() que funcionaba impecable
-              const largoTotal = path.getTotalLength();
-              path.style.strokeDasharray = `${largoTotal}`;
-              path.style.strokeDashoffset = `${largoTotal}`;
-
-              const animacionFlecha = path.animate([{ strokeDashoffset: largoTotal }, { strokeDashoffset: 0 }], {
-                duration: 2000,
-                easing: "ease-in-out",
-                fill: "forwards"
-              });
-
-              // // Activación de la punta al finalizar los 2000ms del trazado
-              // setTimeout(() => {
-              //   document.documentElement.style.setProperty('--punta-flecha-curva-left', `${x2}px`);
-              //   document.documentElement.style.setProperty('--punta-flecha-curva-top', `${y2}px`);
-              //   document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '1');
-
-              //   DOM.agregarComienzo.disabled = false;
-              //   DOM.agregarFinal.disabled = false;
-              //   console.log("Tu verdadera flecha curva se renderizó y animó de forma nativa.");
-              // }, 2000);
-              animacionFlecha.onfinish = () => {
-                console.log("La animación del path terminó. Seteando flecha final...");
-                
-                // Suponiendo que 'necesitaTransicion' es un booleano que ya tenés en el scope
-                // o que determina si la punta o el siguiente paso entran con fade
-                // const necesitaTransicion = true; 
-                setFlechaFinal(true, necesitaTransicion);
-
-                // Render de la punta física en el DOM/CSS custom properties
-                document.documentElement.style.setProperty('--punta-flecha-curva-left', `${x2}px`);
-                document.documentElement.style.setProperty('--punta-flecha-curva-top', `${y2}px`);
-                document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '1');
-
-                // Liberamos los controles de la app
-                DOM.agregarComienzo.disabled = false;
-                DOM.agregarFinal.disabled = false;
-              };
-            } else {
-              DOM.agregarComienzo.disabled = false;
-              DOM.agregarFinal.disabled = false;
-            }
-          }
-        });
-      }
-    }, 100);
-  }, 2000); 
-}
-
-
-  finalUl.classList.add("no-desplazar");
-  finalUl.removeEventListener("transitionend", nfpf_aC);
-});
-
-  const primerNodo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
-  primerNodo?.addEventListener("transitionend", function nald() {
-    agregarNodo(DOM.inputNodo.value, 0);
-    const nuevosNodos = getNodos() as HTMLElement[];
-
-    for (let i = 0; i < (nuevosNodos.length - 1); i++) {
-      nuevosNodos[i].classList.add("no-mover");
-      nuevosNodos[i].style.left = '0px';
-    }
-
-    setTimeout(() => {
-      const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement | null;
-      if (ultimo) ultimo.style.opacity = "1";
-    }, 100);
-
-    const ultimoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement | null;
-    ultimoNodo?.addEventListener("transitionend", function na() {
-      agregarFlecha(0);
-      const flechasActuales = getFlechas() as HTMLElement[];
-
-      const ultimaFlecha = flechasActuales[flechasActuales.length - 1];
-      const ultimoHijoFlecha = ultimaFlecha?.lastElementChild as HTMLElement | null;
-
-      ultimoHijoFlecha?.addEventListener("transitionend", function fl() {
-        setFlechaFinal(true, necesitaTransicion);
-        ultimoHijoFlecha.removeEventListener("transitionend", fl);
-      });
-
-      const finalLi = DOM.finalLi();
-      finalLi?.addEventListener("transitionend", function g() {
-        document.removeEventListener("click", handler, true);
-        DOM.agregarComienzo.disabled = false;
-        DOM.agregarFinal.disabled = false;
-
-        actualizarSelectoresIntermedios();
-
-        if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
-          DOM.principal.removeAttribute("style");
-          renderizar();
-          setFlechaInicial(true, 0);
-          setFlechaFinal(true, 0);
-        } else {
-          DOM.principal.removeAttribute("style");
+        for (let i = 0; i < (nuevosNodos.length - 1); i++) {
+          nuevosNodos[i].classList.add("no-mover");
+          nuevosNodos[i].style.left = '0px';
         }
 
-        finalUl?.classList.remove("no-desplazar");
-        finalLi?.removeEventListener("transitionend", g);
+        setTimeout(() => {
+          const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement | null;
+          if (ultimo) ultimo.style.opacity = "1";
+        }, 100);
+
+        const ultimoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement | null;
+        ultimoNodo?.addEventListener("transitionend", function na() {
+          agregarFlecha(0);
+          const flechasActuales = getFlechas() as HTMLElement[];
+          const ultimaFlecha = flechasActuales[flechasActuales.length - 1];
+          const ultimoHijoFlecha = ultimaFlecha?.lastElementChild as HTMLElement | null;
+
+          ultimoHijoFlecha?.addEventListener("transitionend", function fl() {
+            setFlechaFinal(true, necesitaTransicion);
+            ultimoHijoFlecha.removeEventListener("transitionend", fl);
+          });
+
+          const finalLi = DOM.finalLi();
+          finalLi?.addEventListener("transitionend", function g() {
+            // Liberación del camino original
+            document.removeEventListener("click", handler, true);
+            DOM.agregarComienzo.disabled = false;
+            DOM.agregarFinal.disabled = false;
+
+            actualizarSelectoresIntermedios();
+
+            if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
+              DOM.principal.removeAttribute("style");
+              renderizar();
+              setFlechaInicial(true, 0);
+              setFlechaFinal(true, 0);
+            } else {
+              DOM.principal.removeAttribute("style");
+            }
+
+            finalUl?.classList.remove("no-desplazar");
+            finalLi?.removeEventListener("transitionend", g);
+          });
+
+          ultimoNodo.removeEventListener("transitionend", na);
+        });
+
+        primerNodo.removeEventListener("transitionend", nald);
       });
 
-      ultimoNodo.removeEventListener("transitionend", na);
-    });
+    } else {
+      // =========================================================================
+      // 🔵 TU NUEVO CAMINO ELSE (TOTALMENTE AISLADO)
+      // =========================================================================
+      console.log("Paso 1: Expansión escalable a 600px con contra-desplazamiento interno.");
+      
+      if (DOM.principalWrapper) {
+        DOM.principalWrapper.style.transition = "height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out";
+        DOM.principalWrapper.style.overflow = "hidden"; 
+        DOM.principalWrapper.style.height = "600px";
+        DOM.principalWrapper.style.minHeight = "600px";
+        DOM.principalWrapper.style.maxHeight = "600px";
+      }
 
-    primerNodo.removeEventListener("transitionend", nald);
+      setTimeout(() => {
+        document.documentElement.style.setProperty('--principal-height', '600px');
+        if (DOM.principal) {
+          DOM.principal.style.transition = "none";
+          DOM.principal.style.height = "600px";
+          DOM.principal.style.minHeight = "600px";
+        }
+        if (DOM.contenedorNodos) {
+          DOM.contenedorNodos.style.transition = "none";
+          DOM.contenedorNodos.style.height = "600px";
+          DOM.contenedorNodos.style.minHeight = "600px";
+          DOM.contenedorNodos.style.flexWrap = "wrap";
+          DOM.contenedorNodos.style.alignContent = "flex-start";
+          DOM.contenedorNodos.style.alignItems = "flex-start";
+        }
+        if (DOM.inicializador) {
+          DOM.inicializador.style.transition = "none";
+          DOM.inicializador.style.height = "600px"; 
+        }
+
+        const contenedorFlechas = document.getElementById("contenedor_flechas");
+        if (contenedorFlechas) {
+          contenedorFlechas.style.transition = "none";
+          contenedorFlechas.style.height = "600px";
+          contenedorFlechas.style.minHeight = "600px";
+        }
+
+        const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
+        if (contenedorCurvas) {
+          contenedorCurvas.style.height = "600px";
+          contenedorCurvas.style.minHeight = "600px";
+        }
+
+        const desvioCentro = (600 - 400) / 2;
+        if (contenedorFlechas) {
+          const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
+          flechasExistentes.forEach((flecha) => {
+            (flecha as HTMLElement).style.transform = `translateY(-${desvioCentro}px)`;
+          });
+        }
+
+        // root.style.setProperty('--nulo-top', `${(DOM.principal.offsetHeight*2/3 - DOM.str.offsetTop)}px`);
+        // root.style.setProperty('--linea-flecha-final-top', `${DOM.principal.offsetHeight*3/4 - 2.5}px`);
+        // // root.style.setProperty('--punta-flecha-final-top', `${DOM.nulo.offsetTop+DOM.nulo.offsetHeight+DOM.principal.offsetHeight/2}px`);
+        // root.style.setProperty('--punta-flecha-final-top', `${DOM.principal.offsetHeight*2/3 - (DOM.str.offsetTop - DOM.nulo.offsetHeight)}px`);
+
+          const ultimoNodo = DOM.contenedorNodos.lastElementChild;
+          const topUN = (ultimoNodo as HTMLElement).offsetTop;
+          root.style.setProperty('--linea-flecha-final-top', `${DOM.principal.offsetHeight*3/4 - 2.5}px`);
+          root.style.setProperty('--nulo-top', `${( 400 - 50 - DOM.nulo.offsetHeight/2)}px`);
+          root.style.setProperty('--punta-flecha-final-top', `${( 400 + DOM.nulo.offsetHeight/2 - 50)}px`);
+
+        const nodosActuales = Array.from(getNodos() as HTMLElement[]);
+        nodosActuales.forEach(nodo => {
+          nodo.style.transition = "none";
+          nodo.style.alignSelf = "flex-start";
+          nodo.style.marginTop = "150px"; 
+        });
+
+        const saltoDeLinea = document.createElement("div");
+        saltoDeLinea.className = "salto-flex";
+        saltoDeLinea.style.flexBasis = "100%";
+        saltoDeLinea.style.height = "0";
+        DOM.contenedorNodos.appendChild(saltoDeLinea);
+
+        setTimeout(() => {
+          const nodosAntesDeAgregar = Array.from(getNodos() as HTMLElement[]);
+          const nodoOrigenReal = nodosAntesDeAgregar[nodosAntesDeAgregar.length - 1];
+
+          agregarNodo(DOM.inputNodo.value, 0);
+
+          const todosLosNodos = Array.from(getNodos() as HTMLElement[]);
+          const nodoNuevo = todosLosNodos[todosLosNodos.length - 1];
+
+          if (nodoNuevo) {
+            nodoNuevo.style.alignSelf = "flex-start";
+            nodoNuevo.style.marginTop = "150px"; 
+            nodoNuevo.style.opacity = "0";
+            nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
+            void nodoNuevo.offsetWidth; 
+            nodoNuevo.style.opacity = "1";
+
+            nodoNuevo.addEventListener('transitionend', function dispararFlechaCurva(e) {
+              if (e.propertyName === 'opacity') {
+                nodoNuevo.removeEventListener('transitionend', dispararFlechaCurva);
+
+                const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
+                if (!contenedorCurvas) {
+                  document.removeEventListener("click", handler, true); // 👈 Seguridad
+                  DOM.agregarComienzo.disabled = false;
+                  DOM.agregarFinal.disabled = false;
+                  return;
+                }
+
+                const nodoCinco = nodoOrigenReal;
+                const nodoSeis = nodoNuevo;
+
+                if (nodoCinco && nodoSeis) {
+                  const contRect = DOM.contenedorNodos.getBoundingClientRect();
+                  const emisorRect = nodoCinco.getBoundingClientRect();
+                  const receptorRect = nodoSeis.getBoundingClientRect();
+                  const radioRulo = 130; 
+
+                  const x1 = emisorRect.left - contRect.left + (emisorRect.width * 0.75);
+                  const y1 = emisorRect.top - contRect.top + (emisorRect.height / 2);
+                  const x2 = receptorRect.left - contRect.left;
+                  const y2 = receptorRect.top - contRect.top + (receptorRect.height / 2);
+                  const y_pasillo = y1 + ((y2 - y1) / 2);
+
+                  const de_x1_borde = emisorRect.right - contRect.left;
+                  const de_cpx1 = de_x1_borde + radioRulo;
+                  const de_cpy1 = y1;
+                  const de_cpx2 = de_x1_borde + radioRulo;
+                  const de_cpy2 = y_pasillo;
+
+                  const a_cpx1 = x2 - radioRulo;
+                  const a_cpy1 = y_pasillo;
+                  const a_cpx2 = x2 - radioRulo;
+                  const a_cpy2 = y2;
+
+                  const d = `
+                    M ${x1} ${y1} 
+                    C ${de_cpx1} ${de_cpy1}, ${de_cpx2} ${de_cpy2}, ${de_x1_borde} ${y_pasillo}
+                    L ${x2} ${y_pasillo}
+                    C ${a_cpx1} ${a_cpy1}, ${a_cpx2} ${a_cpy2}, ${x2} ${y2}
+                  `.replace(/\s+/g, ' ').trim();
+
+                  const svgCurva = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                  svgCurva.setAttribute("style", "position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;");
+                  svgCurva.setAttribute("class", "svg-flecha-interfila");
+
+                  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                  path.setAttribute("id", "flecha_curva_dinamica");
+                  path.setAttribute("d", d);
+                  path.setAttribute("stroke", "red");
+                  path.setAttribute("stroke-width", "4");
+                  path.setAttribute("fill", "none");
+
+                  svgCurva.appendChild(path);
+                  contenedorCurvas.appendChild(svgCurva);
+
+                  const largoTotal = path.getTotalLength();
+                  path.style.strokeDasharray = `${largoTotal}`;
+                  path.style.strokeDashoffset = `${largoTotal}`;
+
+                  const animacionFlecha = path.animate([{ strokeDashoffset: largoTotal }, { strokeDashoffset: 0 }], {
+                    duration: 2000,
+                    easing: "ease-in-out",
+                    fill: "forwards"
+                  });
+
+                  animacionFlecha.onfinish = () => {
+                    console.log("La animación del path terminó. Seteando flecha final...");
+                    setFlechaFinal(true, necesitaTransicion);
+
+                    document.documentElement.style.setProperty('--punta-flecha-curva-left', `${x2}px`);
+                    document.documentElement.style.setProperty('--punta-flecha-curva-top', `${y2}px`);
+                    document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '1');
+
+                    // 💥 LIBERACIÓN DEL ELSE: Removemos el handler global del principio
+                    document.removeEventListener("click", handler, true);
+                    DOM.agregarComienzo.disabled = false;
+                    DOM.agregarFinal.disabled = false;
+
+                    actualizarSelectoresIntermedios();
+                    
+                    // Rematamos limpiando cualquier rastro elástico del Ul original
+                    // finalUl?.classList.remove("no-desplazar");
+                  };
+                } else {
+                  document.removeEventListener("click", handler, true);
+                  DOM.agregarComienzo.disabled = false;
+                  DOM.agregarFinal.disabled = false;
+                }
+              }
+            });
+          }
+        }, 100);
+      }, 2000); 
+    }
+
+    // Se limpia el evento de la transición base inicial
+    finalUl.classList.add("no-desplazar");
+    finalUl.removeEventListener("transitionend", nfpf_aC);
   });
 }
 
