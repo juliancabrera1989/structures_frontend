@@ -1,4 +1,4 @@
-import { setFlechasNodos, setFlechasNodos2 } from "./RenderFlechasNodos.ts";
+import { setFlechasNodos, setFlechasNodos2, setFlechasNodos3 } from "./RenderFlechasNodos.ts";
 import { agregarNodo, agregarNodoN,  getNodos } from "../contenedores/ContenedorNodos.ts";
 import { agregarFlecha, agregarFlechaN, getFlechas } from "../contenedores/ContenedorFlechas.ts";
 import { inicializarPuntero, setPuntero, setFlechaInicial, setFlechaFinal } from "./ControladorInicializador.ts";
@@ -162,9 +162,73 @@ function agregarNodoAlComienzo(): void {
 
   const inicialUl = DOM.inicialUl();
   inicialUl?.addEventListener("transitionend", function nfpi_aC() {
-    
+    inicialUl.removeEventListener("transitionend", nfpi_aC);
+    if (nodos.length < 2)  {
+      console.log("🟢 Ejecutando flujo horizontal...");
 
-if (nodos.length === 2) {
+      const nodosActualizados = getNodos() as HTMLElement[];
+      const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+      s1 = (DOM.contenedorNodos.offsetWidth - nodosActualizados.length * ultimo.offsetWidth) / (nodosActualizados.length + 1);
+      s2 = (DOM.contenedorNodos.offsetWidth - (nodosActualizados.length + 1) * ultimo.offsetWidth) / (nodosActualizados.length + 2);
+
+      setFlechaFinal(true, necesitaTransicion, s2);
+      setFlechasNodos(necesitaTransicion, 1, s1, s2);
+
+      ultimoNodo.addEventListener("transitionend", function nald() {
+        agregarNodo(DOM.inputNodo.value, 1);
+        const nuevosNodos = getNodos() as HTMLElement[];
+
+        for (let i = 1; i < nuevosNodos.length; i++) {
+          nuevosNodos[i].classList.add("no-mover");
+          nuevosNodos[i].style.left = '0px';
+        }
+
+        setTimeout(() => {
+          const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
+          if (primerHijo) primerHijo.style.opacity = "1";
+        }, 100);
+
+        const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
+        primerHijo?.addEventListener("transitionend", function na() {
+          window.banderaFlechaInicial = 0;
+          setFlechaInicial(true, necesitaTransicion);
+          
+          const inicialLi = DOM.inicialLi();
+          inicialLi?.addEventListener("transitionend", function af() {
+            agregarFlecha(1);
+
+            const primerFlecha = DOM.contenedorFlechas.firstElementChild as HTMLElement | null;
+            primerFlecha?.addEventListener("transitionend", function g() {
+              document.removeEventListener("click", handler, true);
+              DOM.agregarComienzo.disabled = false;
+              DOM.agregarFinal.disabled = false;
+
+              actualizarSelectoresIntermedios();
+
+              if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
+                DOM.principalWrapper.removeAttribute("style");
+                renderizar();
+                setFlechaInicial(true, 0);
+                setFlechaFinal(true, 0);
+              } else {
+                DOM.principalWrapper.removeAttribute("style");
+              }
+
+              primerFlecha.removeEventListener("transitionend", g);
+            });
+
+            inicialLi.removeEventListener("transitionend", af);
+          });
+
+          primerHijo.removeEventListener("transitionend", na);
+        });
+
+        ultimoNodo.removeEventListener("transitionend", nald);
+      });
+
+      return;
+    }
+
       console.log("🔵 FASE 1: Bajada suave del Wrapper y Nodos por transform.");
 
       // 1. Estiramos el búnker exterior suavemente
@@ -440,75 +504,11 @@ if (nodos.length === 2) {
 
         }, 100);
       }, 2000); 
-    }
-    // =========================================================================
-    // EL ELSE CON TU FLUJO HORIZONTAL PROTEGIDO
-    // =========================================================================
-    else {
-      console.log("🟢 Ejecutando flujo horizontal...");
+    
 
-      const nodosActualizados = getNodos() as HTMLElement[];
-      const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-      s1 = (DOM.contenedorNodos.offsetWidth - nodosActualizados.length * ultimo.offsetWidth) / (nodosActualizados.length + 1);
-      s2 = (DOM.contenedorNodos.offsetWidth - (nodosActualizados.length + 1) * ultimo.offsetWidth) / (nodosActualizados.length + 2);
 
-      setFlechaFinal(true, necesitaTransicion, s2);
-      setFlechasNodos(necesitaTransicion, 1, s1, s2);
 
-      ultimoNodo.addEventListener("transitionend", function nald() {
-        agregarNodo(DOM.inputNodo.value, 1);
-        const nuevosNodos = getNodos() as HTMLElement[];
-
-        for (let i = 1; i < nuevosNodos.length; i++) {
-          nuevosNodos[i].classList.add("no-mover");
-          nuevosNodos[i].style.left = '0px';
-        }
-
-        setTimeout(() => {
-          const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
-          if (primerHijo) primerHijo.style.opacity = "1";
-        }, 100);
-
-        const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
-        primerHijo?.addEventListener("transitionend", function na() {
-          window.banderaFlechaInicial = 0;
-          setFlechaInicial(true, necesitaTransicion);
-          
-          const inicialLi = DOM.inicialLi();
-          inicialLi?.addEventListener("transitionend", function af() {
-            agregarFlecha(1);
-
-            const primerFlecha = DOM.contenedorFlechas.firstElementChild as HTMLElement | null;
-            primerFlecha?.addEventListener("transitionend", function g() {
-              document.removeEventListener("click", handler, true);
-              DOM.agregarComienzo.disabled = false;
-              DOM.agregarFinal.disabled = false;
-
-              actualizarSelectoresIntermedios();
-
-              if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
-                DOM.principalWrapper.removeAttribute("style");
-                renderizar();
-                setFlechaInicial(true, 0);
-                setFlechaFinal(true, 0);
-              } else {
-                DOM.principalWrapper.removeAttribute("style");
-              }
-
-              primerFlecha.removeEventListener("transitionend", g);
-            });
-
-            inicialLi.removeEventListener("transitionend", af);
-          });
-
-          primerHijo.removeEventListener("transitionend", na);
-        });
-
-        ultimoNodo.removeEventListener("transitionend", nald);
-      });
-    }
-
-    inicialUl.removeEventListener("transitionend", nfpi_aC);
+    
   });
 }
 
@@ -626,6 +626,82 @@ function agregarNodoAlFinal(): void {
     const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
     const totalNodosActuales = nodos.length;
 
+    finalUl.removeEventListener("transitionend", nfpf_aC);
+     
+
+    if (nodos.length === 3) {
+  console.log("🧪 [TEST] Ejecutando flujo de reacomodo en Fila 2 (Nodo 3 -> Nodo 4)");
+
+  // 1. Calculamos s1 y s2 para la última fila
+  // NOTA: Acá usamos la misma matemática de espaciado, pero pensando en la Fila 2.
+  const nodosActualizados = getNodos() as HTMLElement[];
+  const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+  
+  // Calculamos el espacio para cuando haya 2 nodos abajo (el actual + el nuevo)
+  s1 = (DOM.contenedorNodos.offsetWidth - 1 * ultimo.offsetWidth) / (1 + 1);
+  s2 = (DOM.contenedorNodos.offsetWidth - (1 + 1) * ultimo.offsetWidth) / (1 + 2);
+
+  // 2. Ejecutamos tu setFlechasNodos RENOVADO pasando el índice de inicio (2)
+  // Le pasamos el índice 2 para que solo actúe sobre el Nodo 3 (el de la Fila 2)
+
+
+  setFlechasNodos3(necesitaTransicion, 0, s1, s2, 2); 
+
+  // 3. Al terminar la animación del Nodo 3, inyectamos el Nodo 4
+  ultimo.addEventListener("transitionend", function nald() {
+    agregarNodo(DOM.inputNodo.value, 0);
+    
+    const nuevosNodos = getNodos() as HTMLElement[];
+    
+
+        for (let i = 0; i < (nuevosNodos.length - 1); i++) {
+          nuevosNodos[i].classList.add("no-mover");
+          nuevosNodos[i].style.left = '0px';
+        }
+
+    
+          
+          const nodoNuevo = nuevosNodos[nuevosNodos.length - 1];
+
+          if (nodoNuevo) {
+            nodoNuevo.style.alignSelf = "flex-start";
+            nodoNuevo.style.marginTop = "150px"; 
+            nodoNuevo.style.opacity = "0";
+            nodoNuevo.style.setProperty("margin-top", "150px", "important"); // Altura de Fila 2
+            // nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
+            // void nodoNuevo.offsetWidth; 
+            // nodoNuevo.style.opacity = "1";
+            setTimeout(() => {
+              nodoNuevo.style.opacity = "1";
+            }, 100);
+          }
+
+          nodoNuevo.addEventListener("transitionend", function na() {
+          agregarFlecha(0);
+          const flechasActuales = getFlechas() as HTMLElement[];
+          const ultimaFlecha = flechasActuales[flechasActuales.length - 1];
+          const ultimoHijoFlecha = ultimaFlecha?.lastElementChild as HTMLElement | null;
+           
+          ultimaFlecha.style.setProperty("margin-top","245px");
+          ultimoHijoFlecha?.addEventListener("transitionend", function fl() {
+            setFlechaFinal(true, necesitaTransicion);
+            ultimoHijoFlecha.removeEventListener("transitionend", fl);
+          });
+ 
+          });
+
+       
+
+        
+
+    ultimo.removeEventListener("transitionend", nald);
+  });
+
+  return; // 🔥 Cortamos acá para que no siga con el resto del código
+}
+
+
+
     if (totalNodosActuales < 2) {
       // =========================================================================
       // 🟢 CAMINO ORIGINAL: ENCAPSULADO POR COMPLETO AQUÍ DENTRO
@@ -692,7 +768,9 @@ function agregarNodoAlFinal(): void {
         primerNodo.removeEventListener("transitionend", nald);
       });
 
-    } else {
+    finalUl.classList.add("no-desplazar");
+     return;
+    } 
       // =========================================================================
       // 🔵 TU NUEVO CAMINO ELSE (TOTALMENTE AISLADO)
       // =========================================================================
@@ -717,7 +795,7 @@ function agregarNodoAlFinal(): void {
           DOM.contenedorNodos.style.transition = "none";
           DOM.contenedorNodos.style.height = "600px";
           DOM.contenedorNodos.style.minHeight = "600px";
-          DOM.contenedorNodos.style.flexWrap = "wrap";
+          // DOM.contenedorNodos.style.flexWrap = "wrap";
           DOM.contenedorNodos.style.alignContent = "flex-start";
           DOM.contenedorNodos.style.alignItems = "flex-start";
         }
@@ -731,6 +809,7 @@ function agregarNodoAlFinal(): void {
           contenedorFlechas.style.transition = "none";
           contenedorFlechas.style.height = "600px";
           contenedorFlechas.style.minHeight = "600px";
+          contenedorFlechas.style.alignContent = "flex-start";
         }
 
         const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
@@ -739,18 +818,26 @@ function agregarNodoAlFinal(): void {
           contenedorCurvas.style.minHeight = "600px";
         }
 
-        const desvioCentro = (600 - 400) / 2;
+        // const desvioCentro = (600 - 400) / 2;
+        // if (contenedorFlechas) {
+        //   const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
+        //   flechasExistentes.forEach((flecha) => {
+        //     (flecha as HTMLElement).style.transform = `translateY(-${desvioCentro}px)`;
+        //   });
+        // }
+
+        // 2. Aplicamos a las flechas el mismo comportamiento individual que a los nodos
         if (contenedorFlechas) {
           const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
           flechasExistentes.forEach((flecha) => {
-            (flecha as HTMLElement).style.transform = `translateY(-${desvioCentro}px)`;
+            const hFlecha = flecha as HTMLElement;
+            hFlecha.style.transition = "none";
+            hFlecha.style.alignSelf = "flex-start"; // 👈 Igual que el nodo
+            hFlecha.style.marginTop = "197.5px";       // 👈 Igual que el nodo
+            hFlecha.style.transform = "";           // Eliminamos el translateY manual viejo
           });
         }
 
-        // root.style.setProperty('--nulo-top', `${(DOM.principal.offsetHeight*2/3 - DOM.str.offsetTop)}px`);
-        // root.style.setProperty('--linea-flecha-final-top', `${DOM.principal.offsetHeight*3/4 - 2.5}px`);
-        // // root.style.setProperty('--punta-flecha-final-top', `${DOM.nulo.offsetTop+DOM.nulo.offsetHeight+DOM.principal.offsetHeight/2}px`);
-        // root.style.setProperty('--punta-flecha-final-top', `${DOM.principal.offsetHeight*2/3 - (DOM.str.offsetTop - DOM.nulo.offsetHeight)}px`);
 
           const ultimoNodo = DOM.contenedorNodos.lastElementChild;
           const topUN = (ultimoNodo as HTMLElement).offsetTop;
@@ -765,11 +852,20 @@ function agregarNodoAlFinal(): void {
           nodo.style.marginTop = "150px"; 
         });
 
-        const saltoDeLinea = document.createElement("div");
-        saltoDeLinea.className = "salto-flex";
-        saltoDeLinea.style.flexBasis = "100%";
-        saltoDeLinea.style.height = "0";
-        DOM.contenedorNodos.appendChild(saltoDeLinea);
+        // 3. Insertamos el salto flex en ambos lados en la misma posición
+        const saltoDeLineaNodos = document.createElement("div");
+        saltoDeLineaNodos.className = "salto-flex";
+        saltoDeLineaNodos.style.flexBasis = "100%";
+        saltoDeLineaNodos.style.height = "0";
+        DOM.contenedorNodos.appendChild(saltoDeLineaNodos);
+
+        if (contenedorFlechas) {
+          const saltoDeLineaFlechas = document.createElement("div");
+          saltoDeLineaFlechas.className = "salto-flex";
+          saltoDeLineaFlechas.style.flexBasis = "100%";
+          saltoDeLineaFlechas.style.height = "0";
+          contenedorFlechas.appendChild(saltoDeLineaFlechas);
+        }
 
         setTimeout(() => {
           const nodosAntesDeAgregar = Array.from(getNodos() as HTMLElement[]);
@@ -784,9 +880,12 @@ function agregarNodoAlFinal(): void {
             nodoNuevo.style.alignSelf = "flex-start";
             nodoNuevo.style.marginTop = "150px"; 
             nodoNuevo.style.opacity = "0";
-            nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
-            void nodoNuevo.offsetWidth; 
-            nodoNuevo.style.opacity = "1";
+            // nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
+            // void nodoNuevo.offsetWidth; 
+            // nodoNuevo.style.opacity = "1";
+            setTimeout(() => {
+              nodoNuevo.style.opacity = "1";
+            }, 100);
 
             nodoNuevo.addEventListener('transitionend', function dispararFlechaCurva(e) {
               if (e.propertyName === 'opacity') {
@@ -885,11 +984,11 @@ function agregarNodoAlFinal(): void {
           }
         }, 100);
       }, 2000); 
-    }
+    
 
     // Se limpia el evento de la transición base inicial
     finalUl.classList.add("no-desplazar");
-    finalUl.removeEventListener("transitionend", nfpf_aC);
+    
   });
 }
 

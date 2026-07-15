@@ -18,12 +18,7 @@
 #contenedor_flechas {
     position: absolute;
     display: flex;
-
-
-    /* top: calc(var(--principal-height) * -2); */
-
-
-
+    flex-wrap: wrap;
     width: var(--principal-width);  /*Cambiar de 828px a 100% */
     height: var(--principal-height); /*Height base : 300px */
 
