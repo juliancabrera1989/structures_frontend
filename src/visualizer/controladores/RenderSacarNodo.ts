@@ -2,7 +2,7 @@
 import { setPuntero, setFlechaFinal, setFlechaInicial } from "./ControladorInicializador.ts";
 import { sacarNodo, getNodos } from "../contenedores/ContenedorNodos.ts";
 import { sacarFlecha, getFlechas } from "../contenedores/ContenedorFlechas.ts";
-import { setFlechasNodos, setFlechasNodos2 } from "./RenderFlechasNodos.ts";
+import { setFlechasNodos, setFlechasNodos2 , setFlechasNodos5, setFlechasNodos6} from "./RenderFlechasNodos.ts";
 import { renderizar } from "./ControladorBarraSuperior.ts";
 import * as DOM from "../elementosDOM.ts"; // Tu core centralizado
 
@@ -129,9 +129,223 @@ export function borrarNodoAlComienzo(data: string): void {
   necesitaTransicion = 1;
 
 
+ if(nodos.length === 4){
+ const flechaObjetivo = flechas[0];
+  if (flechaObjetivo) {
+    const ul = obtenerSubElemento(flechaObjetivo, "underline");
+    const ls = obtenerSubElemento(flechaObjetivo, "linea-s");
+    const li = obtenerSubElemento(flechaObjetivo, "linea-i");
+
+    ul.classList.remove("inmediato");
+    ls.classList.remove("inmediato");
+    li.classList.remove("inmediato");
+    ul.classList.add("arrowend-first-ul");
+    ls.classList.add("arrowend-first");
+    li.classList.add("arrowend-first");
+
+    setTimeout(() => {
+      ul.style.width = '0px';
+      ls.style.width = '0px';
+      li.style.width = '0px';
+    }, 100);
+
+    ul.addEventListener("transitionend", function fu() {
+      necesitaTransicion = 1;
+      setFlechaInicial(false, necesitaTransicion);
+
+       const inicialUl = DOM.inicialUl();
+
+  inicialUl?.addEventListener("transitionend", function fpu() {
+    setTimeout(() => {
+      const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement;
+      if (primerHijo) {
+        primerHijo.classList.remove("inmediato-nodo");
+        primerHijo.style.opacity = "0";
+      }
+    }, 1100);
+     
+     const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement;
+    if (primerHijo) {
+      primerHijo.addEventListener("transitionend", function fn() {
+        const nodoUltimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+        s1 = ((DOM.contenedorNodos.offsetWidth - (2) * nodoUltimo.offsetWidth) / (2 + 1));
+        s2 = (DOM.contenedorNodos.offsetWidth - (2 - 1) * nodoUltimo.offsetWidth) / (2);
+
+        // setFlechaFinal(true, necesitaTransicion, s2);
+        setFlechasNodos6(necesitaTransicion, 1, s1, s2, 1);
 
 
-if(nodos.length == 3) {
+
+         const unicoNodoFila1 = DOM.contenedorNodos.querySelectorAll(".caja-nodo")[1] as HTMLElement;
+
+
+          unicoNodoFila1.addEventListener("transitionend", function g() {
+
+
+          sacarNodo(data);
+          for (let i = 0; i < 1; i++) {
+            nodos[i].classList.add("no-mover");
+            nodos[i].style.left = '0px';
+          }
+
+          sacarFlecha(0);
+          DOM.contenedorFlechas.querySelector(".salto-flex")?.remove();
+
+
+          setTimeout(() => {
+            for (let i = 0; i < flechas.length; i++) {
+              flechas[i].style.marginTop = "300px";
+            }
+          }, 100);
+
+
+          setFlechaInicial(true,1);
+          
+          const inicialLi = DOM.inicialLi();
+            inicialLi?.addEventListener("transitionend", function h() {
+            document.removeEventListener("click", handler, true);
+            DOM.agregarComienzo.disabled = false;
+            DOM.agregarFinal.disabled = false;
+
+
+            // inicialUl?.classList.remove("no-desplazar");
+
+  
+            inicialLi.removeEventListener("transitionend", h);
+          });
+
+              // actualizarSelectoresIntermedios();
+
+              
+
+              unicoNodoFila1.removeEventListener("transitionend", g);
+            });
+
+
+
+        primerHijo.removeEventListener("transitionend", fn);
+      });
+    }
+
+
+    inicialUl.removeEventListener("transitionend", fpu);
+  });
+
+      ul.removeEventListener("transitionend", fu);
+    });
+  }
+
+
+    
+    return;
+  }
+
+
+if(nodos.length < 3) {
+
+
+  const flechaObjetivo = flechas[0];
+  if (flechaObjetivo) {
+    const ul = obtenerSubElemento(flechaObjetivo, "underline");
+    const ls = obtenerSubElemento(flechaObjetivo, "linea-s");
+    const li = obtenerSubElemento(flechaObjetivo, "linea-i");
+
+    ul.classList.remove("inmediato");
+    ls.classList.remove("inmediato");
+    li.classList.remove("inmediato");
+    ul.classList.add("arrowend-first-ul");
+    ls.classList.add("arrowend-first");
+    li.classList.add("arrowend-first");
+
+    setTimeout(() => {
+      ul.style.width = '0px';
+      ls.style.width = '0px';
+      li.style.width = '0px';
+    }, 100);
+
+    ul.addEventListener("transitionend", function fu() {
+      necesitaTransicion = 1;
+      setFlechaInicial(false, necesitaTransicion);
+      ul.removeEventListener("transitionend", fu);
+    });
+  }
+
+  // const ulInicial = obtenerSubElemento(DOM.flechaPunteroInicial, "underline");
+  const inicialUl = DOM.inicialUl();
+
+  inicialUl?.addEventListener("transitionend", function fpu() {
+    setTimeout(() => {
+      const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement;
+      if (primerHijo) {
+        primerHijo.classList.remove("inmediato-nodo");
+        primerHijo.style.opacity = "0";
+      }
+    }, 1100);
+
+    const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement;
+    if (primerHijo) {
+      primerHijo.addEventListener("transitionend", function fn() {
+        const nodoUltimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+        s1 = ((DOM.contenedorNodos.offsetWidth - (nodos.length) * nodoUltimo.offsetWidth) / (nodos.length + 1));
+        s2 = (DOM.contenedorNodos.offsetWidth - (nodos.length - 1) * nodoUltimo.offsetWidth) / (nodos.length);
+
+        setFlechaFinal(true, necesitaTransicion, s2);
+        setFlechasNodos(necesitaTransicion, 1, s1, s2);
+        primerHijo.removeEventListener("transitionend", fn);
+      });
+    }
+    inicialUl.removeEventListener("transitionend", fpu);
+  });
+
+  const ultimoHijoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+  if (ultimoHijoNodo) {
+    ultimoHijoNodo.addEventListener("transitionend", function fnf() {
+      sacarNodo(data);
+
+      for (let i = 0; i < nodos.length; i++) {
+        nodos[i].classList.add("no-mover");
+        nodos[i].style.left = '0px';
+      }
+
+      sacarFlecha(0);
+
+      setTimeout(() => {
+        setFlechaInicial(true, necesitaTransicion);
+        for (let i = 0; i < nodos.length; i++) {
+          nodos[i].classList.remove("no-mover");
+        }
+      }, 1000);
+
+      // const ulInicialLast = DOM.flechaPunteroInicial.lastElementChild as HTMLElement;
+
+      const inicialLi = DOM.inicialLi();
+      // if (ulInicialLast) {
+        inicialLi?.addEventListener("transitionend", function g() {
+          document.removeEventListener("click", handler, true);
+          DOM.agregarComienzo.disabled = false;
+          DOM.agregarFinal.disabled = false;
+
+          if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
+            DOM.principal.removeAttribute("style");
+            renderizar();
+          } else {
+            DOM.principal.removeAttribute("style");
+          }
+
+          if (DOM.contenedorNodos.childElementCount > 1) {
+            if (DOM.selectorPares.lastChild) {
+              DOM.selectorPares.removeChild(DOM.selectorPares.lastChild);
+            }
+          }
+          inicialLi?.removeEventListener("transitionend", g);
+        });
+      // }
+      ultimoHijoNodo.removeEventListener("transitionend", fnf);
+    });
+  }
+ return;
+} 
+ 
       console.log("Iniciando reversión: Desvaneciendo punta de flecha curva...");
       document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '0');
 
@@ -340,110 +554,7 @@ if(nodos.length == 3) {
 
 
   //Aca va todo para contraer de nuevo a una fila
-} else {
 
-
-  const flechaObjetivo = flechas[0];
-  if (flechaObjetivo) {
-    const ul = obtenerSubElemento(flechaObjetivo, "underline");
-    const ls = obtenerSubElemento(flechaObjetivo, "linea-s");
-    const li = obtenerSubElemento(flechaObjetivo, "linea-i");
-
-    ul.classList.remove("inmediato");
-    ls.classList.remove("inmediato");
-    li.classList.remove("inmediato");
-    ul.classList.add("arrowend-first-ul");
-    ls.classList.add("arrowend-first");
-    li.classList.add("arrowend-first");
-
-    setTimeout(() => {
-      ul.style.width = '0px';
-      ls.style.width = '0px';
-      li.style.width = '0px';
-    }, 100);
-
-    ul.addEventListener("transitionend", function fu() {
-      necesitaTransicion = 1;
-      setFlechaInicial(false, necesitaTransicion);
-      ul.removeEventListener("transitionend", fu);
-    });
-  }
-
-  // const ulInicial = obtenerSubElemento(DOM.flechaPunteroInicial, "underline");
-  const inicialUl = DOM.inicialUl();
-
-  inicialUl?.addEventListener("transitionend", function fpu() {
-    setTimeout(() => {
-      const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement;
-      if (primerHijo) {
-        primerHijo.classList.remove("inmediato-nodo");
-        primerHijo.style.opacity = "0";
-      }
-    }, 1100);
-
-    const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement;
-    if (primerHijo) {
-      primerHijo.addEventListener("transitionend", function fn() {
-        const nodoUltimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-        s1 = ((DOM.contenedorNodos.offsetWidth - (nodos.length) * nodoUltimo.offsetWidth) / (nodos.length + 1));
-        s2 = (DOM.contenedorNodos.offsetWidth - (nodos.length - 1) * nodoUltimo.offsetWidth) / (nodos.length);
-
-        setFlechaFinal(true, necesitaTransicion, s2);
-        setFlechasNodos(necesitaTransicion, 1, s1, s2);
-        primerHijo.removeEventListener("transitionend", fn);
-      });
-    }
-    inicialUl.removeEventListener("transitionend", fpu);
-  });
-
-  const ultimoHijoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-  if (ultimoHijoNodo) {
-    ultimoHijoNodo.addEventListener("transitionend", function fnf() {
-      sacarNodo(data);
-
-      for (let i = 0; i < nodos.length; i++) {
-        nodos[i].classList.add("no-mover");
-        nodos[i].style.left = '0px';
-      }
-
-      sacarFlecha(0);
-
-      setTimeout(() => {
-        setFlechaInicial(true, necesitaTransicion);
-        for (let i = 0; i < nodos.length; i++) {
-          nodos[i].classList.remove("no-mover");
-        }
-      }, 1000);
-
-      // const ulInicialLast = DOM.flechaPunteroInicial.lastElementChild as HTMLElement;
-
-      const inicialLi = DOM.inicialLi();
-      // if (ulInicialLast) {
-        inicialLi?.addEventListener("transitionend", function g() {
-          document.removeEventListener("click", handler, true);
-          DOM.agregarComienzo.disabled = false;
-          DOM.agregarFinal.disabled = false;
-
-          if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
-            DOM.principal.removeAttribute("style");
-            renderizar();
-          } else {
-            DOM.principal.removeAttribute("style");
-          }
-
-          if (DOM.contenedorNodos.childElementCount > 1) {
-            if (DOM.selectorPares.lastChild) {
-              DOM.selectorPares.removeChild(DOM.selectorPares.lastChild);
-            }
-          }
-          inicialLi?.removeEventListener("transitionend", g);
-        });
-      // }
-      ultimoHijoNodo.removeEventListener("transitionend", fnf);
-    });
-  }
-
-} // Fin del else si no hay tres nodos
    
 }
 
@@ -574,12 +685,399 @@ export function borrarNodoIntermedio(data: string, indice: number): void {
 /* ==========================================================================
    4. BORRAR NODO AL FINAL
    ========================================================================== */
+// export function borrarNodoAlFinal(data: string): void {
+//   if (!DOM.verificarDOM()) return;
+
+//   const nodos = getNodos() as HTMLDivElement[];
+//   const flechas = getFlechas() as HTMLDivElement[];
+//   console.log("entro a borrar nodo al final");
+//   console.log(nodos);
+//   console.log(flechas);
+
+//   document.addEventListener("click", handler, true);
+//   DOM.agregarComienzo.disabled = true;
+//   DOM.agregarFinal.disabled = true;
+
+//   necesitaTransicion = 1;
+//   setFlechaFinal(false, necesitaTransicion);
+
+//   const finalUl = DOM.finalUl();
+      
+//   finalUl?.addEventListener("transitionend", function fpu() {
+//     const totalNodos = (getNodos() as HTMLElement[]).length;
+
+
+
+//     if(totalNodos === 4) {
+      
+//     //  1. contraer la ultima flecha que une 3 y 4.
+//      const flechaUltima = flechas[flechas.length - 1];
+//       if (flechaUltima) {
+//         const ul = obtenerSubElemento(flechaUltima, "underline");
+//         const ls = obtenerSubElemento(flechaUltima, "linea-s");
+//         const li = obtenerSubElemento(flechaUltima, "linea-i");
+
+//         ul.classList.remove("inmediato");
+
+//         setTimeout(() => {
+//           ul.style.width = '0px';
+//           ls.style.width = '0px';
+//           li.style.width = '0px';
+//           ul.classList.add("arrowend-first-ul");
+//           ls.classList.add("arrowend-first");
+//           li.classList.add("arrowend-first");
+//         }, 100);
+
+
+//      // 2. cuando termina eso, empieza a hacer desaparecer el nodo
+//       ul.addEventListener("transitionend", function fu() {
+//           setTimeout(() => {
+//             const ultimoHijo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+//             if (ultimoHijo) {
+//               ultimoHijo.classList.remove("inmediato-nodo");
+//               ultimoHijo.style.opacity = "0";
+//             }
+//           }, 1100);
+
+//       const ultimoHijoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+//       if (ultimoHijoNodo) {
+//           ultimoHijoNodo.addEventListener("transitionend", function fn() {
+//           const listaNodos = DOM.contenedorNodos.children;
+//           const nodoUltimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+
+//           s1 = ((DOM.contenedorNodos.offsetWidth - (2) * nodoUltimo.offsetWidth) / (2 + 1));
+//           s2 = (DOM.contenedorNodos.offsetWidth - (2 - 1) * nodoUltimo.offsetWidth) / (2);
+
+//           // setFlechaInicial(true, necesitaTransicion, s2);
+//           setFlechasNodos5(1, 0, s1, s2, 2);
+
+
+//           const primerNodoFila2 = DOM.contenedorNodos.querySelectorAll(".caja-nodo")[2] as HTMLElement;
+
+
+//           primerNodoFila2.addEventListener("transitionend", function g() {
+
+
+//           sacarNodo(data);
+//           for (let i = 2; i < nodos.length; i++) {
+//             nodos[i].classList.add("no-mover");
+//             nodos[i].style.left = '0px';
+//           }
+
+//           sacarFlecha(flechas.length - 1);
+//           DOM.contenedorFlechas.querySelector(".salto-flex")?.remove();
+
+
+//           setTimeout(() => {
+//             for (let i = 0; i < flechas.length; i++) {
+//               flechas[i].style.marginTop = "150px";
+//             }
+//           }, 100);
+
+
+//           setFlechaFinal(true,1);
+          
+//           const finalLi = DOM.finalLi();
+//             finalLi?.addEventListener("transitionend", function h() {
+//             document.removeEventListener("click", handler, true);
+//             DOM.agregarComienzo.disabled = false;
+//             DOM.agregarFinal.disabled = false;
+
+//             finalUl?.classList.remove("no-desplazar");
+
+  
+//             finalLi.removeEventListener("transitionend", h);
+//           });
+
+//               // actualizarSelectoresIntermedios();
+
+              
+
+//               primerNodoFila2.removeEventListener("transitionend", g);
+//             });
+
+
+//           ultimoHijoNodo.removeEventListener("transitionend", fn);
+//         });
+//       }
+
+
+
+
+
+
+
+
+
+//           ul.removeEventListener("transitionend", fu);
+//         });
+//       }
+//      // 3. cuando desaparece el nodo, borro el nodo y animo setFlechasNodos de abajo.
+//      //tambien debo borrar la flechas, y borrar el setflecha nodos, y reacomodar
+//      //la flecha de arriba.
+
+//      //   4. cuando termina de animar el nodo 3, vuelvo al comportamiento normal de flex y animo 
+//       //  la flecha finalUl.
+
+//       return;
+//     }
+
+
+
+
+//      if (totalNodos < 3) {
+//       // =========================================================================
+//       // 🟢 CAMINO ORIGINAL: BORRADO EN UNA SOLA FILA
+//       // =========================================================================
+//       const flechaUltima = flechas[flechas.length - 1];
+//       if (flechaUltima) {
+//         const ul = obtenerSubElemento(flechaUltima, "underline");
+//         const ls = obtenerSubElemento(flechaUltima, "linea-s");
+//         const li = obtenerSubElemento(flechaUltima, "linea-i");
+
+//         ul.classList.remove("inmediato");
+
+//         setTimeout(() => {
+//           ul.style.width = '0px';
+//           ls.style.width = '0px';
+//           li.style.width = '0px';
+//           ul.classList.add("arrowend-first-ul");
+//           ls.classList.add("arrowend-first");
+//           li.classList.add("arrowend-first");
+//         }, 100);
+
+//         ul.addEventListener("transitionend", function fu() {
+//           setTimeout(() => {
+//             const ultimoHijo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+//             if (ultimoHijo) {
+//               ultimoHijo.classList.remove("inmediato-nodo");
+//               ultimoHijo.style.opacity = "0";
+//             }
+//           }, 1100);
+          
+
+//       const ultimoHijoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+//       if (ultimoHijoNodo) {
+//         ultimoHijoNodo.addEventListener("transitionend", function fn() {
+//           const listaNodos = DOM.contenedorNodos.children;
+//           const nodoUltimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+
+//           s1 = ((DOM.contenedorNodos.offsetWidth - (listaNodos.length) * nodoUltimo.offsetWidth) / (listaNodos.length + 1));
+//           s2 = (DOM.contenedorNodos.offsetWidth - (listaNodos.length - 1) * nodoUltimo.offsetWidth) / (listaNodos.length);
+
+//           setFlechaInicial(true, necesitaTransicion, s2);
+//           setFlechasNodos(1, 0, s1, s2);
+
+//           finalUl?.classList.add("no-desplazar");
+
+
+//            const primerHijoNodo = DOM.contenedorNodos.firstElementChild as HTMLElement;
+//       if (primerHijoNodo) {
+//         primerHijoNodo.addEventListener("transitionend", function fnf() {
+//           sacarNodo(data);
+//           for (let i = 0; i < nodos.length; i++) {
+//             nodos[i].classList.add("no-mover");
+//             nodos[i].style.left = '0px';
+//           }
+
+//           sacarFlecha(flechas.length - 1);
+
+//           setTimeout(() => {
+//             setFlechaFinal(true, necesitaTransicion);
+//             for (let i = 0; i < nodos.length; i++) {
+//               nodos[i].classList.remove("no-mover");
+//             }
+//           }, 100);
+
+//           const finalLi = DOM.finalLi();
+//           finalLi?.addEventListener("transitionend", function g() {
+//             document.removeEventListener("click", handler, true);
+//             DOM.agregarComienzo.disabled = false;
+//             DOM.agregarFinal.disabled = false;
+
+//             finalUl?.classList.remove("no-desplazar");
+
+//             if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
+//               DOM.principal.removeAttribute("style");
+//               renderizar();
+//             } else {
+//               DOM.principal.removeAttribute("style");
+//             }
+
+//             if (DOM.contenedorNodos.childElementCount > 1) {
+//               if (DOM.selectorPares.lastChild) {
+//                 DOM.selectorPares.removeChild(DOM.selectorPares.lastChild);
+//               }
+//             }
+//             finalLi.removeEventListener("transitionend", g);
+//           });
+//           primerHijoNodo.removeEventListener("transitionend", fnf);
+//         });
+//       }   
+
+
+
+//           ultimoHijoNodo.removeEventListener("transitionend", fn);
+//         });
+//       }
+
+
+
+
+
+
+
+//           ul.removeEventListener("transitionend", fu);
+//         });
+//       }
+
+//       // 🌟 LOS LISTENERS DE DESPLAZAMIENTO HORIZONTAL AHORA VIVEN EXCLUSIVAMENTE ACÁ ADENTRO
+
+
+     
+//       return;
+//     }  
+    
+
+//       // =========================================================================
+//       // 🔵 CAMINO MULTI-FILA (TOTALMENTE AISLADO)
+//       // =========================================================================
+//       console.log("Iniciando reversión: Desvaneciendo punta de flecha curva...");
+//       document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '0');
+
+//       const pathCurva = document.getElementById("flecha_curva_dinamica") as SVGPathElement | null;
+
+//       if (pathCurva) {
+//         const largoTotal = pathCurva.getTotalLength();
+        
+//         const animacionContraccion = pathCurva.animate(
+//           [
+//             { strokeDashoffset: 0 }, 
+//             { strokeDashoffset: largoTotal }
+//           ], 
+//           {
+//             duration: 2000,
+//             easing: "ease-in-out",
+//             fill: "forwards"
+//           }
+//         );
+
+//         animacionContraccion.onfinish = () => {
+//           console.log("La animación del path terminó. Eliminando contenedor SVG...");
+//           const svgContenedor = pathCurva.closest(".svg-flecha-interfila");
+//           svgContenedor?.remove();
+
+//           const ultimoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement | null;
+          
+//           if (ultimoNodo) {
+//             console.log("Paso 1: Achicando el Wrapper externo a 400px (2 segundos)...");
+//             ultimoNodo.style.transition = "opacity 0.8s ease-in-out";
+//             ultimoNodo.style.opacity = "0";
+
+//             ultimoNodo.addEventListener('transitionend', function desvanecerNodo(e) {
+//               if (e.propertyName === 'opacity') {
+//                 ultimoNodo.removeEventListener('transitionend', desvanecerNodo);
+                
+//                 console.log("Nodo invisible. Iniciando contracción coordinada del Wrapper.");
+
+//                 // Forzamos el reflotamiento del NULL de inmediato usando base estática de 400px
+//                 root.style.setProperty('--nulo-top', `${DOM.str.offsetTop}px`);
+//                 root.style.setProperty('--linea-flecha-final-top', `${400 / 2 - 2.5}px`);
+//                 root.style.setProperty('--punta-flecha-final-top', `${DOM.str.offsetTop + DOM.nulo.offsetHeight}px`);
+
+//                 if (DOM.principalWrapper) {
+//                   DOM.principalWrapper.style.transition = "height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out";
+//                   DOM.principalWrapper.style.height = "400px";
+//                   DOM.principalWrapper.style.minHeight = "400px";
+//                   DOM.principalWrapper.style.maxHeight = "400px";
+//                 }
+
+//                 setTimeout(() => {
+//                   console.log("Paso 2: Wrapper cerrado. Limpiando el DOM en bloque.");
+
+//                   // 1. Borrado físico del DOM
+//                   sacarNodo(data);
+//                   DOM.contenedorNodos.querySelector(".salto-flex")?.remove();
+
+//                   // 2. Reseteamos las cajas internas barriendo estilos en línea
+//                   document.documentElement.style.setProperty('--principal-height', '400px');
+                  
+//                   if (DOM.principal) {
+//                     DOM.principal.style.height = "";
+//                     DOM.principal.style.minHeight = "";
+//                   }
+//                   if (DOM.contenedorNodos) {
+//                     DOM.contenedorNodos.style.height = "";
+//                     DOM.contenedorNodos.style.minHeight = "";
+//                     DOM.contenedorNodos.style.flexWrap = "";
+//                     DOM.contenedorNodos.style.alignContent = "";
+//                     DOM.contenedorNodos.style.alignItems = "";
+//                   }
+//                   if (DOM.inicializador) DOM.inicializador.style.height = "";
+
+//                   const contenedorFlechas = document.getElementById("contenedor_flechas");
+//                   if (contenedorFlechas) {
+//                     contenedorFlechas.style.height = "";
+//                     contenedorFlechas.style.minHeight = "";
+//                     const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
+//                     flechasExistentes.forEach((flecha) => {
+//                       (flecha as HTMLElement).style.transform = "translateY(0px)";
+//                     });
+//                   }
+
+//                   const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
+//                   if (contenedorCurvas) {
+//                     contenedorCurvas.style.height = "";
+//                     contenedorCurvas.style.minHeight = "";
+//                   }
+
+//                   // 3. Purgamos los inline styles residuales de los nodos de Fila 1 (Evita lefts molestos)
+//                   const nodosRestantes = Array.from(getNodos() as HTMLElement[]);
+//                   nodosRestantes.forEach(nodo => {
+//                     nodo.style.transition = "none";
+//                     nodo.style.alignSelf = "";
+//                     nodo.style.marginTop = ""; 
+//                     nodo.style.left = "";
+//                   });
+
+//                   // 4. Revivimos la flecha final recta original
+//                   setFlechaFinal(true, necesitaTransicion);
+
+//                   // 5. Liberamos la aplicación
+//                   document.removeEventListener("click", handler, true);
+//                   DOM.agregarComienzo.disabled = false;
+//                   DOM.agregarFinal.disabled = false;
+
+//                   console.log("Reversión multi-fila completada con éxito.");
+//                 }, 2000);
+//               }
+//             });
+//           }
+//         };
+//       } else {
+//         document.removeEventListener("click", handler, true);
+//         DOM.agregarComienzo.disabled = false;
+//         DOM.agregarFinal.disabled = false;
+//       }
+
+   
+
+
+//     finalUl.removeEventListener("transitionend", fpu);
+//   });
+// }
+
+
 export function borrarNodoAlFinal(data: string): void {
   if (!DOM.verificarDOM()) return;
 
   const nodos = getNodos() as HTMLDivElement[];
   const flechas = getFlechas() as HTMLDivElement[];
+  const totalNodos = nodos.length; // 🔥 Evaluamos acá el estado lógico antes de tocar el DOM
 
+  console.log("Entro a borrar nodo al final. Total nodos actuales:", totalNodos);
+
+  // Bloqueo de UI inicial estándar
   document.addEventListener("click", handler, true);
   DOM.agregarComienzo.disabled = true;
   DOM.agregarFinal.disabled = true;
@@ -588,12 +1086,184 @@ export function borrarNodoAlFinal(data: string): void {
   setFlechaFinal(false, necesitaTransicion);
 
   const finalUl = DOM.finalUl();
-      
-  finalUl?.addEventListener("transitionend", function fpu() {
-    const totalNodos = (getNodos() as HTMLElement[]).length;
 
-    if (totalNodos === 3) { // O la condición exacta que uses para identificar multi-fila
-      // =========================================================================
+  // =========================================================================
+  // 🟢 CASO 1: BORRADO CON REACOMODO DE FILAS (totalNodos === 4)
+  // =========================================================================
+  if (totalNodos === 4) {
+    finalUl?.addEventListener("transitionend", function fpu() {
+      finalUl.removeEventListener("transitionend", fpu);
+
+      const flechaUltima = flechas[flechas.length - 1];
+      if (!flechaUltima) return;
+
+      const ul = obtenerSubElemento(flechaUltima, "underline");
+      const ls = obtenerSubElemento(flechaUltima, "linea-s");
+      const li = obtenerSubElemento(flechaUltima, "linea-i");
+
+      ul.classList.remove("inmediato");
+
+      setTimeout(() => {
+        ul.style.width = '0px';
+        ls.style.width = '0px';
+        li.style.width = '0px';
+        ul.classList.add("arrowend-first-ul");
+        ls.classList.add("arrowend-first");
+        li.classList.add("arrowend-first");
+      }, 100);
+
+      // Escuchamos el fin de la flecha para DESVANECER el nodo
+      ul.addEventListener("transitionend", function fu() {
+        ul.removeEventListener("transitionend", fu);
+
+        const ultimoHijo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+        if (!ultimoHijo) return;
+
+        ultimoHijo.classList.remove("inmediato-nodo");
+        ultimoHijo.style.opacity = "0";
+
+        // 🔥 CORRECCIÓN CRÍTICA: El reacomodo matemático escucha al nodo RECIÉN CUANDO EMPIEZA a desaparecer
+        ultimoHijo.addEventListener("transitionend", function fn() {
+          ultimoHijo.removeEventListener("transitionend", fn);
+
+          // const listaNodos = DOM.contenedorNodos.children;
+          const nodoUltimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+
+          // Cálculo del layout inverso
+          s1 = ((DOM.contenedorNodos.offsetWidth - (2) * nodoUltimo.offsetWidth) / (2 + 1));
+          s2 = (DOM.contenedorNodos.offsetWidth - (2 - 1) * nodoUltimo.offsetWidth) / (2);
+
+          // Disparamos la animación que vamos a arreglar ahora
+          setFlechasNodos5(1, 0, s1, s2, 2);
+
+          const primerNodoFila2 = DOM.contenedorNodos.querySelectorAll(".caja-nodo")[2] as HTMLElement;
+          if (!primerNodoFila2) return;
+
+          primerNodoFila2.addEventListener("transitionend", function g() {
+            primerNodoFila2.removeEventListener("transitionend", g);
+
+            sacarNodo(data);
+            for (let i = 2; i < nodos.length; i++) {
+              nodos[i].classList.add("no-mover");
+              nodos[i].style.left = '0px';
+            }
+
+            // const flechas = getFlechas() as HTMLDivElement[];
+
+            // console.log("Como está el contenedor flechas antes de borrar la ultima flecha: ");
+            // console.log(DOM.conen);
+            // console.log("La longitud del contenedor flechas es: ",flechas);
+            // console.log("La ultima flecha es: ", flechas[flechas.length-1]);
+            console.log(DOM.contenedorFlechas);
+            const cantidadDeElementos = DOM.contenedorFlechas.childElementCount;
+            const flechas = DOM.contenedorFlechas.querySelectorAll(".arrow");
+            const cantidadFlechas = flechas.length;
+            console.log("La longitud del contenedor_flechas es: ",cantidadDeElementos);
+            console.log("El indice de la ultima flecha en contenedor_flechas es es: ",cantidadDeElementos-1);
+            console.log(DOM.contenedorFlechas);
+            // sacarFlecha(cantidadDeElementos-1);
+            sacarFlecha(cantidadFlechas-1);
+            DOM.contenedorFlechas.querySelector(".salto-flex")?.remove();
+
+            setTimeout(() => {
+              // for (let i = 0; i < flechas.length; i++) {
+              //   flechas.forEach.style.marginTop = "150px"; // Ajustar según diseño
+              // }
+               flechas.forEach((flecha) => {
+                      (flecha as HTMLElement).style.marginTop = "150px";
+                    });
+            }, 100);
+
+            setFlechaFinal(true, 1);
+            
+            const finalLi = DOM.finalLi();
+            finalLi?.addEventListener("transitionend", function h() {
+              finalLi.removeEventListener("transitionend", h);
+              document.removeEventListener("click", handler, true);
+              DOM.agregarComienzo.disabled = false;
+              DOM.agregarFinal.disabled = false;
+              finalUl?.classList.remove("no-desplazar");
+            });
+          });
+        });
+      });
+    });
+    return; // Fin absoluto del caso 4
+  }
+
+  // =========================================================================
+  // 🟡 CASO 2: BORRADO FILA SIMPLE (totalNodos < 4 o <= 3)
+  // =========================================================================
+  if (totalNodos < 3) {
+    finalUl?.addEventListener("transitionend", function fpu() {
+      finalUl.removeEventListener("transitionend", fpu);
+
+      const flechaUltima = flechas[flechas.length - 1];
+      if (!flechaUltima) return;
+
+      const ul = obtenerSubElemento(flechaUltima, "underline");
+      const ls = obtenerSubElemento(flechaUltima, "linea-s");
+      const li = obtenerSubElemento(flechaUltima, "linea-i");
+
+      ul.classList.remove("inmediato");
+
+      setTimeout(() => {
+        ul.style.width = '0px';
+        ls.style.width = '0px';
+        li.style.width = '0px';
+      }, 100);
+
+      ul.addEventListener("transitionend", function fu() {
+        ul.removeEventListener("transitionend", fu);
+
+        const ultimoHijo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+        if (!ultimoHijo) return;
+
+        ultimoHijo.classList.remove("inmediato-nodo");
+        ultimoHijo.style.opacity = "0";
+
+        ultimoHijo.addEventListener("transitionend", function fn() {
+          ultimoHijo.removeEventListener("transitionend", fn);
+
+          const listaNodos = DOM.contenedorNodos.children;
+          const nodoUltimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+
+          s1 = ((DOM.contenedorNodos.offsetWidth - (listaNodos.length) * nodoUltimo.offsetWidth) / (listaNodos.length + 1));
+          s2 = (DOM.contenedorNodos.offsetWidth - (listaNodos.length - 1) * nodoUltimo.offsetWidth) / (listaNodos.length);
+
+          setFlechaInicial(true, necesitaTransicion, s2);
+          setFlechasNodos(1, 0, s1, s2); // Tu función original horizontal
+
+          finalUl?.classList.add("no-desplazar");
+
+          const primerHijoNodo = DOM.contenedorNodos.firstElementChild as HTMLElement;
+          primerHijoNodo?.addEventListener("transitionend", function fnf() {
+            primerHijoNodo.removeEventListener("transitionend", fnf);
+
+            sacarNodo(data);
+            sacarFlecha(flechas.length - 1);
+
+            setTimeout(() => {
+              setFlechaFinal(true, necesitaTransicion);
+            }, 100);
+
+            const finalLi = DOM.finalLi();
+            finalLi?.addEventListener("transitionend", function g() {
+              finalLi.removeEventListener("transitionend", g);
+              document.removeEventListener("click", handler, true);
+              DOM.agregarComienzo.disabled = false;
+              DOM.agregarFinal.disabled = false;
+              finalUl?.classList.remove("no-desplazar");
+            });
+          });
+        });
+      });
+    });
+    return;
+  }
+
+
+  // =========================================================================
       // 🔵 CAMINO MULTI-FILA (TOTALMENTE AISLADO)
       // =========================================================================
       console.log("Iniciando reversión: Desvaneciendo punta de flecha curva...");
@@ -713,102 +1383,9 @@ export function borrarNodoAlFinal(data: string): void {
         DOM.agregarComienzo.disabled = false;
         DOM.agregarFinal.disabled = false;
       }
-
-    } else {
-      // =========================================================================
-      // 🟢 CAMINO ORIGINAL: BORRADO EN UNA SOLA FILA
-      // =========================================================================
-      const flechaUltima = flechas[flechas.length - 1];
-      if (flechaUltima) {
-        const ul = obtenerSubElemento(flechaUltima, "underline");
-        const ls = obtenerSubElemento(flechaUltima, "linea-s");
-        const li = obtenerSubElemento(flechaUltima, "linea-i");
-
-        ul.classList.remove("inmediato");
-
-        setTimeout(() => {
-          ul.style.width = '0px';
-          ls.style.width = '0px';
-          li.style.width = '0px';
-          ul.classList.add("arrowend-first-ul");
-          ls.classList.add("arrowend-first");
-          li.classList.add("arrowend-first");
-        }, 100);
-
-        ul.addEventListener("transitionend", function fu() {
-          setTimeout(() => {
-            const ultimoHijo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-            if (ultimoHijo) {
-              ultimoHijo.classList.remove("inmediato-nodo");
-              ultimoHijo.style.opacity = "0";
-            }
-          }, 1100);
-          ul.removeEventListener("transitionend", fu);
-        });
-      }
-
-      // 🌟 LOS LISTENERS DE DESPLAZAMIENTO HORIZONTAL AHORA VIVEN EXCLUSIVAMENTE ACÁ ADENTRO
-      const ultimoHijoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-      if (ultimoHijoNodo) {
-        ultimoHijoNodo.addEventListener("transitionend", function fn() {
-          const listaNodos = DOM.contenedorNodos.children;
-          const nodoUltimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-
-          s1 = ((DOM.contenedorNodos.offsetWidth - (listaNodos.length) * nodoUltimo.offsetWidth) / (listaNodos.length + 1));
-          s2 = (DOM.contenedorNodos.offsetWidth - (listaNodos.length - 1) * nodoUltimo.offsetWidth) / (listaNodos.length);
-
-          setFlechaInicial(true, necesitaTransicion, s2);
-          setFlechasNodos(1, 0, s1, s2);
-
-          finalUl?.classList.add("no-desplazar");
-          ultimoHijoNodo.removeEventListener("transitionend", fn);
-        });
-      }
-
-      const primerHijoNodo = DOM.contenedorNodos.firstElementChild as HTMLElement;
-      if (primerHijoNodo) {
-        primerHijoNodo.addEventListener("transitionend", function fnf() {
-          sacarNodo(data);
-          for (let i = 0; i < nodos.length; i++) {
-            nodos[i].classList.add("no-mover");
-            nodos[i].style.left = '0px';
-          }
-
-          sacarFlecha(flechas.length - 1);
-
-          setTimeout(() => {
-            setFlechaFinal(true, necesitaTransicion);
-            for (let i = 0; i < nodos.length; i++) {
-              nodos[i].classList.remove("no-mover");
-            }
-          }, 100);
-
-          const finalLi = DOM.finalLi();
-          finalLi?.addEventListener("transitionend", function g() {
-            document.removeEventListener("click", handler, true);
-            DOM.agregarComienzo.disabled = false;
-            DOM.agregarFinal.disabled = false;
-
-            finalUl?.classList.remove("no-desplazar");
-
-            if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
-              DOM.principal.removeAttribute("style");
-              renderizar();
-            } else {
-              DOM.principal.removeAttribute("style");
-            }
-
-            if (DOM.contenedorNodos.childElementCount > 1) {
-              if (DOM.selectorPares.lastChild) {
-                DOM.selectorPares.removeChild(DOM.selectorPares.lastChild);
-              }
-            }
-            finalLi.removeEventListener("transitionend", g);
-          });
-          primerHijoNodo.removeEventListener("transitionend", fnf);
-        });
-      }
-    }
-    finalUl.removeEventListener("transitionend", fpu);
-  });
+  // =========================================================================
+  // 🔵 CASO 3: REVERSIÓN MULTI-FILA MAYOR (totalNodos > 4)
+  // =========================================================================
+  // Tu bloque original de animación de SVGPathElement, contracción de Wrapper, etc.
+  // ... (El código que tenías abajo se ejecuta acá directo de forma limpia)
 }

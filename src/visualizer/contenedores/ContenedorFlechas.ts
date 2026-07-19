@@ -94,24 +94,45 @@ function agregarFlecha(metodo: number): void {
   }
 }
 
+// function sacarFlecha(indice: number): void {
+//   if (!verificarDOM() || !contenedorFlechas) return;
+
+//   const flechasAntes = getFlechas();
+//   const flechaAEliminar = flechasAntes[indice];
+
+//   if (flechaAEliminar) {
+//     contenedorFlechas.removeChild(flechaAEliminar);
+//   }
+
+//   // Volvemos a consultar la lista actualizada post-eliminación
+//   const flechasDespues = getFlechas();
+//   if (flechasDespues.length > 0) {
+//     root.style.setProperty('--flecha-left', `-25px`);
+//     for (let i = 0; i < flechasDespues.length; i++) {
+//       flechasDespues[i].classList.add("no-mover__flecha");
+//     }
+//   }
+// }
+
 function sacarFlecha(indice: number): void {
   if (!verificarDOM() || !contenedorFlechas) return;
 
-  const flechasAntes = getFlechas();
+  // 1. Obtenemos la foto de las flechas únicamente por clase
+  const flechasAntes = contenedorFlechas.querySelectorAll(".arrow");
   const flechaAEliminar = flechasAntes[indice];
 
+  // 2. Si existe, la eliminamos de forma directa y síncrona
   if (flechaAEliminar) {
-    contenedorFlechas.removeChild(flechaAEliminar);
+    flechaAEliminar.remove(); // .remove() es más directo que removeChild
   }
 
-  // Volvemos a consultar la lista actualizada post-eliminación
-  const flechasDespues = getFlechas();
+  // 3. Aplicamos la clase "no-mover__flecha" sólo a las que sobrevivieron
+  const flechasDespues = contenedorFlechas.querySelectorAll(".arrow");
   if (flechasDespues.length > 0) {
     root.style.setProperty('--flecha-left', `-25px`);
-    for (let i = 0; i < flechasDespues.length; i++) {
-      flechasDespues[i].classList.add("no-mover__flecha");
-    }
+    flechasDespues.forEach((f) => f.classList.add("no-mover__flecha"));
   }
 }
+
 
 export { agregarFlecha, agregarFlechaN, sacarFlecha, getFlechas };
