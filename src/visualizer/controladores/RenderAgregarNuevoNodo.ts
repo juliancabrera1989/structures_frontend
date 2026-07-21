@@ -3,7 +3,11 @@ import { agregarNodo, agregarNodoN,  getNodos } from "../contenedores/Contenedor
 import { agregarFlecha, agregarFlechaN, getFlechas } from "../contenedores/ContenedorFlechas.ts";
 import { inicializarPuntero, setPuntero, setFlechaInicial, setFlechaFinal } from "./ControladorInicializador.ts";
 import { renderizar } from "./ControladorBarraSuperior.ts";
-import * as DOM from "../elementosDOM.ts";
+import { crearFlechaCurvaInterfila } from "../elementosGraficos/FlechaCurva.ts";
+import { obtenerInfoLayout } from "../utils/layoutHelpers.ts";
+
+import * as DOM from "../utils/elementosDOM.ts";
+
 
 const root = document.documentElement;
 let necesitaTransicion: number;
@@ -35,7 +39,7 @@ function agregarPrimerNodo(): void {
   // Agrega el nodo físico al contenedor
   agregarNodo(DOM.inputNodo.value, 0);
   inicializarPuntero(0);
-
+    
     const inicialUl = DOM.inicialUl();
     const inicialLs = DOM.inicialLs();
     const inicialLi = DOM.inicialLi();
@@ -586,61 +590,8 @@ return ;
 
                 // Si ambos nodos existen, calculamos la geometría rígida sin deformaciones
                 if (nodoNuevo && nodoOrigenReal) {
-                  const contRect = DOM.contenedorNodos.getBoundingClientRect();
-                  const emisorRect = nodoNuevo.getBoundingClientRect();
-                  const receptorRect = nodoOrigenReal.getBoundingClientRect();
-                  const radioRulo = 130;
-
-                  // Coordenadas calculadas en base a la posición real en pantalla
-                  const x1 = emisorRect.left - contRect.left + (emisorRect.width * 0.75);
-                  const y1 = emisorRect.top - contRect.top + (emisorRect.height / 2);
-                  const x2 = receptorRect.left - contRect.left;
-                  const y2 = receptorRect.top - contRect.top + (receptorRect.height / 2);
-                  const y_pasillo = y1 + ((y2 - y1) / 2);
-
-                  const de_x1_borde = emisorRect.right - contRect.left;
-                  const de_cpx1 = de_x1_borde + radioRulo;
-                  const de_cpy1 = y1;
-                  const de_cpx2 = de_x1_borde + radioRulo;
-                  const de_cpy2 = y_pasillo;
-
-                  const a_cpx1 = x2 - radioRulo;
-                  const a_cpy1 = y_pasillo;
-                  const a_cpx2 = x2 - radioRulo;
-                  const a_cpy2 = y2;
-
-                  const d = `
-                    M ${x1} ${y1}
-                    C ${de_cpx1} ${de_cpy1}, ${de_cpx2} ${de_cpy2}, ${de_x1_borde} ${y_pasillo}
-                    L ${x2} ${y_pasillo}
-                    C ${a_cpx1} ${a_cpy1}, ${a_cpx2} ${a_cpy2}, ${x2} ${y2}
-                  `.replace(/\s+/g, ' ').trim();
-
-                  const svgCurva = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                  svgCurva.setAttribute("style", "position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;");
-                  svgCurva.setAttribute("class", "svg-flecha-interfila");
-
-                  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                  path.setAttribute("id", "flecha_curva_dinamica");
-                  path.setAttribute("d", d);
-                  path.setAttribute("stroke", "red");
-                  path.setAttribute("stroke-width", "4");
-                  path.setAttribute("fill", "none");
-
-                  svgCurva.appendChild(path);
-                  contenedorCurvas.appendChild(svgCurva);
-
-                  // Animación por strokeDashoffset (Efecto de dibujado óptico progresivo)
-                  const largoTotal = path.getTotalLength();
-                  path.style.strokeDasharray = `${largoTotal}`;
-                  path.style.strokeDashoffset = `${largoTotal}`;
-
-                  const animacionFlecha = path.animate([{ strokeDashoffset: largoTotal }, { strokeDashoffset: 0 }], {
-                    duration: 2000,
-                    easing: "ease-in-out",
-                    fill: "forwards"
-                  });
-
+                  const animacionFlecha = crearFlechaCurvaInterfila(nodoNuevo, nodoOrigenReal, DOM.contenedorFlechasCurvas, DOM.contenedorNodos );
+                  
                   animacionFlecha.onfinish = () => {
                     console.log("La animación del path terminó. Seteando flecha final...");
 
@@ -648,8 +599,8 @@ return ;
                     setFlechaInicial(true, necesitaTransicion);
 
                     // Aseguramos las variables CSS de la punta de la flecha curva en su destino exacto
-                    document.documentElement.style.setProperty('--punta-flecha-curva-left', `${x2}px`);
-                    document.documentElement.style.setProperty('--punta-flecha-curva-top', `${y2}px`);
+                    // document.documentElement.style.setProperty('--punta-flecha-curva-left', `${x2}px`);
+                    // document.documentElement.style.setProperty('--punta-flecha-curva-top', `${y2}px`);
                     document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '1');
 
 
@@ -794,12 +745,259 @@ function agregarNodoAlFinal(): void {
     finalUl.removeEventListener("transitionend", nfpf_aC);
 
 
+
+
+
+
+
+// // 1. Calculamos la cantidad de saltos flex en el contenedor
+// const saltosFlex = DOM.contenedorNodos.querySelectorAll(".salto-flex");
+// const S = saltosFlex.length; // Cantidad de saltos flex actuales
+
+// // 2. Definimos tu M (Capacidad máxima por fila)
+// const M = 2; // Cambialo a 5 cuando pases a producción
+
+// // 3. Calculamos 'n' (nodos en la última fila)
+// const todosLosNodos = Array.from(getNodos() as HTMLElement[]);
+// let n = 0;
+
+// if (S === 0) {
+//   // Si no hay saltos, todos los nodos están en la primera fila
+//   n = todosLosNodos.length;
+// } else {
+//   // Si hay saltos, buscamos el último salto flex insertado
+//   const ultimoSalto = saltosFlex[S - 1];
+  
+//   // Contamos cuántos nodos hay posicionados DESPUÉS de ese divisor en el DOM
+//   let hermanoSiguiente = ultimoSalto.nextElementSibling;
+//   while (hermanoSiguiente) {
+//     if (hermanoSiguiente.classList.contains("nodo")) { // Asegurate de usar tu clase de nodo
+//       n++;
+//     }
+//     hermanoSiguiente = hermanoSiguiente.nextElementSibling;
+//   }
+// }
+
+// console.log(`📊 ESTADO ACTUAL -> S (Filas extras): ${S} | n (Nodos en última fila): ${n} de ${M}`);
+
+
+
+// // CONDICIONAL DINÁMICO DE CONTROL (Suelto para pruebas)
+// // =========================================================================
+
+// if (n < M) {
+//   // 🟢 CASO A: REACOMODO HORIZONTAL EN LA ÚLTIMA FILA
+//   // (Funciona igual para 1 nodo en Fila 1, o para el Nodo 4 en Fila 2)
+//   console.log("🟢 Ejecutando reacomodo horizontal en la última fila...");
+  
+//   // TODO: Acá vas a aplicar tu lógica de espaciado (s1, s2)
+//   // pero afectando únicamente a los últimos 'n' nodos.
+  
+// } else if (n === M) {
+//   // 🔵 CASO B: CREACIÓN DE NUEVA FILA (DESBORDE)
+//   // (Funciona para el paso de 2 a 3 nodos, o de 5 a 6 nodos)
+//   console.log("🔵 Ejecutando desborde: Estirando contenedor y creando nueva fila...");
+  
+//   // Tu lógica de animación de bajada de 250px, estiramiento a 600px,
+//   // inserción del nuevo .salto-flex y dibujo de la flecha curva.
+// }
+
+
+
+
+// const M = 2; // Máximo de nodos por fila
+// const totalNodosActuales = getNodos().length;
+
+// // ============================================================================
+// // 🟢 CAMINO A: LA FILA ACTUAL TIENE ESPACIO (Reacomodo Horizontal)
+// // Total actual: 1, 3, 5... (para M = 2)
+// // ============================================================================
+// if (totalNodosActuales % M !== 0) {
+
+//   const filaActual = Math.floor(totalNodosActuales / M);
+//   const indiceInicioFila = filaActual * M; // 0 para Fila 1, 2 para Fila 2, etc.
+//   const nodosEnEstaFila = totalNodosActuales % M;
+
+//   // Calculamos los espaciados s1 y s2 para los nodos de ESTA fila
+//   s1 = (DOM.contenedorNodos.offsetWidth - nodosEnEstaFila * ultimo.offsetWidth) / (nodosEnEstaFila + 1);
+//   s2 = (DOM.contenedorNodos.offsetWidth - (nodosEnEstaFila + 1) * ultimo.offsetWidth) / (nodosEnEstaFila + 2);
+
+//   if (filaActual === 0) {
+//     setFlechaInicial(true, necesitaTransicion, s2);
+//   }
+
+//   // Desplazamiento horizontal usando la función refinada
+//   setFlechasNodos(necesitaTransicion, 0, s1, s2, indiceInicioFila);
+
+//   // ... (Gatillos transitionend, inyección del nuevo nodo en la misma fila)
+//   return;
+// }
+
+// // ============================================================================
+// // 🔵 CAMINO B: LA FILA ACTUAL ESTÁ LLENA (Expansión y Salto de Fila / ELSE)
+// // Total actual: 2, 4, 6... (para M = 2)
+// // ============================================================================
+// else {
+//   console.log("Paso 1: Expansión escalable a 600px con salto a nueva fila.");
+
+//   // Tu bloque ELSE de expansión completo:
+//   // 1. Redimensionar wrappers a 600px (o la altura según el número de fila)
+//   // 2. Insertar `salto-flex`
+//   // 3. Crear el nuevo nodo en la fila de abajo
+//   // 4. Disparar `crearFlechaCurvaInterfila`
+  
+//   // ... (Todo el código que pasaste arriba)
+//   return;
+// }
+
+
+
+const M = 2; // Tu límite configurado por fila
+
+
+
+
+const layout = obtenerInfoLayout(M);
+
+if (layout.tieneEspacioUltimaFila) {
+
+const n = layout.nodosUltimaFila; // nodos actuales en esta fila
+  
+
+const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+  // Recalculamos espaciados s1 y s2 para los nodos de la ÚLTIMA fila únicamente
+  const s1 = (DOM.contenedorNodos.offsetWidth - n * ultimo.offsetWidth) / (n + 1);
+  const s2 = (DOM.contenedorNodos.offsetWidth - (n + 1) * ultimo.offsetWidth) / (n + 2);
+
+  if (layout.totalFilas === 1) {
+    // Solo si estamos en la Fila 1 ajustamos la flecha del puntero inicial (StrPtr)
+    setFlechaInicial(true, necesitaTransicion, s2);
+  }
+
+  // Reacomodamos únicamente los nodos de esta última fila
+  setFlechasNodos(necesitaTransicion, 0, s1, s2, layout.indiceInicioUltimaFila);
+  
+    ultimo.addEventListener("transitionend", function nald() {
+    agregarNodo(DOM.inputNodo.value, 0);
+
+    const nuevosNodos = getNodos() as HTMLElement[];
+
+
+        for (let i = 0; i < (nuevosNodos.length - 1); i++) {
+          nuevosNodos[i].classList.add("no-mover");
+          nuevosNodos[i].style.left = '0px';
+        }
+
+
+
+          const nodoNuevo = nuevosNodos[nuevosNodos.length - 1];
+
+          if (nodoNuevo) {
+            nodoNuevo.style.alignSelf = "flex-start";
+            nodoNuevo.style.marginTop = "150px";
+            nodoNuevo.style.opacity = "0";
+            nodoNuevo.style.setProperty("margin-top", "150px", "important"); // Altura de Fila 2
+            // nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
+            // void nodoNuevo.offsetWidth;
+            // nodoNuevo.style.opacity = "1";
+            setTimeout(() => {
+              nodoNuevo.style.opacity = "1";
+            }, 100);
+          }
+
+          nodoNuevo.addEventListener("transitionend", function na() {
+             
+          nodoNuevo.removeEventListener("transitionend", na);
+        if (DOM.contenedorFlechas) {
+          const flechasExistentes = DOM.contenedorFlechas.querySelectorAll(".arrow");
+          flechasExistentes.forEach((flecha) => {
+            const hFlecha = flecha as HTMLElement;
+            hFlecha.style.transition = "none";
+            hFlecha.style.alignSelf = "flex-start"; // 👈 Igual que el nodo
+            hFlecha.style.marginTop = "150px";       // 👈 Igual que el nodo
+            // hFlecha.style.transform = "";           // Eliminamos el translateY manual viejo
+          });
+        }
+
+          agregarFlecha(0);
+
+          if (DOM.contenedorFlechas) {
+            DOM.contenedorFlechas.style.alignContent = "flex-start";
+            DOM.contenedorFlechas.style.alignItems = "flex-start";
+          }
+          const flechasActuales = getFlechas() as HTMLElement[];
+          const ultimaFlecha = flechasActuales[flechasActuales.length - 1];
+          const ultimoHijoFlecha = ultimaFlecha?.lastElementChild as HTMLElement | null;
+
+          ultimaFlecha.style.setProperty("margin-top","150px");
+
+
+        if (DOM.contenedorFlechas) {
+          const saltoDeLineaFlechas = document.createElement("div");
+          saltoDeLineaFlechas.className = "salto-flex";
+          saltoDeLineaFlechas.style.flexBasis = "100%";
+          saltoDeLineaFlechas.style.height = "0";
+          DOM.contenedorFlechas.insertBefore(saltoDeLineaFlechas, ultimaFlecha);
+        }
+
+
+
+          ultimoHijoFlecha?.addEventListener("transitionend", function fl() {
+            setFlechaFinal(true, necesitaTransicion);
+
+
+          const finalLi = DOM.finalLi();
+          finalLi?.addEventListener("transitionend", function g() {
+            // Liberación del camino original
+            document.removeEventListener("click", handler, true);
+            DOM.agregarComienzo.disabled = false;
+            DOM.agregarFinal.disabled = false;
+
+            actualizarSelectoresIntermedios();
+
+
+
+            finalUl?.classList.remove("no-desplazar");
+            finalLi?.removeEventListener("transitionend", g);
+          });
+
+            ultimoHijoFlecha.removeEventListener("transitionend", fl);
+          });
+
+          });
+
+
+
+
+
+    ultimo.removeEventListener("transitionend", nald);
+  });
+  return;
+
+
+  // Rama A: Reacomodamiento Horizontal
+  // Calculas desplazamiento usando layout.nodosUltimaFila y layout.indiceInicioUltimaFila
+} else {
+  // Rama B: Expansión Vertical (Nueva Fila)
+  // Insertas el `.salto-flex`, abres la fila layout.totalFilas y dibujas la curva inter-row
+}
+
+
+
+
+
+
+
+
+
+
+
     if (nodos.length === 3) {
   console.log("🧪 [TEST] Ejecutando flujo de reacomodo en Fila 2 (Nodo 3 -> Nodo 4)");
 
   // 1. Calculamos s1 y s2 para la última fila
   // NOTA: Acá usamos la misma matemática de espaciado, pero pensando en la Fila 2.
-  const nodosActualizados = getNodos() as HTMLElement[];
+  // const nodosActualizados = getNodos() as HTMLElement[];
   const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
 
   // Calculamos el espacio para cuando haya 2 nodos abajo (el actual + el nuevo)
@@ -1128,65 +1326,14 @@ function agregarNodoAlFinal(): void {
                 const nodoSeis = nodoNuevo;
 
                 if (nodoCinco && nodoSeis) {
-                  const contRect = DOM.contenedorNodos.getBoundingClientRect();
-                  const emisorRect = nodoCinco.getBoundingClientRect();
-                  const receptorRect = nodoSeis.getBoundingClientRect();
-                  const radioRulo = 130;
-
-                  const x1 = emisorRect.left - contRect.left + (emisorRect.width * 0.75);
-                  const y1 = emisorRect.top - contRect.top + (emisorRect.height / 2);
-                  const x2 = receptorRect.left - contRect.left;
-                  const y2 = receptorRect.top - contRect.top + (receptorRect.height / 2);
-                  const y_pasillo = y1 + ((y2 - y1) / 2);
-
-                  const de_x1_borde = emisorRect.right - contRect.left;
-                  const de_cpx1 = de_x1_borde + radioRulo;
-                  const de_cpy1 = y1;
-                  const de_cpx2 = de_x1_borde + radioRulo;
-                  const de_cpy2 = y_pasillo;
-
-                  const a_cpx1 = x2 - radioRulo;
-                  const a_cpy1 = y_pasillo;
-                  const a_cpx2 = x2 - radioRulo;
-                  const a_cpy2 = y2;
-
-                  const d = `
-                    M ${x1} ${y1}
-                    C ${de_cpx1} ${de_cpy1}, ${de_cpx2} ${de_cpy2}, ${de_x1_borde} ${y_pasillo}
-                    L ${x2} ${y_pasillo}
-                    C ${a_cpx1} ${a_cpy1}, ${a_cpx2} ${a_cpy2}, ${x2} ${y2}
-                  `.replace(/\s+/g, ' ').trim();
-
-                  const svgCurva = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                  svgCurva.setAttribute("style", "position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;");
-                  svgCurva.setAttribute("class", "svg-flecha-interfila");
-
-                  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                  path.setAttribute("id", "flecha_curva_dinamica");
-                  path.setAttribute("d", d);
-                  path.setAttribute("stroke", "red");
-                  path.setAttribute("stroke-width", "4");
-                  path.setAttribute("fill", "none");
-
-                  svgCurva.appendChild(path);
-                  contenedorCurvas.appendChild(svgCurva);
-
-                  const largoTotal = path.getTotalLength();
-                  path.style.strokeDasharray = `${largoTotal}`;
-                  path.style.strokeDashoffset = `${largoTotal}`;
-
-                  const animacionFlecha = path.animate([{ strokeDashoffset: largoTotal }, { strokeDashoffset: 0 }], {
-                    duration: 2000,
-                    easing: "ease-in-out",
-                    fill: "forwards"
-                  });
+                  const animacionFlecha = crearFlechaCurvaInterfila(nodoCinco, nodoSeis, DOM.contenedorFlechasCurvas, DOM.contenedorNodos );
 
                   animacionFlecha.onfinish = () => {
                     console.log("La animación del path terminó. Seteando flecha final...");
                     setFlechaFinal(true, necesitaTransicion);
 
-                    document.documentElement.style.setProperty('--punta-flecha-curva-left', `${x2}px`);
-                    document.documentElement.style.setProperty('--punta-flecha-curva-top', `${y2}px`);
+                    // document.documentElement.style.setProperty('--punta-flecha-curva-left', `${x2}px`);
+                    // document.documentElement.style.setProperty('--punta-flecha-curva-top', `${y2}px`);
                     document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '1');
 
                     // 💥 LIBERACIÓN DEL ELSE: Removemos el handler global del principio
