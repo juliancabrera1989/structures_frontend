@@ -1,10 +1,10 @@
-import { setFlechasNodos, setFlechasNodos2, setFlechasNodos3, setFlechasNodos4 } from "./RenderFlechasNodos.ts";
+import { setFlechasNodos, setFlechasNodos2, setFlechasNodos3, setFlechasNodos4, setFlechasNodosConFlechaCurva, RolCurva } from "./RenderFlechasNodos.ts";
 import { agregarNodo, agregarNodoN,  getNodos } from "../contenedores/ContenedorNodos.ts";
 import { agregarFlecha, agregarFlechaN, getFlechas } from "../contenedores/ContenedorFlechas.ts";
 import { inicializarPuntero, setPuntero, setFlechaInicial, setFlechaFinal } from "./ControladorInicializador.ts";
 import { renderizar } from "./ControladorBarraSuperior.ts";
 import { crearFlechaCurvaInterfila } from "../elementosGraficos/FlechaCurva.ts";
-import { obtenerInfoLayout } from "../utils/layoutHelpers.ts";
+import { obtenerInfoLayout, getCantidadNodosFila } from "../utils/layoutHelpers.ts";
 
 import * as DOM from "../utils/elementosDOM.ts";
 
@@ -19,6 +19,18 @@ function handler(e: Event): void {
   e.stopPropagation();
   e.preventDefault();
 }
+
+
+
+
+function crearSaltoFlex(): HTMLDivElement {
+  const salto = document.createElement("div");
+  salto.className = "salto-flex";
+  return salto;
+}
+
+
+
 
 function agregarPrimerNodo(): void {
   if (!DOM.verificarDOM()) return;
@@ -169,28 +181,54 @@ function agregarNodoAlComienzo(): void {
     inicialUl.removeEventListener("transitionend", nfpi_aC);
 
 
-     if (nodos.length === 3) {
 
 
-        const primero = DOM.contenedorNodos.firstElementChild as HTMLElement;
+const M = 2; // Tu límite configurado por fila
 
 
-  s1 = (DOM.contenedorNodos.offsetWidth - 1 * primero.offsetWidth) / (1 + 1);
-  s2 = (DOM.contenedorNodos.offsetWidth - (1 + 1) * primero.offsetWidth) / (1 + 2);
 
 
-setFlechasNodos4(necesitaTransicion, 1, s1, s2, 0);
 
 
- primero.addEventListener("transitionend", function nald() {
+
+const layout = obtenerInfoLayout(M);
+
+const nodosPrimeraFila = getCantidadNodosFila(layout, 0);
+
+
+
+if (nodosPrimeraFila < M) {
+
+const n = nodosPrimeraFila; // nodos actuales en esta fila
+  
+
+const primero = DOM.contenedorNodos.firstElementChild as HTMLElement;
+  // Recalculamos espaciados s1 y s2 para los nodos de la ÚLTIMA fila únicamente
+  const s1 = (DOM.contenedorNodos.offsetWidth - n * primero.offsetWidth) / (n + 1);
+  const s2 = (DOM.contenedorNodos.offsetWidth - (n + 1) * primero.offsetWidth) / (n + 2);
+console.log("el valor de s1 es: ",s1);
+console.log("el valor de s2 es: ",s2);
+  if (layout.totalFilas === 1) {
+    // Solo si estamos en la Fila 1 ajustamos la flecha del puntero inicial (StrPtr)
+    setFlechaFinal(true, necesitaTransicion, s2);
+  }
+
+  // Reacomodamos únicamente los nodos de esta última fila
+  // setFlechasNodos(necesitaTransicion, 0, s1, s2);
+
+
+  
+  setFlechasNodosConFlechaCurva(necesitaTransicion, 1, s1, s2, 0,"emisor",layout);
+  
+    primero.addEventListener("transitionend", function nald() {
     agregarNodo(DOM.inputNodo.value, 1);
 
     const nuevosNodos = getNodos() as HTMLElement[];
 
 
-        for (let i = 1; i < nuevosNodos.length; i++) {
+        for (let i = 1; i < nuevosNodos.length ; i++) {
           nuevosNodos[i].classList.add("no-mover");
-          nuevosNodos[i].style.left = '0px';
+          nuevosNodos[i].style.removeProperty("left");
         }
 
 
@@ -198,172 +236,115 @@ setFlechasNodos4(necesitaTransicion, 1, s1, s2, 0);
           const nodoNuevo = nuevosNodos[0];
 
           if (nodoNuevo) {
-            nodoNuevo.style.alignSelf = "flex-start";
+             if (layout.totalFilas > 1) {
+            // nodoNuevo.style.alignSelf = "flex-start";
             nodoNuevo.style.marginTop = "150px";
-            nodoNuevo.style.opacity = "0";
-            nodoNuevo.style.setProperty("margin-top", "150px", "important"); // Altura de Fila 2
-            // nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
-            // void nodoNuevo.offsetWidth;
-            // nodoNuevo.style.opacity = "1";
+             }
             setTimeout(() => {
               nodoNuevo.style.opacity = "1";
             }, 100);
           }
 
           nodoNuevo.addEventListener("transitionend", function na() {
+             
+nodoNuevo.removeEventListener("transitionend", na);
+             window.banderaFlechaInicial = 0;
+          setFlechaInicial(true, necesitaTransicion);
 
-          if (DOM.contenedorFlechas) {
-          const flechasExistentes = DOM.contenedorFlechas.querySelectorAll(".arrow");
-          flechasExistentes.forEach((flecha) => {
-            const hFlecha = flecha as HTMLElement;
-            hFlecha.style.transition = "none";
-            hFlecha.style.alignSelf = "flex-start"; // 👈 Igual que el nodo
-            hFlecha.style.marginTop = "150px";       // 👈 Igual que el nodo
-            // hFlecha.style.transform = "";           // Eliminamos el translateY manual viejo
-          });
-        }  
-        
-          agregarFlecha(1);
+          const inicialLi = DOM.inicialLi();
+         inicialLi?.addEventListener("transitionend", function af() {
 
-          if (DOM.contenedorFlechas) {
-            DOM.contenedorFlechas.style.alignContent = "flex-start";
-            DOM.contenedorFlechas.style.alignItems = "flex-start";
-          }
+  const esFilaSuperior = layout.totalFilas > 1;
+  const esSegundoNodoDeFila = (nodosPrimeraFila + 1) === 2;
 
-          const flechasActuales = getFlechas() as HTMLElement[];
-          const primeraFlecha = flechasActuales[0];
-          const ultimoHijoFlecha = primeraFlecha?.lastElementChild as HTMLElement | null;
+  console.log("El valor de esFilaSuperior es: ",esFilaSuperior);
+  console.log("El valor de esSegundoNodoDeFila es: ",esSegundoNodoDeFila);
+  if (esFilaSuperior && esSegundoNodoDeFila) {
+    if (DOM.contenedorFlechas) {
+      console.log("al final tenia que entrar aca , pero no se si entra");
+      // 1. Reestructuración del contenedor
+      DOM.contenedorFlechas.classList.add("cambio-flex");
 
+      // 2. Ajuste de flechas existentes
+      const flechasExistentes = DOM.contenedorFlechas.querySelectorAll(".arrow");
+      flechasExistentes.forEach((flecha) => {
+        const hFlecha = flecha as HTMLElement;
+        hFlecha.style.marginTop = "150px";
+      });
 
-          primeraFlecha.style.setProperty("margin-top","150px");
+      // 3. Inserción anticipada del salto-flex (al final del contenedor)
+      const saltoDeLineaFlechas = document.createElement("div");
+      saltoDeLineaFlechas.className = "salto-flex";
+      saltoDeLineaFlechas.style.flexBasis = "100%";
+      saltoDeLineaFlechas.style.height = "0";
+      DOM.contenedorFlechas.insertBefore(saltoDeLineaFlechas, DOM.contenedorFlechas.firstElementChild);
+    }
+  }
 
+  // Creación de la nueva flecha (Cae automáticamente debajo del salto-flex si se creó arriba)
+  agregarFlecha(1);
 
-        if (DOM.contenedorFlechas &&  primeraFlecha) {
-          const saltoDeLineaFlechas = document.createElement("div");
-          saltoDeLineaFlechas.className = "salto-flex";
-          saltoDeLineaFlechas.style.flexBasis = "100%";
-          saltoDeLineaFlechas.style.height = "0";
-          DOM.contenedorFlechas.insertBefore(saltoDeLineaFlechas, primeraFlecha.nextSibling);
-        }
+  const flechasActuales = getFlechas() as HTMLElement[];
+  const primeraFlecha = flechasActuales[0];
+
+  if (primeraFlecha) {
+    // Únicamente seteamos el margin-top a la nueva flecha si estamos en fila inferior
+    if (esFilaSuperior && esSegundoNodoDeFila) {
+      primeraFlecha.style.setProperty("margin-top", "150px");
+    }
+  }
+
+    const ultimoHijoFlecha = primeraFlecha.lastElementChild as HTMLElement | null;
+
           ultimoHijoFlecha?.addEventListener("transitionend", function fl() {
-            setFlechaInicial(true, necesitaTransicion);
 
-            const primerFlecha = DOM.contenedorFlechas.firstElementChild as HTMLElement | null;
-            primerFlecha?.addEventListener("transitionend", function g() {
-              document.removeEventListener("click", handler, true);
-              DOM.agregarComienzo.disabled = false;
-              DOM.agregarFinal.disabled = false;
+            // Liberación del camino original
+            document.removeEventListener("click", handler, true);
+            DOM.agregarComienzo.disabled = false;
+            DOM.agregarFinal.disabled = false;
 
-              actualizarSelectoresIntermedios();
+            actualizarSelectoresIntermedios();
 
+
+
+            inicialUl?.classList.remove("no-desplazar");
             
-              primerFlecha.removeEventListener("transitionend", g);
-            });
-
-
+          
+          
             ultimoHijoFlecha.removeEventListener("transitionend", fl);
           });
-
+        inicialLi?.removeEventListener("transitionend", af);
           });
 
-
+          });
 
 
 
     primero.removeEventListener("transitionend", nald);
   });
+  return;
 
 
-
-return ;
-     }
-
-
-    if (nodos.length < 2)  {
-      console.log("🟢 Ejecutando flujo horizontal...");
-
-      const nodosActualizados = getNodos() as HTMLElement[];
-      const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-      s1 = (DOM.contenedorNodos.offsetWidth - nodosActualizados.length * ultimo.offsetWidth) / (nodosActualizados.length + 1);
-      s2 = (DOM.contenedorNodos.offsetWidth - (nodosActualizados.length + 1) * ultimo.offsetWidth) / (nodosActualizados.length + 2);
-
-      setFlechaFinal(true, necesitaTransicion, s2);
-      setFlechasNodos(necesitaTransicion, 1, s1, s2);
-
-      ultimoNodo.addEventListener("transitionend", function nald() {
-        agregarNodo(DOM.inputNodo.value, 1);
-        const nuevosNodos = getNodos() as HTMLElement[];
-
-        for (let i = 1; i < nuevosNodos.length; i++) {
-          nuevosNodos[i].classList.add("no-mover");
-          nuevosNodos[i].style.left = '0px';
-        }
-
-        setTimeout(() => {
-          const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
-          if (primerHijo) primerHijo.style.opacity = "1";
-        }, 100);
-
-        const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
-        primerHijo?.addEventListener("transitionend", function na() {
-          window.banderaFlechaInicial = 0;
-          setFlechaInicial(true, necesitaTransicion);
-
-          const inicialLi = DOM.inicialLi();
-          inicialLi?.addEventListener("transitionend", function af() {
-            agregarFlecha(1);
-
-            const primerFlecha = DOM.contenedorFlechas.firstElementChild as HTMLElement | null;
-            primerFlecha?.addEventListener("transitionend", function g() {
-              document.removeEventListener("click", handler, true);
-              DOM.agregarComienzo.disabled = false;
-              DOM.agregarFinal.disabled = false;
-
-              actualizarSelectoresIntermedios();
-
-              if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
-                DOM.principalWrapper.removeAttribute("style");
-                renderizar();
-                setFlechaInicial(true, 0);
-                setFlechaFinal(true, 0);
-              } else {
-                DOM.principalWrapper.removeAttribute("style");
-              }
-
-              primerFlecha.removeEventListener("transitionend", g);
-            });
-
-            inicialLi.removeEventListener("transitionend", af);
-          });
-
-          primerHijo.removeEventListener("transitionend", na);
-        });
-
-        ultimoNodo.removeEventListener("transitionend", nald);
-      });
-
-      return;
-    }
-
+  // Rama A: Reacomodamiento Horizontal
+  // Calculas desplazamiento usando layout.nodosUltimaFila y layout.indiceInicioUltimaFila
+} else {
+  // Rama B: Expansión Vertical (Nueva Fila)
+  // Insertas el `.salto-flex`, abres la fila layout.totalFilas y dibujas la curva inter-row
       console.log("🔵 FASE 1: Bajada suave del Wrapper y Nodos por transform.");
 
       // 1. Estiramos el búnker exterior suavemente
       if (DOM.principalWrapper) {
-        DOM.principalWrapper.style.transition = "height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out";
-        DOM.principalWrapper.style.height = "600px";
-        DOM.principalWrapper.style.minHeight = "600px";
-        DOM.principalWrapper.style.maxHeight = "600px";
+          DOM.principalWrapper?.classList.add("contenedor-expandido");
       }
 
-      if (DOM.principal) DOM.principal.style.transition = "none";
-      if (DOM.contenedorNodos) DOM.contenedorNodos.style.transition = "none";
+      // if (DOM.principal) DOM.principal.style.transition = "none";
+      // if (DOM.contenedorNodos) DOM.contenedorNodos.style.transition = "none";
 
       // 2. Bajada con tu valor corregido de transform
       const nodosActuales = Array.from(getNodos() as HTMLElement[]);
       nodosActuales.forEach(nodo => {
         nodo.classList.remove("inmediato-nodo", "inmediato", "inmediato_reacomodo", "no-mover");
-        nodo.style.transition = "transform 2s ease-in-out";
-        nodo.style.transform = "translateY(250px)"; // 🔥 Tu corrección
+         nodo.classList.add("transicion-nodos");
       });
 
      const contenedorFlechas = document.getElementById("contenedor_flechas");
@@ -380,8 +361,7 @@ return ;
           });
 
           // Ahora sí le aplicamos la animación de bajada
-          flecha.style.transition = "transform 2s ease-in-out";
-          flecha.style.transform = "translateY(250px)";
+          flecha.classList.add("transicion-flechas");
         });
       }
 
@@ -389,10 +369,9 @@ return ;
 
 
       // B. Mover el nodo NULL (DOM.nulo)
-      if (DOM.nulo) {
-        DOM.nulo.style.transition = "transform 2s ease-in-out";
-        DOM.nulo.style.transform = "translateY(250px)";
-      }
+      
+        DOM.nulo.classList.add("transicion-Flechas");
+      
 
         const flecha_puntero_final = document.getElementById("flecha_puntero_final");
         if (!flecha_puntero_final) return;
@@ -414,11 +393,6 @@ return ;
             finalLi.style.top = `${DOM.str.offsetTop + DOM.nulo.offsetHeight + 250}px`;
             finalLs.style.top = `${DOM.str.offsetTop + DOM.nulo.offsetHeight + 250}px`;
          }
-      // const finalUl = DOM.finalUl();
-      // if (finalUl) {
-      //   finalUl.style.transition = "transform 2s ease-in-out";
-      //   finalUl.style.transform = "translateY(250px)";
-      // }
 
       // =========================================================================
       // FASE 2: RETENCIÓN (A los 2000ms, clavamos los nodos en el fondo)
@@ -427,14 +401,9 @@ return ;
         console.log("⚡ FASE 2: Retención instantánea en contenedor de una fila.");
 
         document.documentElement.style.setProperty('--principal-height', '600px');
-        if (DOM.principal) DOM.principal.style.height = "600px";
-        if (DOM.contenedorNodos) DOM.contenedorNodos.style.height = "600px";
-        if (DOM.contenedorFlechas) DOM.contenedorFlechas.style.height = "600px";
-        if (DOM.inicializador) DOM.inicializador.style.height = "600px";
 
         nodosActuales.forEach(nodo => {
-          nodo.style.transition = "none";
-          nodo.style.transform = "none";
+          nodo.classList.remove("transicion-nodos");
           nodo.style.setProperty("margin-top", "300px", "important"); // 🔥 Tu corrección
         });
 
@@ -444,10 +413,7 @@ return ;
 
           const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
           flechasExistentes.forEach((flecha) => {
-            (flecha as HTMLElement).style.transition = "none";
-            (flecha as HTMLElement).style.transform = "none";
-            // Aplicamos el desfase vertical estático para que calcen con los nodos en margin-top 300px
-            // (flecha as HTMLElement).style.transform = "translateY(150px)";
+            (flecha as HTMLElement).classList.remove("transicion-flechas");
             (flecha as HTMLElement).style.setProperty("margin-top","300px","important");
           });
 
@@ -467,18 +433,14 @@ return ;
                 }
 
         if (DOM.nulo) {
-          DOM.nulo.style.transition = "none";
-          DOM.nulo.style.transform = "none";
-          // Actualizamos su variable CSS o top si lo requiere tu layout para congelarlo abajo
-          //  root.style.setProperty('--nulo-top', `${DOM.str.offsetTop+(DOM.principal.offsetHeight/2)}px`);
+          DOM.nulo.classList.remove("transicion-Flechas");
+          
           const ultimoNodo = DOM.contenedorNodos.lastElementChild;
           const topUN = (ultimoNodo as HTMLElement).offsetTop;
           root.style.setProperty('--linea-flecha-final-top', `${DOM.principal.offsetHeight*3/4 - 2.5}px`);
           root.style.setProperty('--nulo-top', `${( topUN - 50 - DOM.nulo.offsetHeight/2)}px`);
           root.style.setProperty('--punta-flecha-final-top', `${( topUN + DOM.nulo.offsetHeight/2 - 50)}px`);
 
-          // root.style.setProperty('--punta-flecha-final-top', `${DOM.str.offsetTop+DOM.nulo.offsetHeight+DOM.principal.offsetHeight/2}px`);
-        // root.style.setProperty('--punta-flecha-final-top', `${DOM.principal.offsetHeight*2/3 - (DOM.str.offsetTop - DOM.nulo.offsetHeight)}px`);
         }
 
 
@@ -491,13 +453,15 @@ return ;
 
           // 1. Convertimos el contenedor a dos filas (Wrap) justo en este frame
           if (DOM.contenedorNodos) {
-            DOM.contenedorNodos.style.flexWrap = "wrap";
-            DOM.contenedorNodos.style.alignContent = "flex-start";
-            DOM.contenedorNodos.style.alignItems = "flex-start";
+              DOM.contenedorNodos?.classList.add("cambio-flex");
           }
 
 
-
+          const saltoDeLineaNodos = crearSaltoFlex();
+            // if (DOM.contenedorNodos) {
+            // DOM.contenedorNodos.insertBefore(saltoDeLineaNodos, nodoNuevo.nextSibling);
+            DOM.contenedorNodos.prepend(saltoDeLineaNodos);
+          // }
 
 
           // 2. Tu función pura mete el nuevo nodo al principio (índice 0)
@@ -509,68 +473,15 @@ return ;
           // 🔥 Identificamos al nodo que antes estaba primero y ahora bajó a la segunda fila
           const nodoOrigenReal = todosLosNodos[1];
 
-          // 🟢 Seteamos la opacidad en 0 e iniciamos la transición justo acá, antes del salto
-          // if (nodoNuevo) {
-          //   nodoNuevo.style.opacity = "0";
-          //   nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
-          // }
-
-          // // 3. Creamos el bloque divisor
-          // const saltoDeLinea = document.createElement("div");
-          // saltoDeLinea.className = "salto-flex";
-          // saltoDeLinea.style.flexBasis = "100%";
-          // saltoDeLinea.style.height = "0";
-
-          // // 4. Lo insertamos exactamente DESPUÉS del nuevo nodo para partir la grilla
-          // if (DOM.contenedorNodos && nodoNuevo) {
-          //   DOM.contenedorNodos.insertBefore(saltoDeLinea, nodoNuevo.nextSibling);
-          // }
-
-
-                // 3. Insertamos el salto flex en ambos lados en la misma posición
-        const saltoDeLineaNodos = document.createElement("div");
-        saltoDeLineaNodos.className = "salto-flex";
-        saltoDeLineaNodos.style.flexBasis = "100%";
-        saltoDeLineaNodos.style.height = "0";
-
-            if (DOM.contenedorNodos && nodoNuevo) {
-            DOM.contenedorNodos.insertBefore(saltoDeLineaNodos, nodoNuevo.nextSibling);
-          }
-
-        // if (contenedorFlechas) {
-        //   const saltoDeLineaFlechas = document.createElement("div");
-        //   saltoDeLineaFlechas.className = "salto-flex";
-        //   saltoDeLineaFlechas.style.flexBasis = "100%";
-        //   saltoDeLineaFlechas.style.height = "0";
-        //   contenedorFlechas.prepend(saltoDeLineaFlechas);
-        // }
-
-
-
-
-
-
-
-
-
+    
 
           // 5. Con las dos filas armadas por el salto, pasamos todo al layout final
           todosLosNodos.forEach(nodo => {
-            nodo.style.alignSelf = "flex-start";
             nodo.style.setProperty("margin-top", "150px", "important");
           });
 
-          // // Forzamos el reflow y disparamos la animación suave hacia 1
-          // if (nodoNuevo) {
-          //   void nodoNuevo.offsetWidth; // Truco mecánico
-          //   nodoNuevo.style.opacity = "1";
            if (nodoNuevo) {
-            // nodoNuevo.style.alignSelf = "flex-start";
-            // nodoNuevo.style.marginTop = "150px";
-            nodoNuevo.style.opacity = "0";
-            // nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
-            // void nodoNuevo.offsetWidth;
-            // nodoNuevo.style.opacity = "1";
+
             setTimeout(() => {
               nodoNuevo.style.opacity = "1";
             }, 100);
@@ -620,6 +531,468 @@ return ;
 
         }, 100);
       }, 2000);
+
+
+
+
+}
+
+
+    
+
+//      if (nodos.length === 3) {
+
+
+//         const primero = DOM.contenedorNodos.firstElementChild as HTMLElement;
+
+
+//   s1 = (DOM.contenedorNodos.offsetWidth - 1 * primero.offsetWidth) / (1 + 1);
+//   s2 = (DOM.contenedorNodos.offsetWidth - (1 + 1) * primero.offsetWidth) / (1 + 2);
+
+
+// setFlechasNodos4(necesitaTransicion, 1, s1, s2, 0);
+
+
+//  primero.addEventListener("transitionend", function nald() {
+//     agregarNodo(DOM.inputNodo.value, 1);
+
+//     const nuevosNodos = getNodos() as HTMLElement[];
+
+
+//         for (let i = 1; i < nuevosNodos.length; i++) {
+//           nuevosNodos[i].classList.add("no-mover");
+//           nuevosNodos[i].style.left = '0px';
+//         }
+
+
+
+//           const nodoNuevo = nuevosNodos[0];
+
+//           if (nodoNuevo) {
+//             nodoNuevo.style.alignSelf = "flex-start";
+//             nodoNuevo.style.marginTop = "150px";
+//             nodoNuevo.style.opacity = "0";
+//             nodoNuevo.style.setProperty("margin-top", "150px", "important"); // Altura de Fila 2
+
+
+//             setTimeout(() => {
+//               nodoNuevo.style.opacity = "1";
+//             }, 100);
+//           }
+
+//           nodoNuevo.addEventListener("transitionend", function na() {
+
+//           if (DOM.contenedorFlechas) {
+//           const flechasExistentes = DOM.contenedorFlechas.querySelectorAll(".arrow");
+//           flechasExistentes.forEach((flecha) => {
+//             const hFlecha = flecha as HTMLElement;
+//             hFlecha.style.transition = "none";
+//             hFlecha.style.alignSelf = "flex-start"; // 👈 Igual que el nodo
+//             hFlecha.style.marginTop = "150px";       // 👈 Igual que el nodo
+  
+//           });
+//         }  
+        
+//           agregarFlecha(1);
+
+//           if (DOM.contenedorFlechas) {
+//             DOM.contenedorFlechas.style.alignContent = "flex-start";
+//             DOM.contenedorFlechas.style.alignItems = "flex-start";
+//           }
+
+//           const flechasActuales = getFlechas() as HTMLElement[];
+//           const primeraFlecha = flechasActuales[0];
+//           const ultimoHijoFlecha = primeraFlecha?.lastElementChild as HTMLElement | null;
+
+
+//           primeraFlecha.style.setProperty("margin-top","150px");
+
+
+//         if (DOM.contenedorFlechas &&  primeraFlecha) {
+//           const saltoDeLineaFlechas = document.createElement("div");
+//           saltoDeLineaFlechas.className = "salto-flex";
+//           saltoDeLineaFlechas.style.flexBasis = "100%";
+//           saltoDeLineaFlechas.style.height = "0";
+//           DOM.contenedorFlechas.insertBefore(saltoDeLineaFlechas, primeraFlecha.nextSibling);
+//         }
+//           ultimoHijoFlecha?.addEventListener("transitionend", function fl() {
+//             setFlechaInicial(true, necesitaTransicion);
+
+//             const primerFlecha = DOM.contenedorFlechas.firstElementChild as HTMLElement | null;
+//             primerFlecha?.addEventListener("transitionend", function g() {
+//               document.removeEventListener("click", handler, true);
+//               DOM.agregarComienzo.disabled = false;
+//               DOM.agregarFinal.disabled = false;
+
+//               actualizarSelectoresIntermedios();
+
+            
+//               primerFlecha.removeEventListener("transitionend", g);
+//             });
+
+
+//             ultimoHijoFlecha.removeEventListener("transitionend", fl);
+//           });
+
+//           });
+
+
+
+
+
+//     primero.removeEventListener("transitionend", nald);
+//   });
+
+
+
+// return ;
+//      }
+
+
+    // if (nodos.length < 2)  {
+    //   console.log("🟢 Ejecutando flujo horizontal...");
+
+    //   const nodosActualizados = getNodos() as HTMLElement[];
+    //   const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+    //   s1 = (DOM.contenedorNodos.offsetWidth - nodosActualizados.length * ultimo.offsetWidth) / (nodosActualizados.length + 1);
+    //   s2 = (DOM.contenedorNodos.offsetWidth - (nodosActualizados.length + 1) * ultimo.offsetWidth) / (nodosActualizados.length + 2);
+
+    //   setFlechaFinal(true, necesitaTransicion, s2);
+    //   setFlechasNodos(necesitaTransicion, 1, s1, s2);
+
+    //   ultimoNodo.addEventListener("transitionend", function nald() {
+    //     agregarNodo(DOM.inputNodo.value, 1);
+    //     const nuevosNodos = getNodos() as HTMLElement[];
+
+    //     for (let i = 1; i < nuevosNodos.length; i++) {
+    //       nuevosNodos[i].classList.add("no-mover");
+    //       nuevosNodos[i].style.left = '0px';
+    //     }
+
+    //     setTimeout(() => {
+    //       const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
+    //       if (primerHijo) primerHijo.style.opacity = "1";
+    //     }, 100);
+
+    //     const primerHijo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
+    //     primerHijo?.addEventListener("transitionend", function na() {
+    //       window.banderaFlechaInicial = 0;
+    //       setFlechaInicial(true, necesitaTransicion);
+
+    //       const inicialLi = DOM.inicialLi();
+    //       inicialLi?.addEventListener("transitionend", function af() {
+           
+           
+           
+    //         agregarFlecha(1);
+
+    //         const primerFlecha = DOM.contenedorFlechas.firstElementChild as HTMLElement | null;
+    //         primerFlecha?.addEventListener("transitionend", function g() {
+    //           document.removeEventListener("click", handler, true);
+    //           DOM.agregarComienzo.disabled = false;
+    //           DOM.agregarFinal.disabled = false;
+
+    //           actualizarSelectoresIntermedios();
+
+    //           if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
+    //             DOM.principalWrapper.removeAttribute("style");
+    //             renderizar();
+    //             setFlechaInicial(true, 0);
+    //             setFlechaFinal(true, 0);
+    //           } else {
+    //             DOM.principalWrapper.removeAttribute("style");
+    //           }
+
+    //           primerFlecha.removeEventListener("transitionend", g);
+    //         });
+
+    //         inicialLi.removeEventListener("transitionend", af);
+    //       });
+
+    //       primerHijo.removeEventListener("transitionend", na);
+    //     });
+
+    //     ultimoNodo.removeEventListener("transitionend", nald);
+    //   });
+
+    //   return;
+    // }
+
+    //   console.log("🔵 FASE 1: Bajada suave del Wrapper y Nodos por transform.");
+
+    //   // 1. Estiramos el búnker exterior suavemente
+    //   if (DOM.principalWrapper) {
+    //     DOM.principalWrapper.style.transition = "height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out";
+    //     DOM.principalWrapper.style.height = "600px";
+    //     DOM.principalWrapper.style.minHeight = "600px";
+    //     DOM.principalWrapper.style.maxHeight = "600px";
+    //   }
+
+    //   if (DOM.principal) DOM.principal.style.transition = "none";
+    //   if (DOM.contenedorNodos) DOM.contenedorNodos.style.transition = "none";
+
+    //   // 2. Bajada con tu valor corregido de transform
+    //   const nodosActuales = Array.from(getNodos() as HTMLElement[]);
+    //   nodosActuales.forEach(nodo => {
+    //     nodo.classList.remove("inmediato-nodo", "inmediato", "inmediato_reacomodo", "no-mover");
+    //     nodo.style.transition = "transform 2s ease-in-out";
+    //     nodo.style.transform = "translateY(250px)"; // 🔥 Tu corrección
+    //   });
+
+    //  const contenedorFlechas = document.getElementById("contenedor_flechas");
+    //   if (contenedorFlechas) {
+    //     const flechasExistentes = Array.from(contenedorFlechas.querySelectorAll(".arrow")) as HTMLElement[];
+
+    //     flechasExistentes.forEach((flecha) => {
+    //       // Replicamos la limpieza de tu setFlechasNodos() para permitir la transición suave
+    //       flecha.classList.remove("no-mover__flecha");
+
+    //       const elementosHijos = Array.from(flecha.children) as HTMLElement[];
+    //       elementosHijos.forEach((elemento) => {
+    //         elemento.classList.remove("inmediato");
+    //       });
+
+    //       // Ahora sí le aplicamos la animación de bajada
+    //       flecha.style.transition = "transform 2s ease-in-out";
+    //       flecha.style.transform = "translateY(250px)";
+    //     });
+    //   }
+
+
+
+
+    //   // B. Mover el nodo NULL (DOM.nulo)
+    //   if (DOM.nulo) {
+    //     DOM.nulo.style.transition = "transform 2s ease-in-out";
+    //     DOM.nulo.style.transform = "translateY(250px)";
+    //   }
+
+    //     const flecha_puntero_final = document.getElementById("flecha_puntero_final");
+    //     if (!flecha_puntero_final) return;
+    //     const hijos = flecha_puntero_final.children;
+
+    //             for (const hijo of hijos) {
+    //               (hijo as HTMLElement).classList.remove("inmediato");
+    //               (hijo as HTMLElement).style.transition = "top 2s ease-in-out";
+
+    //             }
+    //         const finalUl = DOM.finalUl();
+    //         const finalLi = DOM.finalLi();
+    //         const finalLs = DOM.finalLs();
+
+
+    //      if (finalUl && finalLi && finalLs) {
+    //       const altura = finalUl?.offsetTop;
+    //         finalUl.style.top = `${altura + 250}px`;
+    //         finalLi.style.top = `${DOM.str.offsetTop + DOM.nulo.offsetHeight + 250}px`;
+    //         finalLs.style.top = `${DOM.str.offsetTop + DOM.nulo.offsetHeight + 250}px`;
+    //      }
+    //   // const finalUl = DOM.finalUl();
+    //   // if (finalUl) {
+    //   //   finalUl.style.transition = "transform 2s ease-in-out";
+    //   //   finalUl.style.transform = "translateY(250px)";
+    //   // }
+
+    //   // =========================================================================
+    //   // FASE 2: RETENCIÓN (A los 2000ms, clavamos los nodos en el fondo)
+    //   // =========================================================================
+    //   setTimeout(() => {
+    //     console.log("⚡ FASE 2: Retención instantánea en contenedor de una fila.");
+
+    //     document.documentElement.style.setProperty('--principal-height', '600px');
+    //     if (DOM.principal) DOM.principal.style.height = "600px";
+    //     if (DOM.contenedorNodos) DOM.contenedorNodos.style.height = "600px";
+    //     if (DOM.contenedorFlechas) DOM.contenedorFlechas.style.height = "600px";
+    //     if (DOM.inicializador) DOM.inicializador.style.height = "600px";
+
+    //     nodosActuales.forEach(nodo => {
+    //       nodo.style.transition = "none";
+    //       nodo.style.transform = "none";
+    //       nodo.style.setProperty("margin-top", "300px", "important"); // 🔥 Tu corrección
+    //     });
+
+
+    //     const contenedorFlechas = document.getElementById("contenedor_flechas");
+    //     if (contenedorFlechas) {
+
+    //       const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
+    //       flechasExistentes.forEach((flecha) => {
+    //         (flecha as HTMLElement).style.transition = "none";
+    //         (flecha as HTMLElement).style.transform = "none";
+    //         // Aplicamos el desfase vertical estático para que calcen con los nodos en margin-top 300px
+    //         // (flecha as HTMLElement).style.transform = "translateY(150px)";
+    //         (flecha as HTMLElement).style.setProperty("margin-top","300px","important");
+    //       });
+
+
+
+
+
+
+    //     }
+
+    //     const flecha_puntero_final = document.getElementById("flecha_puntero_final");
+    //     if (!flecha_puntero_final) return;
+    //     const hijos = flecha_puntero_final.children;
+
+    //             for (const hijo of hijos) {
+    //               (hijo as HTMLElement).removeAttribute("style");
+    //             }
+
+    //     if (DOM.nulo) {
+    //       DOM.nulo.style.transition = "none";
+    //       DOM.nulo.style.transform = "none";
+    //       // Actualizamos su variable CSS o top si lo requiere tu layout para congelarlo abajo
+    //       //  root.style.setProperty('--nulo-top', `${DOM.str.offsetTop+(DOM.principal.offsetHeight/2)}px`);
+    //       const ultimoNodo = DOM.contenedorNodos.lastElementChild;
+    //       const topUN = (ultimoNodo as HTMLElement).offsetTop;
+    //       root.style.setProperty('--linea-flecha-final-top', `${DOM.principal.offsetHeight*3/4 - 2.5}px`);
+    //       root.style.setProperty('--nulo-top', `${( topUN - 50 - DOM.nulo.offsetHeight/2)}px`);
+    //       root.style.setProperty('--punta-flecha-final-top', `${( topUN + DOM.nulo.offsetHeight/2 - 50)}px`);
+
+    //       // root.style.setProperty('--punta-flecha-final-top', `${DOM.str.offsetTop+DOM.nulo.offsetHeight+DOM.principal.offsetHeight/2}px`);
+    //     // root.style.setProperty('--punta-flecha-final-top', `${DOM.principal.offsetHeight*2/3 - (DOM.str.offsetTop - DOM.nulo.offsetHeight)}px`);
+    //     }
+
+
+
+    //    // =========================================================================
+    //     // 🛠️ FASE 3: Pasando a modo multi-fila e insertando elementos.
+    //     // =========================================================================
+    //     setTimeout(() => {
+    //       console.log("🛠️ FASE 3: Pasando a modo multi-fila e insertando elementos.");
+
+    //       // 1. Convertimos el contenedor a dos filas (Wrap) justo en este frame
+    //       if (DOM.contenedorNodos) {
+    //         DOM.contenedorNodos.style.flexWrap = "wrap";
+    //         DOM.contenedorNodos.style.alignContent = "flex-start";
+    //         DOM.contenedorNodos.style.alignItems = "flex-start";
+    //       }
+
+
+
+
+
+    //       // 2. Tu función pura mete el nuevo nodo al principio (índice 0)
+    //       agregarNodo(DOM.inputNodo.value, 1);
+
+    //       const todosLosNodos = Array.from(getNodos() as HTMLElement[]);
+    //       const nodoNuevo = todosLosNodos[0]; // El recién inyectado arriba
+
+    //       // 🔥 Identificamos al nodo que antes estaba primero y ahora bajó a la segunda fila
+    //       const nodoOrigenReal = todosLosNodos[1];
+
+    //       // 🟢 Seteamos la opacidad en 0 e iniciamos la transición justo acá, antes del salto
+    //       // if (nodoNuevo) {
+    //       //   nodoNuevo.style.opacity = "0";
+    //       //   nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
+    //       // }
+
+    //       // // 3. Creamos el bloque divisor
+    //       // const saltoDeLinea = document.createElement("div");
+    //       // saltoDeLinea.className = "salto-flex";
+    //       // saltoDeLinea.style.flexBasis = "100%";
+    //       // saltoDeLinea.style.height = "0";
+
+    //       // // 4. Lo insertamos exactamente DESPUÉS del nuevo nodo para partir la grilla
+    //       // if (DOM.contenedorNodos && nodoNuevo) {
+    //       //   DOM.contenedorNodos.insertBefore(saltoDeLinea, nodoNuevo.nextSibling);
+    //       // }
+
+
+    //             // 3. Insertamos el salto flex en ambos lados en la misma posición
+    //     const saltoDeLineaNodos = document.createElement("div");
+    //     saltoDeLineaNodos.className = "salto-flex";
+    //     saltoDeLineaNodos.style.flexBasis = "100%";
+    //     saltoDeLineaNodos.style.height = "0";
+
+    //         if (DOM.contenedorNodos && nodoNuevo) {
+    //         DOM.contenedorNodos.insertBefore(saltoDeLineaNodos, nodoNuevo.nextSibling);
+    //       }
+
+    //     // if (contenedorFlechas) {
+    //     //   const saltoDeLineaFlechas = document.createElement("div");
+    //     //   saltoDeLineaFlechas.className = "salto-flex";
+    //     //   saltoDeLineaFlechas.style.flexBasis = "100%";
+    //     //   saltoDeLineaFlechas.style.height = "0";
+    //     //   contenedorFlechas.prepend(saltoDeLineaFlechas);
+    //     // }
+
+
+
+
+
+
+
+
+
+
+    //       // 5. Con las dos filas armadas por el salto, pasamos todo al layout final
+    //       todosLosNodos.forEach(nodo => {
+    //         nodo.style.alignSelf = "flex-start";
+    //         nodo.style.setProperty("margin-top", "150px", "important");
+    //       });
+
+    //       // // Forzamos el reflow y disparamos la animación suave hacia 1
+    //       // if (nodoNuevo) {
+    //       //   void nodoNuevo.offsetWidth; // Truco mecánico
+    //       //   nodoNuevo.style.opacity = "1";
+    //        if (nodoNuevo) {
+    //         // nodoNuevo.style.alignSelf = "flex-start";
+    //         // nodoNuevo.style.marginTop = "150px";
+    //         nodoNuevo.style.opacity = "0";
+    //         // nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
+    //         // void nodoNuevo.offsetWidth;
+    //         // nodoNuevo.style.opacity = "1";
+    //         setTimeout(() => {
+    //           nodoNuevo.style.opacity = "1";
+    //         }, 100);
+
+    //         // 🎯 AGREGADO: Escuchamos el final de la opacidad para disparar la flecha curva
+    //         nodoNuevo.addEventListener('transitionend', function dispararFlechaCurvaComienzo(e) {
+    //           if (e.propertyName === 'opacity') {
+    //             nodoNuevo.removeEventListener('transitionend', dispararFlechaCurvaComienzo);
+
+    //             const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
+    //             if (!contenedorCurvas) {
+    //               document.removeEventListener("click", handler, true);
+    //               DOM.agregarComienzo.disabled = false;
+    //               DOM.agregarFinal.disabled = false;
+    //               return;
+    //             }
+
+    //             // Si ambos nodos existen, calculamos la geometría rígida sin deformaciones
+    //             if (nodoNuevo && nodoOrigenReal) {
+    //               const animacionFlecha = crearFlechaCurvaInterfila(nodoNuevo, nodoOrigenReal, DOM.contenedorFlechasCurvas, DOM.contenedorNodos );
+                  
+    //               animacionFlecha.onfinish = () => {
+    //                 console.log("La animación del path terminó. Seteando flecha final...");
+
+
+    //                 setFlechaInicial(true, necesitaTransicion);
+
+    //                 // Aseguramos las variables CSS de la punta de la flecha curva en su destino exacto
+    //                 // document.documentElement.style.setProperty('--punta-flecha-curva-left', `${x2}px`);
+    //                 // document.documentElement.style.setProperty('--punta-flecha-curva-top', `${y2}px`);
+    //                 document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '1');
+
+
+    //                 // Liberamos los controles de la UI al terminar la secuencia completa
+    //                 document.removeEventListener("click", handler, true);
+    //                 DOM.agregarComienzo.disabled = false;
+    //                 DOM.agregarFinal.disabled = false;
+
+    //                 actualizarSelectoresIntermedios();
+    //               };
+    //             }
+    //           }
+    //         });
+    //       }
+
+    //       console.log("🛑 Estructura DOM armada y escuchador de flecha curva activo.");
+
+    //     }, 100);
+    //   }, 2000);
 
 
 
@@ -746,113 +1119,10 @@ function agregarNodoAlFinal(): void {
 
 
 
-
-
-
-
-// // 1. Calculamos la cantidad de saltos flex en el contenedor
-// const saltosFlex = DOM.contenedorNodos.querySelectorAll(".salto-flex");
-// const S = saltosFlex.length; // Cantidad de saltos flex actuales
-
-// // 2. Definimos tu M (Capacidad máxima por fila)
-// const M = 2; // Cambialo a 5 cuando pases a producción
-
-// // 3. Calculamos 'n' (nodos en la última fila)
-// const todosLosNodos = Array.from(getNodos() as HTMLElement[]);
-// let n = 0;
-
-// if (S === 0) {
-//   // Si no hay saltos, todos los nodos están en la primera fila
-//   n = todosLosNodos.length;
-// } else {
-//   // Si hay saltos, buscamos el último salto flex insertado
-//   const ultimoSalto = saltosFlex[S - 1];
-  
-//   // Contamos cuántos nodos hay posicionados DESPUÉS de ese divisor en el DOM
-//   let hermanoSiguiente = ultimoSalto.nextElementSibling;
-//   while (hermanoSiguiente) {
-//     if (hermanoSiguiente.classList.contains("nodo")) { // Asegurate de usar tu clase de nodo
-//       n++;
-//     }
-//     hermanoSiguiente = hermanoSiguiente.nextElementSibling;
-//   }
-// }
-
-// console.log(`📊 ESTADO ACTUAL -> S (Filas extras): ${S} | n (Nodos en última fila): ${n} de ${M}`);
-
-
-
-// // CONDICIONAL DINÁMICO DE CONTROL (Suelto para pruebas)
-// // =========================================================================
-
-// if (n < M) {
-//   // 🟢 CASO A: REACOMODO HORIZONTAL EN LA ÚLTIMA FILA
-//   // (Funciona igual para 1 nodo en Fila 1, o para el Nodo 4 en Fila 2)
-//   console.log("🟢 Ejecutando reacomodo horizontal en la última fila...");
-  
-//   // TODO: Acá vas a aplicar tu lógica de espaciado (s1, s2)
-//   // pero afectando únicamente a los últimos 'n' nodos.
-  
-// } else if (n === M) {
-//   // 🔵 CASO B: CREACIÓN DE NUEVA FILA (DESBORDE)
-//   // (Funciona para el paso de 2 a 3 nodos, o de 5 a 6 nodos)
-//   console.log("🔵 Ejecutando desborde: Estirando contenedor y creando nueva fila...");
-  
-//   // Tu lógica de animación de bajada de 250px, estiramiento a 600px,
-//   // inserción del nuevo .salto-flex y dibujo de la flecha curva.
-// }
-
-
-
-
-// const M = 2; // Máximo de nodos por fila
-// const totalNodosActuales = getNodos().length;
-
-// // ============================================================================
-// // 🟢 CAMINO A: LA FILA ACTUAL TIENE ESPACIO (Reacomodo Horizontal)
-// // Total actual: 1, 3, 5... (para M = 2)
-// // ============================================================================
-// if (totalNodosActuales % M !== 0) {
-
-//   const filaActual = Math.floor(totalNodosActuales / M);
-//   const indiceInicioFila = filaActual * M; // 0 para Fila 1, 2 para Fila 2, etc.
-//   const nodosEnEstaFila = totalNodosActuales % M;
-
-//   // Calculamos los espaciados s1 y s2 para los nodos de ESTA fila
-//   s1 = (DOM.contenedorNodos.offsetWidth - nodosEnEstaFila * ultimo.offsetWidth) / (nodosEnEstaFila + 1);
-//   s2 = (DOM.contenedorNodos.offsetWidth - (nodosEnEstaFila + 1) * ultimo.offsetWidth) / (nodosEnEstaFila + 2);
-
-//   if (filaActual === 0) {
-//     setFlechaInicial(true, necesitaTransicion, s2);
-//   }
-
-//   // Desplazamiento horizontal usando la función refinada
-//   setFlechasNodos(necesitaTransicion, 0, s1, s2, indiceInicioFila);
-
-//   // ... (Gatillos transitionend, inyección del nuevo nodo en la misma fila)
-//   return;
-// }
-
-// // ============================================================================
-// // 🔵 CAMINO B: LA FILA ACTUAL ESTÁ LLENA (Expansión y Salto de Fila / ELSE)
-// // Total actual: 2, 4, 6... (para M = 2)
-// // ============================================================================
-// else {
-//   console.log("Paso 1: Expansión escalable a 600px con salto a nueva fila.");
-
-//   // Tu bloque ELSE de expansión completo:
-//   // 1. Redimensionar wrappers a 600px (o la altura según el número de fila)
-//   // 2. Insertar `salto-flex`
-//   // 3. Crear el nuevo nodo en la fila de abajo
-//   // 4. Disparar `crearFlechaCurvaInterfila`
-  
-//   // ... (Todo el código que pasaste arriba)
-//   return;
-// }
-
-
-
 const M = 2; // Tu límite configurado por fila
+
+
+
 
 
 
@@ -868,14 +1138,17 @@ const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
   // Recalculamos espaciados s1 y s2 para los nodos de la ÚLTIMA fila únicamente
   const s1 = (DOM.contenedorNodos.offsetWidth - n * ultimo.offsetWidth) / (n + 1);
   const s2 = (DOM.contenedorNodos.offsetWidth - (n + 1) * ultimo.offsetWidth) / (n + 2);
-
+console.log("el valor de s1 es: ",s1);
+console.log("el valor de s2 es: ",s2);
   if (layout.totalFilas === 1) {
     // Solo si estamos en la Fila 1 ajustamos la flecha del puntero inicial (StrPtr)
     setFlechaInicial(true, necesitaTransicion, s2);
   }
 
   // Reacomodamos únicamente los nodos de esta última fila
-  setFlechasNodos(necesitaTransicion, 0, s1, s2, layout.indiceInicioUltimaFila);
+  // setFlechasNodos(necesitaTransicion, 0, s1, s2);
+
+  setFlechasNodosConFlechaCurva(necesitaTransicion, 0, s1, s2, layout.indiceInicioUltimaFila,"receptor",layout);
   
     ultimo.addEventListener("transitionend", function nald() {
     agregarNodo(DOM.inputNodo.value, 0);
@@ -885,7 +1158,7 @@ const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
 
         for (let i = 0; i < (nuevosNodos.length - 1); i++) {
           nuevosNodos[i].classList.add("no-mover");
-          nuevosNodos[i].style.left = '0px';
+          nuevosNodos[i].style.removeProperty("left");
         }
 
 
@@ -893,13 +1166,9 @@ const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
           const nodoNuevo = nuevosNodos[nuevosNodos.length - 1];
 
           if (nodoNuevo) {
-            nodoNuevo.style.alignSelf = "flex-start";
+             if (layout.totalFilas > 1) {
             nodoNuevo.style.marginTop = "150px";
-            nodoNuevo.style.opacity = "0";
-            nodoNuevo.style.setProperty("margin-top", "150px", "important"); // Altura de Fila 2
-            // nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
-            // void nodoNuevo.offsetWidth;
-            // nodoNuevo.style.opacity = "1";
+             }
             setTimeout(() => {
               nodoNuevo.style.opacity = "1";
             }, 100);
@@ -907,40 +1176,46 @@ const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
 
           nodoNuevo.addEventListener("transitionend", function na() {
              
-          nodoNuevo.removeEventListener("transitionend", na);
-        if (DOM.contenedorFlechas) {
-          const flechasExistentes = DOM.contenedorFlechas.querySelectorAll(".arrow");
-          flechasExistentes.forEach((flecha) => {
-            const hFlecha = flecha as HTMLElement;
-            hFlecha.style.transition = "none";
-            hFlecha.style.alignSelf = "flex-start"; // 👈 Igual que el nodo
-            hFlecha.style.marginTop = "150px";       // 👈 Igual que el nodo
-            // hFlecha.style.transform = "";           // Eliminamos el translateY manual viejo
-          });
-        }
+nodoNuevo.removeEventListener("transitionend", na);
 
-          agregarFlecha(0);
+const esFilaInferior = layout.totalFilas > 1;
+  const esSegundoNodoDeFila = (layout.nodosUltimaFila + 1) === 2;
 
-          if (DOM.contenedorFlechas) {
-            DOM.contenedorFlechas.style.alignContent = "flex-start";
-            DOM.contenedorFlechas.style.alignItems = "flex-start";
-          }
-          const flechasActuales = getFlechas() as HTMLElement[];
-          const ultimaFlecha = flechasActuales[flechasActuales.length - 1];
-          const ultimoHijoFlecha = ultimaFlecha?.lastElementChild as HTMLElement | null;
+  console.log("El valor de esFilaInferior es: ",esFilaInferior);
+  console.log("El valor de esSegundoNodoDeFila es: ",esSegundoNodoDeFila);
+  if (esFilaInferior && esSegundoNodoDeFila) {
+    if (DOM.contenedorFlechas) {
+      console.log("al final tenia que entrar aca , pero no se si entra");
+      // 1. Reestructuración del contenedor
+      DOM.contenedorFlechas.classList.add("cambio-flex");
 
-          ultimaFlecha.style.setProperty("margin-top","150px");
+      // 2. Ajuste de flechas existentes
+      const flechasExistentes = DOM.contenedorFlechas.querySelectorAll(".arrow");
+      flechasExistentes.forEach((flecha) => {
+        const hFlecha = flecha as HTMLElement;
+        hFlecha.style.marginTop = "150px";
+      });
 
+      // 3. Inserción anticipada del salto-flex (al final del contenedor)
+      const saltoDeLineaFlechas = crearSaltoFlex();
+      DOM.contenedorFlechas.appendChild(saltoDeLineaFlechas);
+    }
+  }
 
-        if (DOM.contenedorFlechas) {
-          const saltoDeLineaFlechas = document.createElement("div");
-          saltoDeLineaFlechas.className = "salto-flex";
-          saltoDeLineaFlechas.style.flexBasis = "100%";
-          saltoDeLineaFlechas.style.height = "0";
-          DOM.contenedorFlechas.insertBefore(saltoDeLineaFlechas, ultimaFlecha);
-        }
+  // Creación de la nueva flecha (Cae automáticamente debajo del salto-flex si se creó arriba)
+  agregarFlecha(0);
 
+  const flechasActuales = getFlechas() as HTMLElement[];
+  const ultimaFlecha = flechasActuales[flechasActuales.length - 1];
 
+  
+    // Únicamente seteamos el margin-top a la nueva flecha si estamos en fila inferior
+    if (esFilaInferior && esSegundoNodoDeFila) {
+      ultimaFlecha.style.setProperty("margin-top", "150px");
+    }
+  
+
+    const ultimoHijoFlecha = ultimaFlecha.lastElementChild as HTMLElement | null;
 
           ultimoHijoFlecha?.addEventListener("transitionend", function fl() {
             setFlechaFinal(true, necesitaTransicion);
@@ -978,289 +1253,36 @@ const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
   // Rama A: Reacomodamiento Horizontal
   // Calculas desplazamiento usando layout.nodosUltimaFila y layout.indiceInicioUltimaFila
 } else {
-  // Rama B: Expansión Vertical (Nueva Fila)
-  // Insertas el `.salto-flex`, abres la fila layout.totalFilas y dibujas la curva inter-row
-}
-
-
-
-
-
-
-
-
-
-
-
-    if (nodos.length === 3) {
-  console.log("🧪 [TEST] Ejecutando flujo de reacomodo en Fila 2 (Nodo 3 -> Nodo 4)");
-
-  // 1. Calculamos s1 y s2 para la última fila
-  // NOTA: Acá usamos la misma matemática de espaciado, pero pensando en la Fila 2.
-  // const nodosActualizados = getNodos() as HTMLElement[];
-  const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
-
-  // Calculamos el espacio para cuando haya 2 nodos abajo (el actual + el nuevo)
-  s1 = (DOM.contenedorNodos.offsetWidth - 1 * ultimo.offsetWidth) / (1 + 1);
-  s2 = (DOM.contenedorNodos.offsetWidth - (1 + 1) * ultimo.offsetWidth) / (1 + 2);
-
-  // 2. Ejecutamos tu setFlechasNodos RENOVADO pasando el índice de inicio (2)
-  // Le pasamos el índice 2 para que solo actúe sobre el Nodo 3 (el de la Fila 2)
-
-
-  setFlechasNodos3(necesitaTransicion, 0, s1, s2, 2);
-
-  // 3. Al terminar la animación del Nodo 3, inyectamos el Nodo 4
-  ultimo.addEventListener("transitionend", function nald() {
-    agregarNodo(DOM.inputNodo.value, 0);
-
-    const nuevosNodos = getNodos() as HTMLElement[];
-
-
-        for (let i = 0; i < (nuevosNodos.length - 1); i++) {
-          nuevosNodos[i].classList.add("no-mover");
-          nuevosNodos[i].style.left = '0px';
-        }
-
-
-
-          const nodoNuevo = nuevosNodos[nuevosNodos.length - 1];
-
-          if (nodoNuevo) {
-            nodoNuevo.style.alignSelf = "flex-start";
-            nodoNuevo.style.marginTop = "150px";
-            nodoNuevo.style.opacity = "0";
-            nodoNuevo.style.setProperty("margin-top", "150px", "important"); // Altura de Fila 2
-            // nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
-            // void nodoNuevo.offsetWidth;
-            // nodoNuevo.style.opacity = "1";
-            setTimeout(() => {
-              nodoNuevo.style.opacity = "1";
-            }, 100);
-          }
-
-          nodoNuevo.addEventListener("transitionend", function na() {
-             
-          nodoNuevo.removeEventListener("transitionend", na);
-        if (DOM.contenedorFlechas) {
-          const flechasExistentes = DOM.contenedorFlechas.querySelectorAll(".arrow");
-          flechasExistentes.forEach((flecha) => {
-            const hFlecha = flecha as HTMLElement;
-            hFlecha.style.transition = "none";
-            hFlecha.style.alignSelf = "flex-start"; // 👈 Igual que el nodo
-            hFlecha.style.marginTop = "150px";       // 👈 Igual que el nodo
-            // hFlecha.style.transform = "";           // Eliminamos el translateY manual viejo
-          });
-        }
-
-          agregarFlecha(0);
-
-          if (DOM.contenedorFlechas) {
-            DOM.contenedorFlechas.style.alignContent = "flex-start";
-            DOM.contenedorFlechas.style.alignItems = "flex-start";
-          }
-          const flechasActuales = getFlechas() as HTMLElement[];
-          const ultimaFlecha = flechasActuales[flechasActuales.length - 1];
-          const ultimoHijoFlecha = ultimaFlecha?.lastElementChild as HTMLElement | null;
-
-          ultimaFlecha.style.setProperty("margin-top","150px");
-
-
-        if (DOM.contenedorFlechas) {
-          const saltoDeLineaFlechas = document.createElement("div");
-          saltoDeLineaFlechas.className = "salto-flex";
-          saltoDeLineaFlechas.style.flexBasis = "100%";
-          saltoDeLineaFlechas.style.height = "0";
-          DOM.contenedorFlechas.insertBefore(saltoDeLineaFlechas, ultimaFlecha);
-        }
-
-
-
-          ultimoHijoFlecha?.addEventListener("transitionend", function fl() {
-            setFlechaFinal(true, necesitaTransicion);
-
-
-          const finalLi = DOM.finalLi();
-          finalLi?.addEventListener("transitionend", function g() {
-            // Liberación del camino original
-            document.removeEventListener("click", handler, true);
-            DOM.agregarComienzo.disabled = false;
-            DOM.agregarFinal.disabled = false;
-
-            actualizarSelectoresIntermedios();
-
-
-
-            finalUl?.classList.remove("no-desplazar");
-            finalLi?.removeEventListener("transitionend", g);
-          });
-
-            ultimoHijoFlecha.removeEventListener("transitionend", fl);
-          });
-
-          });
-
-
-
-
-
-    ultimo.removeEventListener("transitionend", nald);
-  });
-
-  return; // 🔥 Cortamos acá para que no siga con el resto del código
-}
-
-
-
-    if (totalNodosActuales < 2) {
-      // =========================================================================
-      // 🟢 CAMINO ORIGINAL: ENCAPSULADO POR COMPLETO AQUÍ DENTRO
-      // =========================================================================
-      s1 = (DOM.contenedorNodos.offsetWidth - totalNodosActuales * ultimo.offsetWidth) / (totalNodosActuales + 1);
-      s2 = (DOM.contenedorNodos.offsetWidth - (totalNodosActuales + 1) * ultimo.offsetWidth) / (totalNodosActuales + 2);
-
-      setFlechaInicial(true, necesitaTransicion, s2);
-      setFlechasNodos(necesitaTransicion, 0, s1, s2);
-
-      // MUDAMOS AQUÍ TODO LO QUE ANTES ESTABA SUELTO ABAJO:
-      const primerNodo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
-      primerNodo?.addEventListener("transitionend", function nald() {
-        agregarNodo(DOM.inputNodo.value, 0);
-        const nuevosNodos = getNodos() as HTMLElement[];
-
-        for (let i = 0; i < (nuevosNodos.length - 1); i++) {
-          nuevosNodos[i].classList.add("no-mover");
-          nuevosNodos[i].style.left = '0px';
-        }
-
-        setTimeout(() => {
-          const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement | null;
-          if (ultimo) ultimo.style.opacity = "1";
-        }, 100);
-
-        const ultimoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement | null;
-        ultimoNodo?.addEventListener("transitionend", function na() {
-          agregarFlecha(0);
-          const flechasActuales = getFlechas() as HTMLElement[];
-          const ultimaFlecha = flechasActuales[flechasActuales.length - 1];
-          const ultimoHijoFlecha = ultimaFlecha?.lastElementChild as HTMLElement | null;
-
-          ultimoHijoFlecha?.addEventListener("transitionend", function fl() {
-            setFlechaFinal(true, necesitaTransicion);
-            ultimoHijoFlecha.removeEventListener("transitionend", fl);
-          });
-
-          const finalLi = DOM.finalLi();
-          finalLi?.addEventListener("transitionend", function g() {
-            // Liberación del camino original
-            document.removeEventListener("click", handler, true);
-            DOM.agregarComienzo.disabled = false;
-            DOM.agregarFinal.disabled = false;
-
-            actualizarSelectoresIntermedios();
-
-            if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
-              DOM.principal.removeAttribute("style");
-              renderizar();
-              setFlechaInicial(true, 0);
-              setFlechaFinal(true, 0);
-            } else {
-              DOM.principal.removeAttribute("style");
-            }
-
-            finalUl?.classList.remove("no-desplazar");
-            finalLi?.removeEventListener("transitionend", g);
-          });
-
-          ultimoNodo.removeEventListener("transitionend", na);
-        });
-
-        primerNodo.removeEventListener("transitionend", nald);
-      });
-
-    finalUl.classList.add("no-desplazar");
-     return;
-    }
-      // =========================================================================
-      // 🔵 TU NUEVO CAMINO ELSE (TOTALMENTE AISLADO)
-      // =========================================================================
+      
       console.log("Paso 1: Expansión escalable a 600px con contra-desplazamiento interno.");
 
-      if (DOM.principalWrapper) {
-        DOM.principalWrapper.style.transition = "height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out";
+
         DOM.principalWrapper.style.overflow = "hidden";
-        DOM.principalWrapper.style.height = "600px";
-        DOM.principalWrapper.style.minHeight = "600px";
-        DOM.principalWrapper.style.maxHeight = "600px";
-      }
+         DOM.principalWrapper?.classList.add("contenedor-expandido");
+   
 
       setTimeout(() => {
+     
         document.documentElement.style.setProperty('--principal-height', '600px');
-        if (DOM.principal) {
-          DOM.principal.style.transition = "none";
-          DOM.principal.style.height = "600px";
-          DOM.principal.style.minHeight = "600px";
-        }
-        if (DOM.contenedorNodos) {
-          DOM.contenedorNodos.style.transition = "none";
-          DOM.contenedorNodos.style.height = "600px";
-          DOM.contenedorNodos.style.minHeight = "600px";
-          // DOM.contenedorNodos.style.flexWrap = "wrap";
-          DOM.contenedorNodos.style.alignContent = "flex-start";
-          DOM.contenedorNodos.style.alignItems = "flex-start";
-        }
-        if (DOM.inicializador) {
-          DOM.inicializador.style.transition = "none";
-          DOM.inicializador.style.height = "600px";
-        }
+     
+          DOM.contenedorNodos?.classList.add("cambio-flex");
+ 
 
         const contenedorFlechas = document.getElementById("contenedor_flechas");
-        if (contenedorFlechas) {
-          contenedorFlechas.style.transition = "none";
-          contenedorFlechas.style.height = "600px";
-          contenedorFlechas.style.minHeight = "600px";
-          contenedorFlechas.style.alignContent = "flex-start";
-        }
+   
+          DOM.contenedorFlechas?.classList.add("cambio-flex");
 
-        const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
-        if (contenedorCurvas) {
-          contenedorCurvas.style.height = "600px";
-          contenedorCurvas.style.minHeight = "600px";
-        }
 
-        // const desvioCentro = (600 - 400) / 2;
-        // if (contenedorFlechas) {
-        //   const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
-        //   flechasExistentes.forEach((flecha) => {
-        //     (flecha as HTMLElement).style.transform = `translateY(-${desvioCentro}px)`;
-        //   });
-        // }
-
-        // 2. Aplicamos a las flechas el mismo comportamiento individual que a los nodos
-        // if (contenedorFlechas) {
-        //   const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
-        //   flechasExistentes.forEach((flecha) => {
-        //     const hFlecha = flecha as HTMLElement;
-        //     hFlecha.style.transition = "none";
-        //     hFlecha.style.alignSelf = "flex-start"; // 👈 Igual que el nodo
-        //     hFlecha.style.marginTop = "150px";       // 👈 Igual que el nodo
-        //     // hFlecha.style.transform = "";           // Eliminamos el translateY manual viejo
-        //   });
-        // }
+    
 
         if (contenedorFlechas) {
 
           const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
           flechasExistentes.forEach((flecha) => {
-            (flecha as HTMLElement).style.transition = "none";
-            (flecha as HTMLElement).style.transform = "none";
-            // Aplicamos el desfase vertical estático para que calcen con los nodos en margin-top 300px
-            // (flecha as HTMLElement).style.transform = "translateY(150px)";
             (flecha as HTMLElement).style.setProperty("margin-top","150px","important");
           });
 
         }
-
 
           const ultimoNodo = DOM.contenedorNodos.lastElementChild;
           const topUN = (ultimoNodo as HTMLElement).offsetTop;
@@ -1268,27 +1290,19 @@ const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
           root.style.setProperty('--nulo-top', `${( 400 - 50 - DOM.nulo.offsetHeight/2)}px`);
           root.style.setProperty('--punta-flecha-final-top', `${( 400 + DOM.nulo.offsetHeight/2 - 50)}px`);
 
+
+          
         const nodosActuales = Array.from(getNodos() as HTMLElement[]);
         nodosActuales.forEach(nodo => {
-          nodo.style.transition = "none";
-          nodo.style.alignSelf = "flex-start";
           nodo.style.marginTop = "150px";
         });
 
         // 3. Insertamos el salto flex en ambos lados en la misma posición
-        const saltoDeLineaNodos = document.createElement("div");
-        saltoDeLineaNodos.className = "salto-flex";
-        saltoDeLineaNodos.style.flexBasis = "100%";
-        saltoDeLineaNodos.style.height = "0";
-        DOM.contenedorNodos.appendChild(saltoDeLineaNodos);
+          const saltoDeLineaNodos = crearSaltoFlex();
+          DOM.contenedorNodos.appendChild(saltoDeLineaNodos);
 
-        // if (contenedorFlechas) {
-        //   const saltoDeLineaFlechas = document.createElement("div");
-        //   saltoDeLineaFlechas.className = "salto-flex";
-        //   saltoDeLineaFlechas.style.flexBasis = "100%";
-        //   saltoDeLineaFlechas.style.height = "0";
-        //   contenedorFlechas.appendChild(saltoDeLineaFlechas);
-        // }
+
+
 
         setTimeout(() => {
           const nodosAntesDeAgregar = Array.from(getNodos() as HTMLElement[]);
@@ -1300,12 +1314,7 @@ const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
           const nodoNuevo = todosLosNodos[todosLosNodos.length - 1];
 
           if (nodoNuevo) {
-            nodoNuevo.style.alignSelf = "flex-start";
             nodoNuevo.style.marginTop = "150px";
-            nodoNuevo.style.opacity = "0";
-            // nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
-            // void nodoNuevo.offsetWidth;
-            // nodoNuevo.style.opacity = "1";
             setTimeout(() => {
               nodoNuevo.style.opacity = "1";
             }, 100);
@@ -1314,13 +1323,13 @@ const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
               if (e.propertyName === 'opacity') {
                 nodoNuevo.removeEventListener('transitionend', dispararFlechaCurva);
 
-                const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
-                if (!contenedorCurvas) {
-                  document.removeEventListener("click", handler, true); // 👈 Seguridad
-                  DOM.agregarComienzo.disabled = false;
-                  DOM.agregarFinal.disabled = false;
-                  return;
-                }
+                // const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
+                // if (!contenedorCurvas) {
+                //   document.removeEventListener("click", handler, true); // 👈 Seguridad
+                //   DOM.agregarComienzo.disabled = false;
+                //   DOM.agregarFinal.disabled = false;
+                //   return;
+                // }
 
                 const nodoCinco = nodoOrigenReal;
                 const nodoSeis = nodoNuevo;
@@ -1356,6 +1365,398 @@ const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
           }
         }, 100);
       }, 2000);
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+//     if (nodos.length === 3) {
+
+
+
+//   console.log("🧪 [TEST] Ejecutando flujo de reacomodo en Fila 2 (Nodo 3 -> Nodo 4)");
+
+//   // 1. Calculamos s1 y s2 para la última fila
+//   // NOTA: Acá usamos la misma matemática de espaciado, pero pensando en la Fila 2.
+//   // const nodosActualizados = getNodos() as HTMLElement[];
+//   const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement;
+
+//   // Calculamos el espacio para cuando haya 2 nodos abajo (el actual + el nuevo)
+//   s1 = (DOM.contenedorNodos.offsetWidth - 1 * ultimo.offsetWidth) / (1 + 1);
+//   s2 = (DOM.contenedorNodos.offsetWidth - (1 + 1) * ultimo.offsetWidth) / (1 + 2);
+
+//   // 2. Ejecutamos tu setFlechasNodos RENOVADO pasando el índice de inicio (2)
+//   // Le pasamos el índice 2 para que solo actúe sobre el Nodo 3 (el de la Fila 2)
+
+
+//   setFlechasNodos3(necesitaTransicion, 0, s1, s2, 2);
+
+//   // 3. Al terminar la animación del Nodo 3, inyectamos el Nodo 4
+//   ultimo.addEventListener("transitionend", function nald() {
+//     agregarNodo(DOM.inputNodo.value, 0);
+
+//     const nuevosNodos = getNodos() as HTMLElement[];
+
+
+//         for (let i = 0; i < (nuevosNodos.length - 1); i++) {
+//           nuevosNodos[i].classList.add("no-mover");
+//           nuevosNodos[i].style.left = '0px';
+//         }
+
+
+
+//           const nodoNuevo = nuevosNodos[nuevosNodos.length - 1];
+
+//           if (nodoNuevo) {
+//             nodoNuevo.style.alignSelf = "flex-start";
+//             nodoNuevo.style.marginTop = "150px";
+//             nodoNuevo.style.opacity = "0";
+//             nodoNuevo.style.setProperty("margin-top", "150px", "important"); // Altura de Fila 2
+//             // nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
+//             // void nodoNuevo.offsetWidth;
+//             // nodoNuevo.style.opacity = "1";
+//             setTimeout(() => {
+//               nodoNuevo.style.opacity = "1";
+//             }, 100);
+//           }
+
+//           nodoNuevo.addEventListener("transitionend", function na() {
+             
+//           nodoNuevo.removeEventListener("transitionend", na);
+
+
+         
+//          if (DOM.contenedorFlechas) {
+//           const flechasExistentes = DOM.contenedorFlechas.querySelectorAll(".arrow");
+//           flechasExistentes.forEach((flecha) => {
+//             const hFlecha = flecha as HTMLElement;
+//             hFlecha.style.transition = "none";
+//             hFlecha.style.alignSelf = "flex-start"; // 👈 Igual que el nodo
+//             hFlecha.style.marginTop = "150px";       // 👈 Igual que el nodo
+//             // hFlecha.style.transform = "";           // Eliminamos el translateY manual viejo
+//           });
+//         }
+
+//           agregarFlecha(0);
+
+//           if (DOM.contenedorFlechas) {
+//             DOM.contenedorFlechas.style.alignContent = "flex-start";
+//             DOM.contenedorFlechas.style.alignItems = "flex-start";
+//           }
+//           const flechasActuales = getFlechas() as HTMLElement[];
+//           const ultimaFlecha = flechasActuales[flechasActuales.length - 1];
+//           const ultimoHijoFlecha = ultimaFlecha?.lastElementChild as HTMLElement | null;
+
+//           ultimaFlecha.style.setProperty("margin-top","150px");
+
+
+//         if (DOM.contenedorFlechas) {
+//           const saltoDeLineaFlechas = document.createElement("div");
+//           saltoDeLineaFlechas.className = "salto-flex";
+//           saltoDeLineaFlechas.style.flexBasis = "100%";
+//           saltoDeLineaFlechas.style.height = "0";
+//           DOM.contenedorFlechas.insertBefore(saltoDeLineaFlechas, ultimaFlecha);
+//         }
+
+
+
+//           ultimoHijoFlecha?.addEventListener("transitionend", function fl() {
+//             setFlechaFinal(true, necesitaTransicion);
+
+
+//           const finalLi = DOM.finalLi();
+//           finalLi?.addEventListener("transitionend", function g() {
+//             // Liberación del camino original
+//             document.removeEventListener("click", handler, true);
+//             DOM.agregarComienzo.disabled = false;
+//             DOM.agregarFinal.disabled = false;
+
+//             actualizarSelectoresIntermedios();
+
+
+
+//             finalUl?.classList.remove("no-desplazar");
+//             finalLi?.removeEventListener("transitionend", g);
+//           });
+
+//             ultimoHijoFlecha.removeEventListener("transitionend", fl);
+//           });
+
+//           });
+
+
+
+
+
+//     ultimo.removeEventListener("transitionend", nald);
+//   });
+
+//   return; // 🔥 Cortamos acá para que no siga con el resto del código
+// }
+
+
+
+    // if (totalNodosActuales < 2) {
+    //   // =========================================================================
+    //   // 🟢 CAMINO ORIGINAL: ENCAPSULADO POR COMPLETO AQUÍ DENTRO
+    //   // =========================================================================
+    //   s1 = (DOM.contenedorNodos.offsetWidth - totalNodosActuales * ultimo.offsetWidth) / (totalNodosActuales + 1);
+    //   s2 = (DOM.contenedorNodos.offsetWidth - (totalNodosActuales + 1) * ultimo.offsetWidth) / (totalNodosActuales + 2);
+
+    //   setFlechaInicial(true, necesitaTransicion, s2);
+    //   setFlechasNodos(necesitaTransicion, 0, s1, s2);
+
+    //   // MUDAMOS AQUÍ TODO LO QUE ANTES ESTABA SUELTO ABAJO:
+    //   const primerNodo = DOM.contenedorNodos.firstElementChild as HTMLElement | null;
+    //   primerNodo?.addEventListener("transitionend", function nald() {
+    //     agregarNodo(DOM.inputNodo.value, 0);
+    //     const nuevosNodos = getNodos() as HTMLElement[];
+
+    //     for (let i = 0; i < (nuevosNodos.length - 1); i++) {
+    //       nuevosNodos[i].classList.add("no-mover");
+    //       nuevosNodos[i].style.left = '0px';
+    //     }
+
+    //     setTimeout(() => {
+    //       const ultimo = DOM.contenedorNodos.lastElementChild as HTMLElement | null;
+    //       if (ultimo) ultimo.style.opacity = "1";
+    //     }, 100);
+
+    //     // const ultimoNodo = DOM.contenedorNodos.lastElementChild as HTMLElement | null;
+    //     ultimo?.addEventListener("transitionend", function na() {
+    //       agregarFlecha(0);
+    //       const flechasActuales = getFlechas() as HTMLElement[];
+    //       const ultimaFlecha = flechasActuales[flechasActuales.length - 1];
+    //       const ultimoHijoFlecha = ultimaFlecha?.lastElementChild as HTMLElement | null;
+
+    //       ultimoHijoFlecha?.addEventListener("transitionend", function fl() {
+    //         setFlechaFinal(true, necesitaTransicion);
+    //         ultimoHijoFlecha.removeEventListener("transitionend", fl);
+    //       });
+
+    //       const finalLi = DOM.finalLi();
+    //       finalLi?.addEventListener("transitionend", function g() {
+    //         // Liberación del camino original
+    //         document.removeEventListener("click", handler, true);
+    //         DOM.agregarComienzo.disabled = false;
+    //         DOM.agregarFinal.disabled = false;
+
+    //         actualizarSelectoresIntermedios();
+
+    //         if (window.innerWidth !== (DOM.principal.offsetWidth + 33)) {
+    //           DOM.principal.removeAttribute("style");
+    //           renderizar();
+    //           setFlechaInicial(true, 0);
+    //           setFlechaFinal(true, 0);
+    //         } else {
+    //           DOM.principal.removeAttribute("style");
+    //         }
+
+    //         finalUl?.classList.remove("no-desplazar");
+    //         finalLi?.removeEventListener("transitionend", g);
+    //       });
+
+    //       ultimo.removeEventListener("transitionend", na);
+    //     });
+
+    //     primerNodo.removeEventListener("transitionend", nald);
+    //   });
+
+    // finalUl.classList.add("no-desplazar");
+    //  return;
+    // }
+      // =========================================================================
+      // 🔵 TU NUEVO CAMINO ELSE (TOTALMENTE AISLADO)
+      // =========================================================================
+
+      
+      // console.log("Paso 1: Expansión escalable a 600px con contra-desplazamiento interno.");
+
+      // if (DOM.principalWrapper) {
+      //   DOM.principalWrapper.style.transition = "height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out";
+      //   DOM.principalWrapper.style.overflow = "hidden";
+      //   DOM.principalWrapper.style.height = "600px";
+      //   DOM.principalWrapper.style.minHeight = "600px";
+      //   DOM.principalWrapper.style.maxHeight = "600px";
+      // }
+
+      // setTimeout(() => {
+      //   document.documentElement.style.setProperty('--principal-height', '600px');
+      //   if (DOM.principal) {
+      //     DOM.principal.style.transition = "none";
+      //     DOM.principal.style.height = "600px";
+      //     DOM.principal.style.minHeight = "600px";
+      //   }
+      //   if (DOM.contenedorNodos) {
+      //     DOM.contenedorNodos.style.transition = "none";
+      //     DOM.contenedorNodos.style.height = "600px";
+      //     DOM.contenedorNodos.style.minHeight = "600px";
+      //     DOM.contenedorNodos.style.alignContent = "flex-start";
+      //     DOM.contenedorNodos.style.alignItems = "flex-start";
+      //   }
+      //   if (DOM.inicializador) {
+      //     DOM.inicializador.style.transition = "none";
+      //     DOM.inicializador.style.height = "600px";
+      //   }
+
+      //   const contenedorFlechas = document.getElementById("contenedor_flechas");
+      //   if (contenedorFlechas) {
+      //     contenedorFlechas.style.transition = "none";
+      //     contenedorFlechas.style.height = "600px";
+      //     contenedorFlechas.style.minHeight = "600px";
+      //     contenedorFlechas.style.alignContent = "flex-start";
+      //   }
+
+      //   const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
+      //   if (contenedorCurvas) {
+      //     contenedorCurvas.style.height = "600px";
+      //     contenedorCurvas.style.minHeight = "600px";
+      //   }
+
+      //   // const desvioCentro = (600 - 400) / 2;
+      //   // if (contenedorFlechas) {
+      //   //   const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
+      //   //   flechasExistentes.forEach((flecha) => {
+      //   //     (flecha as HTMLElement).style.transform = `translateY(-${desvioCentro}px)`;
+      //   //   });
+      //   // }
+
+      //   // 2. Aplicamos a las flechas el mismo comportamiento individual que a los nodos
+      //   // if (contenedorFlechas) {
+      //   //   const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
+      //   //   flechasExistentes.forEach((flecha) => {
+      //   //     const hFlecha = flecha as HTMLElement;
+      //   //     hFlecha.style.transition = "none";
+      //   //     hFlecha.style.alignSelf = "flex-start"; // 👈 Igual que el nodo
+      //   //     hFlecha.style.marginTop = "150px";       // 👈 Igual que el nodo
+      //   //     // hFlecha.style.transform = "";           // Eliminamos el translateY manual viejo
+      //   //   });
+      //   // }
+
+      //   if (contenedorFlechas) {
+
+      //     const flechasExistentes = contenedorFlechas.querySelectorAll(".arrow");
+      //     flechasExistentes.forEach((flecha) => {
+      //       (flecha as HTMLElement).style.transition = "none";
+      //       (flecha as HTMLElement).style.transform = "none";
+      //       // Aplicamos el desfase vertical estático para que calcen con los nodos en margin-top 300px
+      //       // (flecha as HTMLElement).style.transform = "translateY(150px)";
+      //       (flecha as HTMLElement).style.setProperty("margin-top","150px","important");
+      //     });
+
+      //   }
+
+
+      //     const ultimoNodo = DOM.contenedorNodos.lastElementChild;
+      //     const topUN = (ultimoNodo as HTMLElement).offsetTop;
+      //     root.style.setProperty('--linea-flecha-final-top', `${DOM.principal.offsetHeight*3/4 - 2.5}px`);
+      //     root.style.setProperty('--nulo-top', `${( 400 - 50 - DOM.nulo.offsetHeight/2)}px`);
+      //     root.style.setProperty('--punta-flecha-final-top', `${( 400 + DOM.nulo.offsetHeight/2 - 50)}px`);
+
+      //   const nodosActuales = Array.from(getNodos() as HTMLElement[]);
+      //   nodosActuales.forEach(nodo => {
+      //     nodo.style.transition = "none";
+      //     nodo.style.alignSelf = "flex-start";
+      //     nodo.style.marginTop = "150px";
+      //   });
+
+      //   // 3. Insertamos el salto flex en ambos lados en la misma posición
+      //   const saltoDeLineaNodos = document.createElement("div");
+      //   saltoDeLineaNodos.className = "salto-flex";
+      //   saltoDeLineaNodos.style.flexBasis = "100%";
+      //   saltoDeLineaNodos.style.height = "0";
+      //   DOM.contenedorNodos.appendChild(saltoDeLineaNodos);
+
+      //   // if (contenedorFlechas) {
+      //   //   const saltoDeLineaFlechas = document.createElement("div");
+      //   //   saltoDeLineaFlechas.className = "salto-flex";
+      //   //   saltoDeLineaFlechas.style.flexBasis = "100%";
+      //   //   saltoDeLineaFlechas.style.height = "0";
+      //   //   contenedorFlechas.appendChild(saltoDeLineaFlechas);
+      //   // }
+
+      //   setTimeout(() => {
+      //     const nodosAntesDeAgregar = Array.from(getNodos() as HTMLElement[]);
+      //     const nodoOrigenReal = nodosAntesDeAgregar[nodosAntesDeAgregar.length - 1];
+
+      //     agregarNodo(DOM.inputNodo.value, 0);
+
+      //     const todosLosNodos = Array.from(getNodos() as HTMLElement[]);
+      //     const nodoNuevo = todosLosNodos[todosLosNodos.length - 1];
+
+      //     if (nodoNuevo) {
+      //       nodoNuevo.style.alignSelf = "flex-start";
+      //       nodoNuevo.style.marginTop = "150px";
+      //       // nodoNuevo.style.opacity = "0";
+      //       // nodoNuevo.style.transition = "opacity 0.8s ease-in-out";
+      //       // void nodoNuevo.offsetWidth;
+      //       // nodoNuevo.style.opacity = "1";
+      //       setTimeout(() => {
+      //         nodoNuevo.style.opacity = "1";
+      //       }, 100);
+
+      //       nodoNuevo.addEventListener('transitionend', function dispararFlechaCurva(e) {
+      //         if (e.propertyName === 'opacity') {
+      //           nodoNuevo.removeEventListener('transitionend', dispararFlechaCurva);
+
+      //           const contenedorCurvas = document.getElementById("contenedor_flechas_curvas");
+      //           if (!contenedorCurvas) {
+      //             document.removeEventListener("click", handler, true); // 👈 Seguridad
+      //             DOM.agregarComienzo.disabled = false;
+      //             DOM.agregarFinal.disabled = false;
+      //             return;
+      //           }
+
+      //           const nodoCinco = nodoOrigenReal;
+      //           const nodoSeis = nodoNuevo;
+
+      //           if (nodoCinco && nodoSeis) {
+      //             const animacionFlecha = crearFlechaCurvaInterfila(nodoCinco, nodoSeis, DOM.contenedorFlechasCurvas, DOM.contenedorNodos );
+
+      //             animacionFlecha.onfinish = () => {
+      //               console.log("La animación del path terminó. Seteando flecha final...");
+      //               setFlechaFinal(true, necesitaTransicion);
+
+      //               // document.documentElement.style.setProperty('--punta-flecha-curva-left', `${x2}px`);
+      //               // document.documentElement.style.setProperty('--punta-flecha-curva-top', `${y2}px`);
+      //               document.documentElement.style.setProperty('--punta-flecha-curva-opacity', '1');
+
+      //               // 💥 LIBERACIÓN DEL ELSE: Removemos el handler global del principio
+      //               document.removeEventListener("click", handler, true);
+      //               DOM.agregarComienzo.disabled = false;
+      //               DOM.agregarFinal.disabled = false;
+
+      //               actualizarSelectoresIntermedios();
+
+      //               // Rematamos limpiando cualquier rastro elástico del Ul original
+      //               // finalUl?.classList.remove("no-desplazar");
+      //             };
+      //           } else {
+      //             document.removeEventListener("click", handler, true);
+      //             DOM.agregarComienzo.disabled = false;
+      //             DOM.agregarFinal.disabled = false;
+      //           }
+      //         }
+      //       });
+      //     }
+      //   }, 100);
+      // }, 2000);
 
 
     // Se limpia el evento de la transición base inicial

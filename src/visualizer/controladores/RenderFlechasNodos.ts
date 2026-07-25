@@ -3,6 +3,7 @@ import { getNodos } from "../contenedores/ContenedorNodos.ts";
 import { getFlechas } from "../contenedores/ContenedorFlechas.ts";
 import {animarDesplazamientoCurva, obtenerPuntosExtremos} from "./RenderFlechasCurvas.ts";
 import * as DOM from "../utils/elementosDOM.ts"; // Core centralizado
+import { LayoutInfo , obtenerUbicacionNodo } from "../utils/layoutHelpers.ts";
 
 // Extendemos la interfaz global de Window para que TypeScript no tire error al leer tus banderas
 declare global {
@@ -19,8 +20,8 @@ declare global {
    ========================================================================== */
 export function setFlechasNodos(necesitaTransicion: number, metodo: number, s1: number, s2Input: number): void {
   if (!DOM.verificarDOM() || DOM.contenedorNodos.childElementCount === 0) return;
-
-
+  
+  console.log("El metodo es: ",metodo);
   const flechas = getFlechas() as HTMLDivElement[];
   const nodos = getNodos() as HTMLDivElement[];
 
@@ -30,7 +31,7 @@ export function setFlechasNodos(necesitaTransicion: number, metodo: number, s1: 
   // Aseguramos que las variables de ventana tengan un valor por defecto numérico
   const bFlecha = window.banderaFlecha ?? 0;
   const resultado = 2 * necesitaTransicion + 1 * bFlecha;
-
+  
   const primerNodo = DOM.contenedorNodos.firstElementChild as HTMLElement;
   console.log("el resultado dentro de flechasnodos es "+resultado);
   switch (resultado) {
@@ -118,6 +119,9 @@ export function setFlechasNodos(necesitaTransicion: number, metodo: number, s1: 
   }
 
   const flecha_width = s2 + primerNodo.offsetWidth / 4;
+  console.log("el valor de s2 es: ",s2);
+  console.log("el valor de flecha_width es: ",flecha_width);
+
   root.style.setProperty('--linea-flecha-width', `${flecha_width}px`);
   root.style.setProperty('--punta-flecha-width', `20px`);
 }
@@ -526,7 +530,52 @@ export function setFlechasNodos2(indice: number, s1: number, s2: number): void {
 
 
 
+export function setFlechasNodosReceptor(
+  necesitaTransicion: number,
+  metodo: number,
+  s1: number,
+  s2Input: number,
+  indiceNodoMovil: number, // En 3 y 5 suele ser el nodo en índice 2
+  indiceAnclaFija: number  // El nodo emisor arriba (ej: índice 1)
+): void {
+  if (!DOM.verificarDOM() || DOM.contenedorNodos.childElementCount === 0) return;
 
+  const nodos = getNodos() as HTMLDivElement[];
+  const root = document.documentElement;
+
+  const nodoMóvil = nodos[indiceNodoMovil];
+  const nodoAncla = nodos[indiceAnclaFija];
+
+  if (nodoMóvil) {
+    nodoMóvil.classList.remove("no-mover", "inmediato-nodo");
+
+    const path = document.getElementById("flecha_curva_dinamica") as SVGPathElement | null;
+    const esElReceptorDeLaCurva = (path !== null);
+
+    const desplazamiento = (metodo === 1) 
+      ? (1 - 0) * (s1 - s2Input) 
+      : (0 + 1) * (s2Input - s1);
+
+    nodoMóvil.style.left = `${desplazamiento}px`;
+
+    if (esElReceptorDeLaCurva && path) {
+      path.style.transition = "none";
+      const contenedorNodos = (document.getElementById("contenedor_nodos") || DOM.contenedorNodos) as HTMLElement;
+
+      if (contenedorNodos && nodoAncla) {
+        // En 3 y 5 el emisor es el fijo y el receptor es el móvil
+        const puntos = obtenerPuntosExtremos(nodoAncla, nodoMóvil, contenedorNodos);
+        const x2_final = puntos.x2 + desplazamiento;
+
+        animarDesplazamientoCurva(path, puntos, x2_final, "receptor", 2000);
+      }
+    }
+  }
+
+  window.banderaFlecha = 0;
+  window.banderaFlechaInicial = 0;
+  root.style.setProperty('--punta-flecha-width', `20px`);
+}
 
 
 
@@ -574,8 +623,8 @@ export function setFlechasNodos3(
   }
 
   // 3. Ajuste de variables CSS globales
-  root.style.setProperty('--flecha-left', `-25px`);
-  root.style.setProperty('--linea-flecha-width', `${s2Input + nodos[0].offsetWidth / 4}px`);
+  // root.style.setProperty('--flecha-left', `-25px`);
+  // root.style.setProperty('--linea-flecha-width', `${s2Input + nodos[0].offsetWidth / 4}px`);
   root.style.setProperty('--punta-flecha-width', `20px`);
   
   window.banderaFlecha = 0;
@@ -1154,76 +1203,289 @@ export function setFlechasNodos5(
 
 
 
-export function setFlechasNodos6(
-  necesitaTransicion: number, 
-  metodo: number, 
-  s1: number, 
+// export function setFlechasNodos6(
+//   necesitaTransicion: number, 
+//   metodo: number, 
+//   s1: number, 
+//   s2Input: number,
+//   indiceInicio: number = 0
+// ): void {
+//   if (!DOM.verificarDOM() || DOM.contenedorNodos.childElementCount === 0) return;
+
+//   const nodos = getNodos() as HTMLDivElement[];
+//   const root = document.documentElement;
+//   let s2 = s2Input;
+
+//   const bFlecha = window.banderaFlecha ?? 0;
+//   const resultado = 2 * necesitaTransicion + 1 * bFlecha;
+
+//   switch (resultado) {
+//     default: {
+//       let i = indiceInicio; 
+
+//       if (nodos[i]) {
+//         nodos[i].classList.remove("no-mover", "inmediato-nodo");
+
+//         const path = document.getElementById("flecha_curva_dinamica") as SVGPathElement | null;
+        
+//         // En el caso 6, el gatillo de movimiento es el EMISOR (i === 1)
+//         const esElEmisorDeLaCurva = (path !== null && i === 1); 
+        
+//         // 1. Obtenemos las coordenadas base ANTES de alterar los estilos CSS del nodo
+//         const contenedorNodos = (document.getElementById("contenedor_nodos") || DOM.contenedorNodos) as HTMLElement;
+//         const receptor = nodos[2] as HTMLElement; // Receptor estático
+//         const emisor = nodos[1] as HTMLElement;   // Emisor dinámico
+
+//         let puntos = null;
+//         if (esElEmisorDeLaCurva && contenedorNodos && emisor && receptor) {
+//           puntos = obtenerPuntosExtremos(emisor, receptor, contenedorNodos);
+//         }
+
+//         // 2. Cálculo del desplazamiento físico del nodo
+//         const desplazamiento = (metodo === 1) 
+//           ? (2 - 1) * (s1 - s2) 
+//           : (0 + 1) * (s2 - s1);
+          
+//         nodos[i].style.left = desplazamiento + 'px';
+
+//         // 3. Disparo de la animación de la curva SVG
+//         if (esElEmisorDeLaCurva && path && puntos) {
+//           path.style.transition = "none";
+
+//           // Posición X1 de destino final del emisor
+//           const x1_final = puntos.x1 + desplazamiento;
+
+//           // Animamos el emisor manteniendo fijo el receptor
+//           animarDesplazamientoCurva(path, puntos, x1_final, "emisor", 2000);
+//         }
+//       }
+      
+//       window.banderaFlecha = 0;
+//       window.banderaFlechaInicial = 0;
+//       break;
+//     }
+//   }
+
+//   root.style.setProperty('--punta-flecha-width', `20px`);
+// }
+
+
+
+
+
+// /**
+//  * Unificación de los Casos 4 y 6:
+//  * Maneja el desplazamiento del nodo EMISOR de la curva.
+//  */
+// export function setFlechasNodosEmisor(
+//   necesitaTransicion: number,
+//   metodo: number,
+//   s1: number,
+//   s2Input: number,
+//   indiceNodoMovil: number, // En el caso 4 es 0, en el caso 6 es 1
+//   indiceAnclaFija: number  // El nodo receptor abajo (ej: 1 o 2)
+// ): void {
+//   if (!DOM.verificarDOM() || DOM.contenedorNodos.childElementCount === 0) return;
+
+//   const nodos = getNodos() as HTMLDivElement[];
+//   const root = document.documentElement;
+
+//   const nodoMóvil = nodos[indiceNodoMovil];
+//   const nodoAncla = nodos[indiceAnclaFija];
+
+//   if (nodoMóvil) {
+//     nodoMóvil.classList.remove("no-mover", "inmediato-nodo");
+
+//     const path = document.getElementById("flecha_curva_dinamica") as SVGPathElement | null;
+//     const esElEmisorDeLaCurva = (path !== null);
+//     const contenedorNodos = (document.getElementById("contenedor_nodos") || DOM.contenedorNodos) as HTMLElement;
+
+//     // Lectura previa para no romper Flex (clave del caso 6)
+//     let puntos = null;
+//     if (esElEmisorDeLaCurva && contenedorNodos && nodoMóvil && nodoAncla) {
+//       puntos = obtenerPuntosExtremos(nodoMóvil, nodoAncla, contenedorNodos);
+//     }
+
+//     const desplazamiento = (metodo === 1) 
+//       ? (1 - 0) * (s1 - s2Input) 
+//       : (0 + 1) * (s2Input - s1);
+
+//     nodoMóvil.style.left = `${desplazamiento}px`;
+
+//     if (esElEmisorDeLaCurva && path && puntos) {
+//       path.style.transition = "none";
+//       const x1_final = puntos.x1 + desplazamiento;
+
+//       animarDesplazamientoCurva(path, puntos, x1_final, "emisor", 2000);
+//     }
+//   }
+
+//   window.banderaFlecha = 0;
+//   window.banderaFlechaInicial = 0;
+
+//   const primerNodo = DOM.contenedorNodos.firstElementChild as HTMLElement;
+//   if (primerNodo) {
+//     const flecha_width = s2Input + primerNodo.offsetWidth / 4;
+//     root.style.setProperty('--linea-flecha-width', `${flecha_width}px`);
+//   }
+//   root.style.setProperty('--punta-flecha-width', `20px`);
+// }
+
+
+/**
+ * Unificación de los Casos 4 y 6:
+ * Maneja el desplazamiento del nodo EMISOR de la curva.
+ * Mantiene exactitud estructural con setFlechasNodosReceptor.
+ */
+// export function setFlechasNodosEmisor(
+//   necesitaTransicion: number,
+//   metodo: number,
+//   s1: number,
+//   s2Input: number,
+//   indiceNodoMovil: number, // En el caso 4 es 0, en el caso 6 es 1
+//   indiceAnclaFija: number  // El nodo receptor abajo (ej: 1 o 2)
+// ): void {
+//   if (!DOM.verificarDOM() || DOM.contenedorNodos.childElementCount === 0) return;
+
+//   const nodos = getNodos() as HTMLDivElement[];
+//   const root = document.documentElement;
+
+//   const nodoMóvil = nodos[indiceNodoMovil];
+//   const nodoAncla = nodos[indiceAnclaFija];
+
+//   if (nodoMóvil) {
+//     nodoMóvil.classList.remove("no-mover", "inmediato-nodo");
+
+//     const path = document.getElementById("flecha_curva_dinamica") as SVGPathElement | null;
+//     const esElEmisorDeLaCurva = (path !== null);
+
+//     const desplazamiento = (metodo === 1) 
+//       ? (1 - 0) * (s1 - s2Input) 
+//       : (0 + 1) * (s2Input - s1);
+
+//     nodoMóvil.style.left = `${desplazamiento}px`;
+
+//     if (esElEmisorDeLaCurva && path) {
+//       path.style.transition = "none";
+//       const contenedorNodos = (document.getElementById("contenedor_nodos") || DOM.contenedorNodos) as HTMLElement;
+
+//       if (contenedorNodos && nodoAncla) {
+//         // En 4 y 6 el emisor es el móvil y el receptor es el fijo
+//         const puntos = obtenerPuntosExtremos(nodoMóvil, nodoAncla, contenedorNodos);
+//         const x1_final = puntos.x1 + desplazamiento;
+
+//         animarDesplazamientoCurva(path, puntos, x1_final, "emisor", 2000);
+//       }
+//     }
+//   }
+
+//   window.banderaFlecha = 0;
+//   window.banderaFlechaInicial = 0;
+
+//   const primerNodo = DOM.contenedorNodos.firstElementChild as HTMLElement;
+//   if (primerNodo) {
+//     const flecha_width = s2Input + primerNodo.offsetWidth / 4;
+//     root.style.setProperty('--linea-flecha-width', `${flecha_width}px`);
+//   }
+//   root.style.setProperty('--punta-flecha-width', `20px`);
+// }
+
+
+
+export type RolCurva = "emisor" | "receptor";
+
+/**
+ * Estandariza setFlechasNodosReceptor y setFlechasNodosEmisor en una sola función.
+ * Maneja el desplazamiento de un nodo móvil y sincroniza la curva SVG interfila.
+ */
+export function setFlechasNodosConFlechaCurva(
+  necesitaTransicion: number,
+  metodo: number,
+  s1: number,
   s2Input: number,
-  indiceInicio: number = 0
+  indiceNodoMovil: number,
+  rol: RolCurva,
+  layout: LayoutInfo
 ): void {
   if (!DOM.verificarDOM() || DOM.contenedorNodos.childElementCount === 0) return;
 
   const nodos = getNodos() as HTMLDivElement[];
   const root = document.documentElement;
-  let s2 = s2Input;
 
-  const bFlecha = window.banderaFlecha ?? 0;
-  const resultado = 2 * necesitaTransicion + 1 * bFlecha;
+  const nodoMóvil = nodos[indiceNodoMovil];
+  
+  // 1. Deducimos el ancla según el rol
+  const indiceAncla = (rol === "emisor") ? indiceNodoMovil + 1 : indiceNodoMovil - 1;
+  const nodoAncla = nodos[indiceAncla];
 
-  switch (resultado) {
-    default: {
-      let i = indiceInicio; 
 
-      if (nodos[i]) {
-        nodos[i].classList.remove("no-mover", "inmediato-nodo");
 
-        const path = document.getElementById("flecha_curva_dinamica") as SVGPathElement | null;
+
+
+
+// USAMOS EL LAYOUT RECIBIDO
+    const ubicacion = obtenerUbicacionNodo(layout, indiceNodoMovil);
+    const iLocal = ubicacion.indiceLocal;
+    const cantidadNodosFila = ubicacion.cantidadNodosEnEstaFila;
+
+// 2. Cálculo dinámico y agnóstico del desplazamiento (Misma fórmula que setFlechasNodos de 1 fila)
+const desplazamiento = (metodo === 1) 
+  ? (cantidadNodosFila - iLocal) * (s1 - s2Input) 
+  : (iLocal + 1) * (s2Input - s1);
+
+// 3. Aplicamos la posición al nodo móvil
+nodoMóvil.style.left = `${desplazamiento}px`;
+
+
+
+
+    // const desplazamiento = (metodo === 1) 
+    //   ? (1 - 0) * (s1 - s2Input) 
+    //   : (0 + 1) * (s2Input - s1);
+
+    // nodoMóvil.style.left = `${desplazamiento}px`;
+
+nodoMóvil.classList.remove("no-mover", "inmediato-nodo");
+
+
+  if (nodoMóvil) {
+    
+
+    const path = document.getElementById("flecha_curva_dinamica") as SVGPathElement | null;
+    const tieneCurva = (path !== null);
+
+
+    if (tieneCurva && path) {
+      path.style.transition = "none";
+      const contenedorNodos = (document.getElementById("contenedor_nodos") || DOM.contenedorNodos) as HTMLElement;
+
+      if (contenedorNodos && nodoAncla) {
+        // Asignamos emisor y receptor para el helper de extremos
+        const emisor = (rol === "emisor") ? nodoMóvil : nodoAncla;
+        const receptor = (rol === "receptor") ? nodoMóvil : nodoAncla;
+
+        const puntos = obtenerPuntosExtremos(emisor, receptor, contenedorNodos);
         
-        // En el caso 6, el gatillo de movimiento es el EMISOR (i === 1)
-        const esElEmisorDeLaCurva = (path !== null && i === 1); 
-        
-        // 1. Obtenemos las coordenadas base ANTES de alterar los estilos CSS del nodo
-        const contenedorNodos = (document.getElementById("contenedor_nodos") || DOM.contenedorNodos) as HTMLElement;
-        const receptor = nodos[2] as HTMLElement; // Receptor estático
-        const emisor = nodos[1] as HTMLElement;   // Emisor dinámico
+        // 2. Deducimos qué coordenada X desplazar
+        const x_final = (rol === "emisor") 
+          ? puntos.x1 + desplazamiento 
+          : puntos.x2 + desplazamiento;
 
-        let puntos = null;
-        if (esElEmisorDeLaCurva && contenedorNodos && emisor && receptor) {
-          puntos = obtenerPuntosExtremos(emisor, receptor, contenedorNodos);
-        }
-
-        // 2. Cálculo del desplazamiento físico del nodo
-        const desplazamiento = (metodo === 1) 
-          ? (2 - 1) * (s1 - s2) 
-          : (0 + 1) * (s2 - s1);
-          
-        nodos[i].style.left = desplazamiento + 'px';
-
-        // 3. Disparo de la animación de la curva SVG
-        if (esElEmisorDeLaCurva && path && puntos) {
-          path.style.transition = "none";
-
-          // Posición X1 de destino final del emisor
-          const x1_final = puntos.x1 + desplazamiento;
-
-          // Animamos el emisor manteniendo fijo el receptor
-          animarDesplazamientoCurva(path, puntos, x1_final, "emisor", 2000);
-        }
+        // 3. El rol pasa directamente a la animación
+        animarDesplazamientoCurva(path, puntos, x_final, rol, 2000);
       }
-      
-      window.banderaFlecha = 0;
-      window.banderaFlechaInicial = 0;
-      break;
     }
   }
 
+  window.banderaFlecha = 0;
+  window.banderaFlechaInicial = 0;
+
+  // Ajuste de línea opcional (si aplica cuando se desplaza el emisor)
+  const primerNodo = DOM.contenedorNodos.firstElementChild as HTMLElement;
+  // if (primerNodo && rol === "emisor") {
+    const flecha_width = s2Input + primerNodo.offsetWidth / 4;
+    root.style.setProperty('--linea-flecha-width', `${flecha_width}px`);
+  // }
+  
   root.style.setProperty('--punta-flecha-width', `20px`);
 }
-
-
-
-
-
-
-
-

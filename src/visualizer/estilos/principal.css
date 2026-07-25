@@ -10,6 +10,18 @@
     --principal-width-min: 100%;
       }
 
+
+
+body {
+  background: #121212 !important;
+  color: #ffffff !important;
+}
+
+
+
+
+
+
     #principal {
         /* outline: 2px solid #f0f;  */
         /* border: 2px red;  */
@@ -64,6 +76,9 @@
     max-height: none;
       /* max-height: var(--wrapper-height); /* 🚨 Cambiado de 400px a la variable */
       overflow-y: auto;
+
+
+      transition: height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out;
     }
 
 
