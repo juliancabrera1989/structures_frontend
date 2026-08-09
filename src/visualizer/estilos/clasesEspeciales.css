@@ -3,6 +3,7 @@
 :root{
        --transicionY-nodos: 250px;
        --transicionY-flechas: 250px;
+       --transicionY-nulo: 250px;
 }
 
 
@@ -88,6 +89,8 @@
 }
 
 
+
+
 .cambio-flex {
   align-content: flex-start !important;
   align-items: flex-start !important;
@@ -112,3 +115,28 @@
       transition : transform 2s ease-in-out !important;
       transform : translateY(var(--transicionY-flechas)) ;
 }
+
+
+
+.transicion-nulo {
+      transition : transform 2s ease-in-out !important;
+      transform : translateY(var(--transicionY-nulo)) ;
+}
+
+
+.transicion-nodos-negativa {
+      transition : transform 2s ease-in-out !important;
+      transform : translateY(calc(-1*(var(--transicionY-nodos)))) ;
+}
+
+.transicion-flechas-negativa {
+      transition : transform 2s ease-in-out !important;
+      transform : translateY(calc(-1*(var(--transicionY-flechas)))) ;
+}
+
+
+.transicion-nulo-negativa {
+      transition : transform 2s ease-in-out !important;
+      transform : translateY(calc(-1*(var(--transicionY-nulo))));
+}
+

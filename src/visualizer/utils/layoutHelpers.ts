@@ -16,7 +16,6 @@ export interface LayoutInfo {
 }
 
 
-
 /**
  * Inspecciona el DOM y calcula la topología actual del layout.
  * @param M Capacidad máxima de nodos por fila.
@@ -73,5 +72,59 @@ export function obtenerInfoLayout(M: number): LayoutInfo {
     totalNodos,
     indiceInicioUltimaFila,
     tieneEspacioUltimaFila: nodosUltimaFila < M,
+  };
+}
+
+
+
+
+
+
+
+/**
+ * Devuelve la cantidad de nodos de una fila específica (0..S-1).
+ */
+export function getCantidadNodosFila(layout: LayoutInfo, numFila: number): number {
+  return layout.nodosPorFila.get(numFila) ?? 0;
+}
+
+/**
+ * Calcula el índice global de inicio dentro del DOM para CUALQUIER fila.
+ */
+export function getIndiceInicioFila(layout: LayoutInfo, numFila: number): number {
+  let acumulado = 0;
+  for (let f = 0; f < numFila; f++) {
+    acumulado += layout.nodosPorFila.get(f) ?? 0;
+  }
+  return acumulado;
+}
+
+/**
+ * Dado un índice global de nodo (0..totalNodos-1), determina a qué fila pertenece 
+ * y cuál es su índice local dentro de esa fila.
+ */
+export function obtenerUbicacionNodo(layout: LayoutInfo, indiceGlobal: number) {
+  let acumulado = 0;
+
+  for (const [numFila, cantidad] of layout.nodosPorFila.entries()) {
+    if (indiceGlobal < acumulado + cantidad) {
+      return {
+        numFila,
+        indiceLocal: indiceGlobal - acumulado,
+        cantidadNodosEnEstaFila: cantidad,
+        indiceInicioFila: acumulado
+      };
+    }
+    acumulado += cantidad;
+  }
+
+  // Fallback por si apunta a la posición donde se va a insertar al final
+  const ultimaFila = Math.max(0, layout.totalFilas - 1);
+  const nodosUltima = layout.nodosPorFila.get(ultimaFila) ?? 0;
+  return {
+    numFila: ultimaFila,
+    indiceLocal: indiceGlobal - acumulado,
+    cantidadNodosEnEstaFila: nodosUltima,
+    indiceInicioFila: acumulado
   };
 }

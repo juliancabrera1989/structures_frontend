@@ -5,42 +5,8 @@ import {
   borrarUltimoNodo 
 } from "./RenderSacarNodo.ts";
 import {  indexOf } from "../contenedores/ContenedorNodos.ts";
-import * as DOM from "../elementosDOM.ts";
+import * as DOM from "../utils/elementosDOM.ts";
 
-/**
- * Esta función maneja la decisión de qué tipo de borrado ejecutar
- * según la posición del nodo en la lista matemática.
- */
-
-// export function nodoSeleccionado(valor: string): void {
-//   // 1. Pedimos la confirmación al usuario de forma segura para ESLint
-//   if (!window.confirm(`¿Estás seguro de que deseas eliminar el nodo con valor "${valor}"?`)) {
-//     return; // Si cancela, cortamos el flujo acá
-//   }
-
-//   const nodos = getNodos();
-  
-//   // 2. Buscamos en qué posición del array de datos está el nodo clickeado
-//   // Asumiendo que tus nodos guardan el valor en una propiedad textContent o similar
-//   const indice = nodos.findIndex(nodo => nodo.textContent?.trim() === valor);
-
-//   if (indice === -1) {
-//     console.error("No se encontró el nodo en el contenedor de datos.");
-//     return;
-//   }
-
-//   // 3. Orquestamos el render correspondiente según la posición matemática
-//   if (nodos.length === 1) {
-//     borrarUltimoNodo();
-//   } else if (indice === 0) {
-//     borrarNodoAlComienzo(valor);
-//   } else if (indice === nodos.length - 1) {
-//     borrarNodoAlFinal(valor);
-//   } else {
-//     // Le pasamos el índice para que sepa qué flechas romper internamente
-//     borrarNodoIntermedio(valor, indice); 
-//   }
-// }
 
 
 
@@ -52,8 +18,18 @@ export function nodoSeleccionado(data: string): void {
     console.log("no se borrara el nodo");
     return;
   }
+  
+  // const cantidad_flechas = DOM.contenedorFlechas.childElementCount + DOM.contenedorFlechasCurvas.childElementCount;
+  // console.log("ver la cantidad de flechas rectas: ",cantidad_flechas);
 
-  const cantidad_flechas = DOM.contenedorFlechas.childElementCount;
+// 🔥 SOLUCIÓN: Contamos únicamente los elementos que representen flechas reales (.arrow)
+  // ignorando por completo los 'salto-flex' u otros contenedores de diseño.
+  const flechasRectas = DOM.contenedorFlechas.querySelectorAll('.arrow').length;
+  const flechasCurvas = DOM.contenedorFlechasCurvas.childElementCount;
+  
+  const cantidad_flechas = flechasRectas + flechasCurvas;
+  console.log("Cantidad real de flechas lógicas: ", cantidad_flechas);
+
 
   switch (cantidad_flechas) {
     case 0: {
@@ -62,6 +38,7 @@ export function nodoSeleccionado(data: string): void {
     }
     default: {
       const indice = indexOf(data);
+      console.log("ver el indice: ",indice);
       if (indice === -1) return; // Si no se encuentra el nodo, abortamos de forma segura
 
       switch (indice) {
@@ -70,6 +47,7 @@ export function nodoSeleccionado(data: string): void {
           break;
         }
         case cantidad_flechas: {
+          console.log("Entro aqui");
           borrarNodoAlFinal(data);
           break;
         }

@@ -1,131 +1,4 @@
 
-// // src/visualizer/controladores/ControladorBarraSuperior.ts
-// import { 
-//   agregarNodoAlComienzo, 
-//   agregarNodoIntermedio, 
-//   agregarNodoAlFinal, 
-//   agregarPrimerNodo 
-// } from "./RenderAgregarNuevoNodo.ts";
-// import { inicializarPuntero, setFlechaInicial, setFlechaFinal } from "./ControladorInicializador.ts";
-// import * as DOM from "../elementosDOM.ts";
-// import { setFlechasNodos  } from "./RenderFlechasNodos.ts";
-
-// const root = document.documentElement;
-
-// declare global {
-//   interface Window {
-//     banderaFlechaInicial: number;
-//     banderaFlechaFinal: number;
-//     banderaFlecha: number;
-//   }
-// }
-
-// window.banderaFlechaInicial = 0;
-// window.banderaFlechaFinal = 0;
-// window.banderaFlecha = 0;
-
-// /**
-//  * Función que despierta el controlador una vez que React montó los elementos.
-//  */
-// export function initControladorBarraSuperior(): void {
-//   // 1. Primero forzamos la captura de elementos reales del DOM
-//   DOM.actualizarElementosDOM();
-
-//   // 2. Validamos que todo se haya cargado bien
-//   if (!DOM.verificarDOM()) {
-//     console.error("No se pudo inicializar la barra superior: Elementos del DOM ausentes.");
-//     return;
-//   }
-
-//   // 3. Asignamos listeners con nombres normales directos sin funciones intermedias
-//   DOM.inic.addEventListener("click", inicializar);
-//   DOM.botonAgregar1erNodo.addEventListener("click", agregarPrimerNodo);
-//   DOM.agregarComienzo.addEventListener("click", agregarNodoAlComienzo);
-//   DOM.agregarIntermedio.addEventListener("click", agregarNodoIntermedio);
-//   DOM.agregarFinal.addEventListener("click", agregarNodoAlFinal);
-  
-//   window.addEventListener("resize", renderizar);
-//   console.log("✅ ControladorBarraSuperior asignado correctamente.");
-// }
-
-// function inicializar(): void {
-//   if (!DOM.verificarDOM()) return;
-
-//   console.log("¡Entró a inicializar con éxito!");
-
-//   // Remoción física usando variables planas
-//   if (DOM.inic && DOM.barraSuperior) {
-//     DOM.barraSuperior.removeChild(DOM.inic);
-//   }
-
-//   // Modificación de estados con nombres limpios
-//   DOM.inic.setAttribute("hidden", "hidden");
-//   DOM.texto.removeAttribute("hidden");
-//   DOM.inputNodo.removeAttribute("hidden");
-//   DOM.botonAgregar1erNodo.removeAttribute("hidden");
-//   DOM.str.removeAttribute("hidden");
-//   DOM.nulo.removeAttribute("hidden");
-
-//   inicializarPuntero(1);
-
-//   const necesitaTransicion = 1;
-//   setTimeout(() => {
-//     setFlechaInicial(true, necesitaTransicion);
-//   }, 100);
-// }
-
-// function setContainer(): void {
-//   if (!DOM.contenedorNodos) return;
-
-//   const x = window.innerWidth;
-//   const y = root.style.getPropertyValue('--principal-height');
-//   const menorSeisNodos = DOM.contenedorNodos.childElementCount < 6;
-
-//   if (menorSeisNodos) {
-//     if (x < 500) {
-//       if (y !== '250px') {
-//         root.style.setProperty('--principal-width', `1000px`);
-//         root.style.setProperty('--principal-height', `250px`);
-//       }
-//     } else {
-//       if (y !== '400px') {
-//         root.style.setProperty('--principal-width', `100%`);
-//         root.style.setProperty('--principal-height', `400px`);
-//       }
-//     }
-//   }
-// }
-
-// function renderizar(): void {
-//   if (!DOM.verificarDOM()) return;
-
-//   if (!DOM.principalWrapper || !DOM.flechaPunteroInicial || !DOM.str || !DOM.contenedorNodos) return;
-
-//   const estiloWrapper = DOM.principalWrapper.getAttribute("style");
-  
-//   if (estiloWrapper === null || estiloWrapper === '') {
-//     setContainer();
-    
-//     let necesitaTransicion = 1;
-//     if (DOM.flechaPunteroInicial()?.childElementCount !== 0) {
-//       necesitaTransicion = 0;
-//     }
-
-//     if (DOM.str.getAttribute("hidden") !== "hidden") {
-//       setFlechaInicial(true, necesitaTransicion);
-//     }
-    
-//     if (DOM.contenedorNodos.children.length !== 0) {
-//       setFlechaFinal(true, necesitaTransicion);
-//       setFlechasNodos(necesitaTransicion,-1,0,0);
-//     }
-//   }
-// }
-
-// export { renderizar };
-
-
-
 
 import { 
   agregarNodoAlComienzo, 
@@ -134,7 +7,7 @@ import {
   agregarPrimerNodo 
 } from "./RenderAgregarNuevoNodo.ts";
 import { inicializarPuntero, setFlechaInicial, setFlechaFinal } from "./ControladorInicializador.ts";
-import * as DOM from "../elementosDOM.ts";
+import * as DOM from "../utils/elementosDOM.ts";
 import { setFlechasNodos } from "./RenderFlechasNodos.ts";
 
 
@@ -177,21 +50,7 @@ export function initControladorBarraSuperior(): void {
   // Vincular el botón de creación principal
   DOM.inic.addEventListener("click", inicializar);
   
-  // Vincular los tres botones genéricos que pusimos en ControlsBar.js
-  // const btnAccion1 = document.getElementById("btn_accion_1");
-  // const btnAccion2 = document.getElementById("btn_accion_2");
-  // const btnAccion3 = document.getElementById("btn_accion_3");
-  // const btnIntermedio = document.getElementById("btn_accion_intermedia");
-
-  // Mapeamos los clicks a tus funciones de Render existentes
-
-
-  
-  // DOM.botonAgregar1erNodo?.addEventListener("click", agregarPrimerNodo); 
-  // DOM.agregarComienzo?.addEventListener("click", agregarNodoAlComienzo);
-  // DOM.agregarFinal?.addEventListener("click", agregarNodoAlFinal);
-  // DOM.agregarIntermedio?.addEventListener("click", agregarNodoIntermedio);
-  
+   
 
   DOM.botonAgregar1erNodo?.addEventListener("click", ejecutarAgregarPrimerNodo); 
   DOM.agregarComienzo?.addEventListener("click", ejecutarAgregarNodoAlComienzo);
@@ -239,6 +98,17 @@ function inicializar(): void {
   DOM.nulo.removeAttribute("hidden");
   DOM.guardarEstructura.removeAttribute("hidden");
 
+
+
+  if (DOM.inicializador) {
+    DOM.inicializador.style.display = "flex";
+    DOM.inicializador.style.justifyContent = "space-between";
+    DOM.inicializador.style.alignItems = "center";
+
+  }
+  DOM.str.style.position = "relative";
+  DOM.nulo.style.position = "relative";
+
   inicializarPuntero(1);
 
   const necesitaTransicion = 1;
@@ -247,46 +117,21 @@ function inicializar(): void {
   }, 100);
 }
 
-/**
- * Función encargada de prender, apagar y renombrar los botones genéricos
- * según las reglas de juego de cada estructura de datos.
- */
-// function configurarBotonesSegunEstructura(tipo: string): void {
-//   const btn1 = document.getElementById("btn_accion_1");
-//   const btn2 = document.getElementById("btn_accion_2");
-//   const btn3 = document.getElementById("btn_accion_3");
-//   const txtSelector = document.getElementById("texto-selector");
-//   const selPares = document.getElementById("selector-pares");
-//   const btnIntermedio = document.getElementById("btn_accion_intermedia");
 
-//   // Reseteamos todos a oculto por seguridad
-//   [btn1, btn2, btn3, txtSelector, selPares, btnIntermedio].forEach(el => el?.setAttribute("hidden", "hidden"));
 
-//   if (tipo === "linkedlist" || tipo === "doublylinkedlist") {
-//     // Las listas tienen libertad total
-//     if (btn1) { btn1.innerText = "Agregar Primer Nodo"; btn1.removeAttribute("hidden"); }
-//     if (btn2) { btn2.innerText = "Agregar al Comienzo"; btn2.removeAttribute("hidden"); }
-//     if (btn3) { btn3.innerText = "Agregar al Final"; btn3.removeAttribute("hidden"); }
-//     txtSelector?.removeAttribute("hidden");
-//     selPares?.removeAttribute("hidden");
-//     btnIntermedio?.removeAttribute("hidden");
-//     if (btnIntermedio) btnIntermedio.innerText = "Agregar Intermedio";
 
-//   } else if (tipo === "stack") {
-//     // Las Pilas solo permiten Push (Agregar al final de la pantalla gráfica)
-//     if (btn1) { btn1.innerText = "Push (Agregar)"; btn1.removeAttribute("hidden"); }
-//     // Nota: El botón de Pop (Sacar) lo vas a mapear después con tu RenderSacarNodo
 
-//   } else if (tipo === "queue") {
-//     // Las Colas solo permiten Enqueue (Agregar al final de la pantalla gráfica)
-//     if (btn1) { btn1.innerText = "Enqueue (Agregar)"; btn1.removeAttribute("hidden"); }
 
-//   } else if (tipo === "deque") {
-//     // Doble cola permite insertar en ambas puntas
-//     if (btn1) { btn1.innerText = "Add Front (Comienzo)"; btn1.removeAttribute("hidden"); }
-//     if (btn2) { btn2.innerText = "Add Back (Final)"; btn2.removeAttribute("hidden"); }
-//   }
-// }
+
+
+
+
+
+
+
+
+
+
 
 // ... Las funciones setContainer y renderizar quedan EXACTAMENTE IGUALES a como las tenías
 
@@ -342,27 +187,119 @@ function configurarBotonesSegunEstructura(tipo: string): void {
   }
 }
 
+// function setContainer(): void {
+//   if (!DOM.contenedorNodos) return;
+
+//   const x = window.innerWidth;
+//   const y = root.style.getPropertyValue('--principal-height');
+//   const menorSeisNodos = DOM.contenedorNodos.childElementCount < 6;
+
+//   if (menorSeisNodos) {
+//     if (x < 500) {
+//       if (y !== '250px') {
+//         root.style.setProperty('--principal-width', `1000px`);
+//         root.style.setProperty('--principal-height', `250px`);
+//       }
+//     } else {
+//       if (y !== '400px') {
+//         root.style.setProperty('--principal-width', `100%`);
+//         root.style.setProperty('--principal-height', `400px`);
+//       }
+//     }
+//   }
+// }
+
+
+// function setContainer(): void {
+//   if (!DOM.contenedorNodos) return;
+
+//   const cantidadNodos = DOM.contenedorNodos.childElementCount;
+
+//   // El ancho se queda siempre al 100% para congelar el scroll horizontal
+//   root.style.setProperty('--principal-width', `100%`);
+
+//   // Si hay 5 nodos o menos, mantenés tu pantalla clásica de 400px
+//   if (cantidadNodos <= 5) {
+//     root.style.setProperty('--principal-height', `400px`);
+//     root.style.setProperty('--wrapper-height', `400px`);
+//   } 
+//   // Si entra el 6to (y hasta el 10), el lienzo crece al doble hacia abajo
+//   else if (cantidadNodos > 5 && cantidadNodos <= 10) {
+//     root.style.setProperty('--principal-height', `800px`);
+//     root.style.setProperty('--wrapper-height', `800px`);
+//   }
+// }
+
+
+// function setContainer(): void {
+//   if (!DOM.contenedorNodos) return;
+
+//   const totalNodos = DOM.contenedorNodos.childElementCount;
+  
+//   // Calculamos cuántas filas de 5 nodos necesitamos (mínimo 1 fila)
+//   const filasNecesarias = Math.max(1, Math.ceil(totalNodos / 5)); 
+  
+//   // Cada fila le añade 400px de altura al lienzo principal
+//   const nuevaAltura = filasNecesarias * 400;
+
+//   // Modificamos las variables CSS del root de forma dinámica hacia abajo
+//   root.style.setProperty('--principal-width', `100%`); // Siempre 100% del ancho
+//   root.style.setProperty('--principal-height', `${nuevaAltura}px`);
+  
+//   console.log(`Lienzo adaptado: ${filasNecesarias} fila(s). Altura: ${nuevaAltura}px`);
+// }
+
+
+
+// function setContainer(): void {
+//   if (!DOM.contenedorNodos) return;
+
+//   const totalNodos = DOM.contenedorNodos.childElementCount;
+  
+//   // 1. Calculamos cuántas filas reales ocupan los nodos en base 5
+//   const filasReales = Math.ceil(totalNodos / 5); 
+  
+//   // 2. Establecemos la altura base (400px para la primera fila).
+//   // Si hay más de una fila (6 nodos o más), le sumamos 200px por cada fila extra.
+//   const nuevaAltura = filasReales <= 1 
+//     ? 400 
+//     : 400 + (filasReales - 1) * 200;
+
+//   // 3. Modificamos la variable CSS del root de forma dinámica
+//   root.style.setProperty('--principal-width', `100%`); 
+//   root.style.setProperty('--principal-height', `${nuevaAltura}px`);
+  
+//   console.log(`Lienzo adaptado: ${filasReales} fila(s). Altura: ${nuevaAltura}px`);
+// }
+
+
+
 function setContainer(): void {
-  if (!DOM.contenedorNodos) return;
+  // if (!DOM.contenedorNodos) return;
 
-  const x = window.innerWidth;
-  const y = root.style.getPropertyValue('--principal-height');
-  const menorSeisNodos = DOM.contenedorNodos.childElementCount < 6;
+  // const totalNodos = DOM.contenedorNodos.childElementCount;
+  // const filasReales = Math.ceil(totalNodos / 5); 
+  
+  // // Tu matemática exacta de carriles de 200px
+  // const nuevaAltura = filasReales <= 1 
+  //   ? 400 
+  //   : 400 + (filasReales - 1) * 200;
 
-  if (menorSeisNodos) {
-    if (x < 500) {
-      if (y !== '250px') {
-        root.style.setProperty('--principal-width', `1000px`);
-        root.style.setProperty('--principal-height', `250px`);
-      }
-    } else {
-      if (y !== '400px') {
-        root.style.setProperty('--principal-width', `100%`);
-        root.style.setProperty('--principal-height', `400px`);
-      }
-    }
-  }
+  // // 1. Actualizamos la altura del lienzo principal
+  // root.style.setProperty('--principal-height', `${nuevaAltura}px`);
+  
+  // // 2. ¡CLAVE! Actualizamos también la variable del wrapper para que no asfixie al contenedor
+  // root.style.setProperty('--wrapper-height', `${nuevaAltura}px`);
+  
+  // // Si no usás variable para el wrapper y lo hacías directo por ID, meté esto:
+  // // const wrapper = document.getElementById('principal_wrapper');
+  // // if (wrapper) wrapper.style.height = `${nuevaAltura}px`;
+
+  // console.log(`Lienzo y Wrapper adaptados a: ${nuevaAltura}px`);
 }
+
+
+
 
 function renderizar(): void {
   if (!DOM.verificarDOM()) return;
@@ -372,7 +309,7 @@ function renderizar(): void {
   const estiloWrapper = DOM.principalWrapper.getAttribute("style");
   
   if (estiloWrapper === null || estiloWrapper === '') {
-    setContainer();
+     setContainer();
     
     let necesitaTransicion = 1;
     if (DOM.flechaPunteroInicial()?.childElementCount !== 0) {

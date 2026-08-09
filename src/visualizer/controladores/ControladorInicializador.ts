@@ -1,6 +1,6 @@
 import { crearFlecha } from "../elementosGraficos/Flecha.ts";
-import * as DOM from "../elementosDOM.ts"; // Usamos la centralización del DOM
-
+import * as DOM from "../utils/elementosDOM.ts"; // Usamos la centralización del DOM
+import { LayoutInfo , obtenerInfoLayout } from "../utils/layoutHelpers.ts";
 const root = document.documentElement;
 
 // 1. Extendemos la interfaz Window para que TS reconozca nuestras propiedades globales
@@ -9,6 +9,7 @@ declare global {
     espacio: number;
     banderaFlechaInicial: number;
     banderaFlechaFinal: number;
+    alturaDeVentana:number;
   }
 }
 
@@ -25,12 +26,20 @@ function inicializarPuntero(valor: number): void {
   
   // Le asignamos el ID al clon
   flecha_puntero_clone.setAttribute("id", idOriginal);
-
+  flecha_puntero_clone.style.height = "0px";
   // Forzamos el tipo a HTMLDivElement porque SABEMOS que la estructura de la flecha los tiene.
   // Al usar querySelector, si estás seguro de tu HTML, lo casteás directamente.
   const underline = flecha_puntero_clone.querySelector(".underline") as HTMLDivElement;
   const lineaS    = flecha_puntero_clone.querySelector(".linea-s") as HTMLDivElement;
   const lineaI    = flecha_puntero_clone.querySelector(".linea-i") as HTMLDivElement;
+
+
+
+  if(valor == 1) {
+    underline.classList.add("cambio_top");
+    
+    }
+
 
   // Rompemos la ejecución si por algún motivo el HTML original mutó y no encuentra el nodo
   if (!original) {
@@ -65,11 +74,12 @@ function setPuntero(valor: number): void {
     ptrHeight = 0;
     ptrOrigin = "left";
   }
-
-  root.style.setProperty('--str-nulo-top', `${ptrHeight}px`);
+  
+  root.style.setProperty('--str-top', `${ptrHeight}px`);
+  root.style.setProperty('--nulo-top', `${ptrHeight}px`);
   root.style.setProperty('--str-left', `${ptrLeft * 100}%`);
   root.style.setProperty('--nulo-left', `-${ptrLeft * 100}%`);
-
+  
   const contenedorWidth = (DOM.contenedorNodos as HTMLElement).offsetWidth;
   const strWidth = (DOM.str as HTMLElement).offsetWidth;
 
@@ -81,230 +91,13 @@ function setPuntero(valor: number): void {
   root.style.setProperty('--linea-flecha-inicial-left', `${flecha_puntero_inicial_left}px`);
   root.style.setProperty('--punta-flecha-inicial-top', `${ptrHeight}px`);
   root.style.setProperty('--punta-flecha-inicial-left', `${flecha_puntero_inicial_left + flecha_puntero_inicial_width}px`);
+  
+
 }
 
-// function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: number): void {
-//   if (!DOM.verificarDOM() || !DOM.str || !DOM.contenedorNodos) return;
-
-//   // Obtenemos dinámicamente el elemento actual para leer sus hijos
-//   const flecha_puntero_inicial = document.getElementById("flecha_puntero_inicial");
-//   if (!flecha_puntero_inicial) return;
-//   const hijos = flecha_puntero_inicial.children;
-
-//   switch (mostrar) {
-//     case true: {
-//       const resultado = necesitaTransicion * 2 + window.banderaFlechaInicial * 1;
-      
-//       switch (resultado) {
-//         case 0: {
-//           for (const hijo of hijos) {
-//             (hijo as HTMLElement).classList.add("inmediato");
-//           }
-//           window.banderaFlechaInicial = 1;
-//           break;
-//         }
-//         case 2: {
-//           for (const hijo of hijos) {
-//             const h = hijo as HTMLElement;
-//             if (h.classList.contains("underline")) {
-//               h.classList.remove("arrowend-first-ul");
-//             } else {
-//               h.classList.remove("arrowend-first");
-//             }
-//           }
-//           root.style.setProperty('--punta-flecha-inicial-width', `20px`);
-//           break;
-//         }
-//         case 3: {
-//           for (const hijo of hijos) {
-//             const h = hijo as HTMLElement;
-//             h.classList.remove("inmediato");
-//             if (h.classList.contains("underline")) {
-//               h.classList.remove("arrowend-first-ul");
-//             } else {
-//               h.classList.remove("arrowend-first");
-//             }
-//           }
-//           window.banderaFlechaInicial = 0;
-//           break;
-//         }
-//       }
-
-//       const long = DOM.contenedorNodos.childElementCount;
-//       const strElem = DOM.str as HTMLElement;
-//       const contenedorElem = DOM.contenedorNodos as HTMLElement;
-      
-//       let flecha_puntero_inicial_left = 0;
-//       let flecha_puntero_inicial_width = 0;
-//       let angulo = 0;
-
-//       switch (long) {
-//         case 0: {
-//           flecha_puntero_inicial_left = strElem.offsetLeft + strElem.offsetWidth + 5;
-//           flecha_puntero_inicial_width = contenedorElem.offsetWidth - 2 * (strElem.offsetLeft + strElem.offsetWidth) - strElem.offsetWidth / 2;
-//           break;
-//         }
-//         default: {
-//           const primerNodo = contenedorElem.firstElementChild as HTMLElement | null;
-//           if (!primerNodo) return;
-
-//           const x2 = s2 === undefined ? primerNodo.offsetLeft : s2;
-//           const x1 = strElem.offsetLeft + strElem.offsetWidth + 5;
-          
-//           flecha_puntero_inicial_left = x1;
-//           flecha_puntero_inicial_width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(100, 2));
-          
-//           const y2 = primerNodo.offsetTop + primerNodo.offsetHeight / 2;
-//           const y1 = strElem.offsetTop + strElem.offsetHeight - 7.5;
-          
-//           angulo = (Math.asin((y2 - y1) / flecha_puntero_inicial_width) * 180) / Math.PI;
-//           root.style.setProperty('--rotation-angle-fpi', `${angulo}deg`);
-//           root.style.setProperty('--punta-flecha-inicial-top', `0`);
-//           break;
-//         }
-//       }
-
-//       const distancia_horizontal = angulo !== 0 ? (s2 === undefined ? (contenedorElem.firstElementChild as HTMLElement).offsetLeft : s2) - (strElem.offsetLeft + strElem.offsetWidth + 5) : flecha_puntero_inicial_width;
-
-//       root.style.setProperty('--linea-flecha-inicial-width', `${flecha_puntero_inicial_width}px`);
-//       root.style.setProperty('--punta-flecha-inicial-left', `${flecha_puntero_inicial_left + distancia_horizontal}px`);
-//       root.style.setProperty('--linea-flecha-inicial-left', `${flecha_puntero_inicial_left}px`);
-//       break;
-//     }
-//     case false: {
-//       root.style.setProperty('--linea-flecha-inicial-width', `0px`);
-//       root.style.setProperty('--punta-flecha-inicial-width', `0px`);
-//       window.banderaFlechaInicial = 0;
-//       for (const hijo of hijos) {
-//         const h = hijo as HTMLElement;
-//         h.classList.remove("inmediato");
-//         if (h.classList.contains("underline")) {
-//           h.classList.add("arrowend-first-ul");
-//         } else {
-//           h.classList.add("arrowend-first");
-//         }
-//       }
-//       break;
-//     }
-//   }
-// }
 
 
-// function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: number): void {
-//   if (!DOM.verificarDOM() || !DOM.str || !DOM.contenedorNodos) return;
 
-//   const flecha_puntero_inicial = document.getElementById("flecha_puntero_inicial");
-//   if (!flecha_puntero_inicial) return;
-//   const hijos = flecha_puntero_inicial.children;
-
-//   switch (mostrar) {
-//     case true: {
-//       const resultado = necesitaTransicion * 2 + window.banderaFlechaInicial * 1;
-      
-//       switch (resultado) {
-//         case 0: {
-//           for (const hijo of hijos) {
-//             (hijo as HTMLElement).classList.add("inmediato");
-//           }
-//           window.banderaFlechaInicial = 1;
-//           break;
-//         }
-//         case 2: {
-//           for (const hijo of hijos) {
-//             const h = hijo as HTMLElement;
-//             if (h.classList.contains("underline")) {
-//               h.classList.remove("arrowend-first-ul");
-//             } else {
-//               h.classList.remove("arrowend-first");
-//             }
-//           }
-//           root.style.setProperty('--punta-flecha-inicial-width', `20px`);
-//           break;
-//         }
-//         case 3: {
-//           for (const hijo of hijos) {
-//             const h = hijo as HTMLElement;
-//             h.classList.remove("inmediato");
-//             if (h.classList.contains("underline")) {
-//               h.classList.remove("arrowend-first-ul");
-//             } else {
-//               h.classList.remove("arrowend-first");
-//             }
-//           }
-//           window.banderaFlechaInicial = 0;
-//           break;
-//         }
-//       }
-
-//       const long = DOM.contenedorNodos.childElementCount;
-//       const strElem = DOM.str as HTMLElement;
-//       const contenedorElem = DOM.contenedorNodos as HTMLElement;
-      
-//       let flecha_puntero_inicial_left = 0;
-//       let flecha_puntero_inicial_width = 0;
-//       let angulo = 0;
-
-//       // 💥 DEFINIMOS LAS COORDENADAS BASE COMO MANDABA TU VANILLA
-//       let x1 = 0;
-//       let x2 = 0;
-
-//       switch (long) {
-//         case 0: {
-//           flecha_puntero_inicial_left = strElem.offsetLeft + strElem.offsetWidth + 5;
-//           flecha_puntero_inicial_width = contenedorElem.offsetWidth - 2 * (strElem.offsetLeft + strElem.offsetWidth) - strElem.offsetWidth / 2;
-//           break;
-//         }
-//         default: {
-//           const primerNodo = contenedorElem.firstElementChild as HTMLElement | null;
-//           if (!primerNodo) return;
-
-//           // Asignación idéntica a tu JS clásico
-//           x2 = s2 === undefined ? primerNodo.offsetLeft : s2;
-//           x1 = strElem.offsetLeft + strElem.offsetWidth + 5;
-          
-//           flecha_puntero_inicial_left = x1;
-//           flecha_puntero_inicial_width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(100, 2));
-          
-//           const y2 = primerNodo.offsetTop + primerNodo.offsetHeight / 2;
-//           const y1 = strElem.offsetTop + strElem.offsetHeight - 7.5;
-          
-//           angulo = (Math.asin((y2 - y1) / flecha_puntero_inicial_width) * 180) / Math.PI;
-//           root.style.setProperty('--rotation-angle-fpi', `${angulo}deg`);
-//           root.style.setProperty('--punta-flecha-inicial-top', `0`);
-//           break;
-//         }
-//       }
-
-//       // 💥 REPARACIÓN DE LA LÍNEA AFECTADA: Usamos los valores planos puros
-//       let distancia_horizontal = 0;
-//       if (angulo !== 0) {
-//         distancia_horizontal = x2 - x1; // Fiel reflejo de tu condicional original
-//       } else {
-//         distancia_horizontal = flecha_puntero_inicial_width;
-//       }
-
-//       root.style.setProperty('--linea-flecha-inicial-width', `${flecha_puntero_inicial_width}px`);
-//       root.style.setProperty('--punta-flecha-inicial-left', `${flecha_puntero_inicial_left + distancia_horizontal}px`);
-//       root.style.setProperty('--linea-flecha-inicial-left', `${flecha_puntero_inicial_left}px`);
-//       break;
-//     }
-//     case false: {
-//       root.style.setProperty('--linea-flecha-inicial-width', `0px`);
-//       root.style.setProperty('--punta-flecha-inicial-width', `0px`);
-//       window.banderaFlechaInicial = 0;
-//       for (const hijo of hijos) {
-//         const h = hijo as HTMLElement;
-//         h.classList.remove("inmediato");
-//         if (h.classList.contains("underline")) {
-//           h.classList.add("arrowend-first-ul");
-//         } else {
-//           h.classList.add("arrowend-first");
-//         }
-//       }
-//       break;
-//     }
-//   }
-// }
 
 
 function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: number): void {
@@ -391,7 +184,7 @@ function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: num
           var angulo = (Math.asin((((firstChild.offsetTop + firstChild.offsetHeight / 2) - (str.offsetTop + str.offsetHeight - 7.5)) / flecha_puntero_inicial_width)) * 180 / Math.PI);
           console.log("En angulo es: "+angulo);
           root.style.setProperty('--rotation-angle-fpi', `${angulo}deg`);
-          root.style.setProperty('--punta-flecha-inicial-top', `0`);
+          // root.style.setProperty('--punta-flecha-inicial-top', `202px`);
           break;
         }
       }
@@ -466,18 +259,29 @@ function setFlechaFinal(mostrar: boolean, necesitaTransicion: number, s2?: numbe
       if (!lastChild) return;
 
       let s2_f = 0;
+
+
+      const nodosReales = DOM.contenedorNodos.querySelectorAll('.caja-nodo');
       if (s2 === undefined) {
-        const cantidadNodos = contenedorElem.childElementCount;
-        s2_f = (contenedorElem.offsetWidth - cantidadNodos * lastChild.offsetWidth) / (cantidadNodos + 1);
+        
+        
+        const layout = obtenerInfoLayout(5);
+        // let cantidadNodos = nodosReales.length % 5;
+        // if(cantidadNodos == 0) 
+        //    cantidadNodos = 5;
+        
+        // s2_f = (contenedorElem.offsetWidth - cantidadNodos * lastChild.offsetWidth) / (cantidadNodos + 1);
+        s2_f = (contenedorElem.offsetWidth - layout.nodosUltimaFila * lastChild.offsetWidth) / (layout.nodosUltimaFila + 1);
+
       } else {
         s2_f = s2;
       }
-
+      
       const x2 = contenedorElem.offsetWidth - (s2_f + (lastChild.offsetWidth / 4));
-      const firstChild = contenedorElem.firstElementChild as HTMLElement | null;
-      if (!firstChild) return;
+      // const firstChild = contenedorElem.lastElementChild as HTMLElement | null;
+      // if (!firstChild) return;
 
-      const y1 = (firstChild.offsetTop + firstChild.offsetHeight / 2) - (nuloElem.offsetTop + nuloElem.offsetHeight);
+      const y1 = (lastChild.offsetTop + lastChild.offsetHeight / 2) - (nuloElem.offsetTop + nuloElem.offsetHeight);
       const flecha_puntero_final_width = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1, 2));
       const angulo = -(Math.asin(y1 / flecha_puntero_final_width) * 180 / Math.PI);
 
@@ -486,7 +290,12 @@ function setFlechaFinal(mostrar: boolean, necesitaTransicion: number, s2?: numbe
       root.style.setProperty('--linea-flecha-final-left', `${x2}px`);
       root.style.setProperty('--punta-flecha-final-left', `${x1}px`);
       root.style.setProperty('--punta-flecha-final-width', `20px`);
-
+      
+      // if(Math.trunc(nodosReales.length / 3) > 1) {
+      //   console.log("solo entro aqui cuando hay mas de una fila");
+      //   root.style.setProperty('--linea-flecha-final-top', `${(lastChild.offsetTop + lastChild.offsetHeight / 2)}px`);
+      //   root.style.setProperty('--punta-flecha-final-top', `${(nuloElem.offsetTop + nuloElem.offsetHeight)}px`);
+      // }
       for (const hijo of hijos) {
         const h = hijo as HTMLElement;
         if (h.classList.contains("underline")) {

@@ -3,7 +3,7 @@
 import { crearNodo } from "../elementosGraficos/Nodo.ts";
 
 import { nodoSeleccionado } from "../controladores/ControladorEventosNodos.ts";
-import { contenedorNodos, verificarDOM } from "../elementosDOM.ts";
+import { contenedorNodos, verificarDOM } from "../utils/elementosDOM.ts";
 
 /**
  * Obtiene la colección actualizada de nodos en el DOM.

@@ -1,9 +1,6 @@
 
 :root {
 
-    /* --principal-height: 400px; */
-
-
     --inicializador-align-items: center;
 
     --str-left : 25%;
@@ -39,10 +36,6 @@
 
 #inicializador {
     position: absolute;
-    /* display: flex; */
-
-
-    /* top: calc(var(--principal-height) * -1);  */
 
 
     width: 100%; 
@@ -50,11 +43,6 @@
     height: 100%;
 
 
-
-    /* width: var(--principal-width); 
-    height: var(--principal-height);  */
-    /* align-items: var(--inicializador-align-items);
-    justify-content: space-between;  */
     pointer-events: none;
    }
 
@@ -110,9 +98,9 @@
   #flecha_puntero_inicial .underline{
     position: absolute;
     /* top: var(--str-top); */
-    top: var(--linea-flecha-inicial-top);
+    top: var(--linea-flecha-inicial-top); 
     left: var(--linea-flecha-inicial-left); 
-    width: var(--linea-flecha-inicial-width);
+    width: var(--linea-flecha-inicial-width) !important;
     transform-origin: var(--linea-flecha-inicial-transform-origin);
     transform : rotate(var(--rotation-angle-fpi));
     transition-property: width, transform, left, top;
@@ -130,7 +118,7 @@
     /* top: -2.5px;  */
     top:var(--linea-flecha-final-top);
     left: var(--linea-flecha-final-left);
-    width: var(--linea-flecha-final-width);
+    width: var(--linea-flecha-final-width) !important;
     transform :rotate(var(--rotation-angle-fpf));
     transition-property: width, transform, left, top;
     transition-duration: 2s, 2s, 2s, 2s;
@@ -149,7 +137,7 @@
     margin: 0px 0px;
     left: var(--punta-flecha-inicial-left);
     top: var(--punta-flecha-inicial-top); 
-    width: var(--punta-flecha-inicial-width);
+    width: var(--punta-flecha-inicial-width) !important;
   }
   
   #flecha_puntero_final .linea-i, #flecha_puntero_final .linea-s {

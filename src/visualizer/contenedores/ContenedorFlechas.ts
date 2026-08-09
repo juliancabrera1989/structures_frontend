@@ -1,5 +1,6 @@
 import { crearFlecha } from "../elementosGraficos/Flecha.ts";
-import { contenedorFlechas, verificarDOM } from "../elementosDOM.ts";
+import { contenedorFlechas, verificarDOM } from "../utils/elementosDOM.ts";
+import { obtenerInfoLayout, obtenerUbicacionNodo } from "../utils/layoutHelpers.ts";
 
 const root = document.documentElement;
 
@@ -52,34 +53,61 @@ function agregarFlecha(metodo: number): void {
 
   let n = 0;
   let m = 1;
+  let o = 0;
   const flecha = crearFlecha();
+  var flechas = getFlechas();
+  // root.style.setProperty('--flecha-left', `-25px`);
+  const layout = obtenerInfoLayout(5);
   
-  root.style.setProperty('--flecha-left', `-25px`);
+
 
   // 1. Inserción en el DOM según el método
   switch (metodo) {
     case 0: {
       contenedorFlechas.append(flecha);
+      o = layout.totalFilas - 1;
       break;
     }
     case 1: {
       contenedorFlechas.prepend(flecha);
       n = 1;
-      m = contenedorFlechas.childElementCount;
+      m = flechas.length;
+      
       break;
     }
   }
 
-  const flechas = getFlechas();
+  flechas = getFlechas();
 
   // 2. Aplicación de clases de animación/estado según el método
-  switch (metodo) {
-    case 0:
-    case 1: {
-      for (let i = (0 + n); i < (flechas.length - (1 - n)); i++) {
+  //  switch (metodo) {
+  //   case 0:
+       if(layout.totalFilas == 1)
+        root.style.setProperty('--flecha-left', `-25px`);
+       
+      // if(layout.nodosPorFila.get(layout.totalFilas - 1) === 5) {
+      //   (flechas[flechas.length - 1] as HTMLElement).style.setProperty("width",root.style.getPropertyValue('--linea-flecha-width'));
+      // }
+       if (n ==1)
+            
+      for (let i = (0 + n); i < (layout.nodosPorFila.get(0)! - (2 - n)); i++) {
         flechas[i].classList.add("no-mover__flecha");
+        flechas[i].classList.remove("flecha-animando");
       }
+      else 
+      for (let i = layout.indiceInicioUltimaFila - (layout.totalFilas-1); i < flechas.length ; i++) {
+        flechas[i].classList.add("no-mover__flecha");
+        flechas[i].classList.remove("flecha-animando");
+      // } } 
+           }
+    // case 1: {
 
+
+
+       console.log("Al agregar la ultima flecha de la fila, la cantidad de nodos es: ",layout.nodosPorFila);
+      if(layout.nodosPorFila.get(obtenerUbicacionNodo(layout,flechas.length-m).numFila) === 5) {
+        (flechas[flechas.length-m] as HTMLElement).style.setProperty("width",root.style.getPropertyValue('--linea-flecha-width'));
+      }
       setTimeout(() => {
         const objetivo = flechas[flechas.length - m];
         if (objetivo) {
@@ -88,10 +116,12 @@ function agregarFlecha(metodo: number): void {
           }
         }
       }, 100);
-      break;
-    }
+    //   break;
+    // }
 
-  }
+  // }
+
+
 }
 
 // function sacarFlecha(indice: number): void {

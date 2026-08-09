@@ -1,8 +1,9 @@
 
 :root {
     --flecha-left: -25px;
+    --flecha-left-dinamica : 0px;
 
-    --linea-flecha-width: 0px;
+    /* --linea-flecha-width: 0px; */
     --linea-flecha-transform-origin: left;
     --linea-flecha-margin-sides: 75px;
   
@@ -28,22 +29,66 @@
     justify-content: center;
     pointer-events: none;
 
+    flex-direction: row;
+    /* row-gap:150px; */
 
    }
+
+
+
+
+.flecha-spacer-fila {
+  width: 100%;
+  height: 325px;
+  flex-shrink: 0; /* O la altura/espacio que ocupe una linea flex */
+  visibility: hidden;
+  pointer-events: none;
+}
+
+
+
+
+
+
   
   
-  .arrow {
+  /* .arrow {
   position:relative;
   margin: 0 var(--linea-flecha-margin-sides);
   width: var(--linea-flecha-width);
   left: var(--flecha-left);
   transition-property: left, width;
   transition-duration: 2s, 2s;
-  }
+  } */
   
   
+.arrow {
+    position: relative;
+    display: flex;
+    flex-direction: row; /* Las líneas internas se despliegan horizontalmente */
+    height: 100px;       /* 👈 Misma altura exacta que tu .caja-nodo */
+    width: var(--linea-flecha-width); /* El ancho del contenedor es el largo de la flecha */
+    left: var(--flecha-left); 
+    align-items: center; /* 👈 Esto centra verticalmente el .underline de forma automática */
+    justify-content: flex-start; /* La línea arranca desde la izquierda */
+    margin: 75px var(--linea-flecha-margin-sides);
+    transition-property: left, width;
+    transition-duration: 2s, 2s;
+}
+
+
+
+
+
+#contenedor_flechas.margin-flex > .arrow {
+  margin: 150px  var(--linea-flecha-margin-sides) 0px;
+}
+
+
+
+
  
-  .underline {
+  /* .underline {
       width: var(--linea-flecha-width);
       transform-origin: left;
       position: relative;
@@ -55,11 +100,24 @@
 
   
   }
+   */
+
+
+
+   .underline {
+    position: relative;
+    height: 5px;
+    width: 100%; /* Ocupa todo el ancho de su contenedor .arrow */
+    background-color: red;
+    overflow: hidden;
+    transform-origin: left;
+    transition-property: width, left;
+    transition-duration: 2s, 2s;
+}
   
   
   
-  
-  .linea-s, .linea-i {
+  /* .linea-s, .linea-i {
     left: var(--linea-flecha-width);
     position: absolute;
     height: 5px;
@@ -72,18 +130,43 @@
     transition-duration: 1s, 0s, 2s, 2s ;
     transition-delay: 2s,0s,0s, 0s ;
 
-  }
+  } */
+
+
+  .linea-s, .linea-i {
+    position: absolute;
+    left: 100%; /* Se pegan justo al final del ancho de .arrow */
+    height: 5px;
+    background-color: blue;
+    opacity: 1;
+    transform-origin: left;
+    width: var(--punta-flecha-width);
+    transition-property: width, transform, left, top;
+    transition-duration: 1s, 0s, 2s, 2s;
+    transition-delay: 2s, 0s, 0s, 0s;
+}
 
 
 
-  .linea-s{
+  /* .linea-s{
     transform: rotate(135deg);
     }
   
   .linea-i{
     transform: rotate(-135deg);
     }
-  
+   */
+
+
+   .linea-s {
+    top: calc(50% - 2.5px); /* Centrado vertical */
+    transform: rotate(135deg);
+}
+
+.linea-i {
+    top: calc(50% - 2.5px); /* Centrado vertical */
+    transform: rotate(-135deg);
+}
   
 
 #contenedor_flechas_curvas {
@@ -104,4 +187,15 @@
     width: 100%;
     height: 100%;
     display: block;
+    transition-property: left, width;
+    transition-duration: 2s, 2s;
+}
+
+
+
+
+
+/* Cuando una flecha o fila está en proceso de animación */
+.flecha-animando {
+  left: var(--flecha-left-dinamica);
 }
