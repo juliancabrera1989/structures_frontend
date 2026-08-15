@@ -1,0 +1,74 @@
+{
+  "docs": [
+    {
+      "id": "1",
+      "title": "Conceptos Fundamentales y TDA",
+      "category": "Teoría Base",
+      "badge": "Principiante",
+      "summary": "Estructuras estáticas vs. dinámicas e importancia de los Tipos de Datos Abstractos (TDA) con Genéricos <T>.",
+      "content": "Las estructuras de datos son formas organizadas de almacenar y manipular información en memoria. A diferencia de las estructuras estáticas (como arreglos de tamaño fijo), las dinámicas se expanden o contraen según las necesidades de la ejecución. Gracias al uso de TypeScript con tipos genéricos <T>, un nodo no se limita a almacenar primitivos como enteros o caracteres: puede contener objetos complejos, registros de base de datos o tokens sintácticos.",
+      "realWorldUse": "Creación de modelos de datos abstractos y librerías reutilizables en desarrollo de software profesional."
+    },
+    {
+      "id": "2",
+      "title": "Pilas (Stacks) y el Call Stack",
+      "category": "Compiladores y Sistemas",
+      "badge": "Avanzado",
+      "summary": "Cómo la estructura LIFO (Last In, First Out) gestiona la ejecución de funciones y evaluación sintáctica.",
+      "content": "Las pilas son esenciales en el diseño de sistemas de bajo nivel y compiladores. Cada vez que un programa invoca una función, el entorno crea un 'Stack Frame' que almacena variables locales y la dirección de retorno. Además, se utilizan en parsers sintácticos para la evaluación de expresiones matemáticas (notación Infija a Postfija/Polaca) y en la función 'Deshacer/Rehacer' (Undo/Redo) de los editores de código.",
+      "realWorldUse": "Motor V8 de JavaScript (Call Stack), parsers de compiladores, botones Deshacer/Rehacer."
+    },
+    {
+      "id": "3",
+      "title": "Colas, Deques y Algoritmos de Grafos",
+      "category": "Algoritmos y Redes",
+      "badge": "Intermedio",
+      "summary": "Uso de la estructura FIFO en algoritmos como BFS y arquitecturas orientadas a eventos.",
+      "content": "Las Colas y Doble Colas (Deques) administran flujos de datos asíncronos y planificaciones de tareas (Scheduling). Son la columna vertebral de algoritmos de grafos como BFS (Breadth-First Search) para encontrar el camino más corto en redes. En entornos como Node.js y el navegador, la 'Task Queue' del Event Loop administra los eventos de I/O de manera no bloqueante.",
+      "realWorldUse": "Algoritmo BFS en grafos/redes, Event Loop de Node.js, colas de impresión y tareas en background."
+    },
+    {
+      "id": "4",
+      "title": "Listas Enlazadas y Gestión de Memoria",
+      "category": "Manejo de Memoria",
+      "badge": "Intermedio",
+      "summary": "Gestión del Heap de memoria, punteros dinámicos y resolución de colisiones.",
+      "content": "Las Listas Enlazadas eliminan la necesidad de bloques de memoria contiguos, reasignando punteros `next` y `prev`. En la construcción de bases de datos y sistemas operativos, se emplean para la gestión de bloques libres en el Heap y en la resolución de colisiones en Tablas Hash mediante el algoritmo de Chaining (encadenamiento).",
+      "realWorldUse": "Asignadores de memoria en C/C++, encadenamiento en Hash Maps, reproductores de música (lista de reproducción)."
+    }
+  ],
+  "videos": [
+    {
+      "id": "1",
+      "title": "Estructuras de Datos Explicadas Visualmente",
+      "description": "Una introducción conceptual a Pilas, Colas y Listas Enlazadas con animaciones.",
+      "embedUrl": "https://www.youtube.com/embed/RBSGKlAvoiM"
+    },
+    {
+      "id": "2",
+      "title": "Big-O Notation y Complejidad Algorítmica",
+      "description": "Aprende a analizar el tiempo de ejecución O(1), O(n) y O(log n) de tus estructuras.",
+      "embedUrl": "https://www.youtube.com/embed/g2o22C3CRfU"
+    }
+  ],
+  "external": [
+    {
+      "id": "1",
+      "title": "VisuAlgo - Visualización Interactiva de Algoritmos",
+      "link": "https://visualgo.net/",
+      "badge": "Web App"
+    },
+    {
+      "id": "2",
+      "title": "TypeScript Documentation - Generics <T>",
+      "link": "https://www.typescriptlang.org/docs/handbook/2/generics.html",
+      "badge": "Doc Oficial"
+    },
+    {
+      "id": "3",
+      "title": "GeeksforGeeks - Data Structures Tutorial",
+      "link": "https://www.geeksforgeeks.org/data-structures/",
+      "badge": "Artículos & Código"
+    }
+  ]
+}

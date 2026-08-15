@@ -107,36 +107,36 @@
 
 
 .transicion-nodos {
-      transition : transform 2s ease-in-out !important;
+      transition : transform 2s ease-out !important;
       transform : translateY(var(--transicionY-nodos)) ;
 }
 
 .transicion-flechas {
-      transition : transform 2s ease-in-out !important;
+      transition : transform 2s ease-out !important;
       transform : translateY(var(--transicionY-flechas)) ;
 }
 
 
 
 .transicion-nulo {
-      transition : transform 2s ease-in-out !important;
+      transition : transform 2s ease-out !important;
       transform : translateY(var(--transicionY-nulo)) ;
 }
 
 
 .transicion-nodos-negativa {
-      transition : transform 2s ease-in-out !important;
+      transition : transform 2s ease-out !important;
       transform : translateY(calc(-1*(var(--transicionY-nodos)))) ;
 }
 
 .transicion-flechas-negativa {
-      transition : transform 2s ease-in-out !important;
+      transition : transform 2s ease-out !important;
       transform : translateY(calc(-1*(var(--transicionY-flechas)))) ;
 }
 
 
 .transicion-nulo-negativa {
-      transition : transform 2s ease-in-out !important;
+      transition : transform 2s ease-out !important;
       transform : translateY(calc(-1*(var(--transicionY-nulo))));
 }
 

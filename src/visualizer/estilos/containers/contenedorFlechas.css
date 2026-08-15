@@ -3,7 +3,6 @@
     --flecha-left: -25px;
     --flecha-left-dinamica : 0px;
 
-    /* --linea-flecha-width: 0px; */
     --linea-flecha-transform-origin: left;
     --linea-flecha-margin-sides: 75px;
   
@@ -52,15 +51,7 @@
 
   
   
-  /* .arrow {
-  position:relative;
-  margin: 0 var(--linea-flecha-margin-sides);
-  width: var(--linea-flecha-width);
-  left: var(--flecha-left);
-  transition-property: left, width;
-  transition-duration: 2s, 2s;
-  } */
-  
+
   
 .arrow {
     position: relative;
@@ -88,19 +79,6 @@
 
 
  
-  /* .underline {
-      width: var(--linea-flecha-width);
-      transform-origin: left;
-      position: relative;
-      height: 5px;
-      background-color: red;
-      overflow: hidden;
-      transition-property: width, left ;
-      transition-duration: 2s, 2s;
-
-  
-  }
-   */
 
 
 
@@ -116,23 +94,6 @@
 }
   
   
-  
-  /* .linea-s, .linea-i {
-    left: var(--linea-flecha-width);
-    position: absolute;
-    height: 5px;
-    top: 0px;
-    background-color: blue;
-    opacity: 1;
-    transform-origin: left;
-    width: var(--punta-flecha-width);
-    transition-property: width, transform, left, top ;
-    transition-duration: 1s, 0s, 2s, 2s ;
-    transition-delay: 2s,0s,0s, 0s ;
-
-  } */
-
-
   .linea-s, .linea-i {
     position: absolute;
     left: 100%; /* Se pegan justo al final del ancho de .arrow */
@@ -148,16 +109,6 @@
 
 
 
-  /* .linea-s{
-    transform: rotate(135deg);
-    }
-  
-  .linea-i{
-    transform: rotate(-135deg);
-    }
-   */
-
-
    .linea-s {
     top: calc(50% - 2.5px); /* Centrado vertical */
     transform: rotate(135deg);
@@ -171,8 +122,7 @@
 
 #contenedor_flechas_curvas {
     position: absolute;
-    /* top: 0; */
-    /* left: 0; */
+
     width: 100%;
     height: 100%; 
 

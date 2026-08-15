@@ -1,0 +1,64 @@
+[
+  {
+    "id": "linked-list",
+    "type": "LinkedList",
+    "name": "Lista Enlazada Simple",
+    "badge": "Dinámica",
+    "description": "Secuencia de nodos donde cada uno apunta al siguiente mediante un puntero 'next'. Ideal para inserciones y eliminaciones rápidas.",
+    "complexity": {
+      "access": "O(n)",
+      "search": "O(n)",
+      "insertion": "O(1)",
+      "deletion": "O(1)"
+    },
+    "useCases": ["Listas de reproducción", "Navegación Historial (atrás/adelante)"],
+    "defaultNodes": ["Inicio", "Nodo A", "Nodo B"]
+  },
+  {
+    "id": "stack",
+    "type": "Stack",
+    "name": "Pila (Stack)",
+    "badge": "LIFO",
+    "description": "Estructura LIFO (Last In, First Out). Los elementos se insertan y remueven únicamente por el extremo superior (Top).",
+    "complexity": {
+      "access": "O(n)",
+      "search": "O(n)",
+      "insertion": "O(1)",
+      "deletion": "O(1)"
+    },
+    "useCases": ["Call Stack de la CPU", "Evaluación de expresiones", "Función Deshacer (Undo)"],
+    "defaultNodes": ["Base", "Mid", "Top"]
+  },
+  {
+    "id": "queue",
+    "type": "Cola (Queue)",
+    "name": "Cola Simple",
+    "badge": "FIFO",
+    "description": "Estructura FIFO (First In, First Out). Los elementos entran por el extremo posterior (Rear) y salen por el frente (Front).",
+    "complexity": {
+      "access": "O(n)",
+      "search": "O(n)",
+      "insertion": "O(1)",
+      "deletion": "O(1)"
+    },
+    "useCases": ["Event Loop de JavaScript", "Gestión de colas de impresión", "Buffers I/O"],
+    "defaultNodes": ["Front", "Item 1", "Rear"]
+  },
+  {
+    "id": "deque",
+    "type": "Deque",
+    "name": "Doble Cola (Deque)",
+    "badge": "Bi-direccional",
+    "description": "Cola de doble extremo. Permite insertar y eliminar elementos eficientemente tanto por el frente como por el final.",
+    "complexity": {
+      "access": "O(n)",
+      "search": "O(n)",
+      "insertion": "O(1)",
+      "deletion": "O(1)"
+    },
+    "useCases": ["Algoritmos de Robo / Web Crawlers", "Planificación de procesos bi-direccional"],
+    "defaultNodes": ["Left", "Center", "Right"]
+  }
+]
+
+

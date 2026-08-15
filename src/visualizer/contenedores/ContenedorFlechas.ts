@@ -32,7 +32,6 @@ function agregarFlechaN(indice: number): void {
 
 
         for (let i = 0; i < flechas.length; i++) {
-        // if (i !== (indice - 2)) {
         if (i !== (indice)) {
           flechas[i].classList.add("no-mover__flecha");
         }
@@ -56,7 +55,6 @@ function agregarFlecha(metodo: number): void {
   let o = 0;
   const flecha = crearFlecha();
   var flechas = getFlechas();
-  // root.style.setProperty('--flecha-left', `-25px`);
   const layout = obtenerInfoLayout(5);
   
 
@@ -79,15 +77,10 @@ function agregarFlecha(metodo: number): void {
 
   flechas = getFlechas();
 
-  // 2. Aplicación de clases de animación/estado según el método
-  //  switch (metodo) {
-  //   case 0:
        if(layout.totalFilas == 1)
         root.style.setProperty('--flecha-left', `-25px`);
        
-      // if(layout.nodosPorFila.get(layout.totalFilas - 1) === 5) {
-      //   (flechas[flechas.length - 1] as HTMLElement).style.setProperty("width",root.style.getPropertyValue('--linea-flecha-width'));
-      // }
+
        if (n ==1)
             
       for (let i = (0 + n); i < (layout.nodosPorFila.get(0)! - (2 - n)); i++) {
@@ -98,9 +91,9 @@ function agregarFlecha(metodo: number): void {
       for (let i = layout.indiceInicioUltimaFila - (layout.totalFilas-1); i < flechas.length ; i++) {
         flechas[i].classList.add("no-mover__flecha");
         flechas[i].classList.remove("flecha-animando");
-      // } } 
+ 
            }
-    // case 1: {
+
 
 
 
@@ -116,33 +109,11 @@ function agregarFlecha(metodo: number): void {
           }
         }
       }, 100);
-    //   break;
-    // }
 
-  // }
 
 
 }
 
-// function sacarFlecha(indice: number): void {
-//   if (!verificarDOM() || !contenedorFlechas) return;
-
-//   const flechasAntes = getFlechas();
-//   const flechaAEliminar = flechasAntes[indice];
-
-//   if (flechaAEliminar) {
-//     contenedorFlechas.removeChild(flechaAEliminar);
-//   }
-
-//   // Volvemos a consultar la lista actualizada post-eliminación
-//   const flechasDespues = getFlechas();
-//   if (flechasDespues.length > 0) {
-//     root.style.setProperty('--flecha-left', `-25px`);
-//     for (let i = 0; i < flechasDespues.length; i++) {
-//       flechasDespues[i].classList.add("no-mover__flecha");
-//     }
-//   }
-// }
 
 function sacarFlecha(indice: number): void {
   if (!verificarDOM() || !contenedorFlechas) return;

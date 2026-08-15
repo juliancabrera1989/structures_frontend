@@ -25,24 +25,11 @@ body {
 
 
     #principal {
-        /* outline: 2px solid #f0f;  */
-        /* border: 2px red;  */
-
-
-
-        /* min-width: 500px; */
-        max-width: var(--principal-width);
-        min-width: var(--principal-width-min);
-
-        height: var(--principal-height);
-
-
-        resize: horizontal;
-        /* overflow-x: auto; */
-        /* overflow-y: auto; */
-     /* overflow-x: auto; */
-     /* overflow-y: auto; */
-     display: flow-root;
+      max-width: var(--principal-width);
+      min-width: var(--principal-width-min);
+      height: var(--principal-height);
+      resize: horizontal;
+      display: flow-root;
     }
 
 
@@ -50,90 +37,28 @@ body {
     #principal_wrapper {
       outline: 2px solid #f0f;
       max-width: 100%;
-      /* min-width: 200px; /*Aca va el valor para que la flecha tenga 50 grados */
-      /* height: 400px; */
-
-
-
-      /* min-height: 250px;
-      max-height: 400px; */
-      
-  margin: 24px 8px 8px 8px !important;
-   /* height : var(--wrapper-height); */
-  /* Aseguramos que el ancho máximo de la caja compute contemplando este margen */
-  max-width: calc(100% - 16px) !important;
-
-  /* Tu borde de control fucsia o el definitivo */
-  /* box-sizing: content-box !important; */
-
-
-      /* overflow-x: auto; */
-
-    height: var(--wrapper-height); 
-    
-    /* El mínimo siempre va a ser 400px (el estado inicial de tu app) */
-    /* min-height: 400px;  */
-   
+      margin: 24px 8px 8px 8px !important;
+      max-width: calc(100% - 16px) !important;
+      height: var(--wrapper-height); 
       min-height: var(--wrapper-height-min);
-
-      
     /* Sacamos el max-height rígido inline o lo seteamos para que acompañe al height.
        Al no ponerle un tope estático de 400px, JS va a poder estirar el contenedor sin trabas. */
-    max-height: none;
-      /* max-height: var(--wrapper-height); /* 🚨 Cambiado de 400px a la variable */
-      /* overflow-y: auto; */
-
-
+      /* max-height: none; */
       transition: height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out;
-
-      
-    box-sizing: border-box !important;
-
-    overflow-y: overlay !important; 
-    overflow-x: hidden !important;
-
-    scrollbar-gutter: stable;
+      box-sizing: border-box !important;
+      overflow-y: overlay !important; 
+      overflow-x: hidden !important;
+      scrollbar-gutter: stable;
     }
 
 
 
-    /* body {
-      overflow-x : hidden;
-      margin: 0;
-    } */
-
-/* body {
-  width: 2100px;
-} */
-    /* body {
-        max-width: var(--principal-width);
-  } */
-
-    /* @media screen and (max-width: 800px) {
-        :root {
-    --principal-width: 100%;
-    --principal-height: 50vw;
-      }
-    }
-
-
-    @media screen and (max-width: 500px){
-        :root {
-    --principal-width: 500px;
-    --principal-height: 250px;
-      }
-    } */
+    
 
 
 #principal_wrapper, #principal {
     position: relative; /* 👈 Obliga a los absolutos internos a calcular desde acá */
 }
-
-
-
-/* html, body, #principal_wrapper {
-  overflow-y: scroll; /* Forzar la barra de scroll vertical permanente */
-/* 1. Aplicado al contenedor con scroll (o directamente a html / body) */
 
 
 /* 2. Estilo para Chrome, Edge, Brave, Opera y Safari */
@@ -160,15 +85,6 @@ body {
   background-color: rgba(255, 255, 255, 0.6) !important;
 }
 
-/* html { */
-  /* En Chrome/Edge Chromium, hace que la barra sea overlay (flotante) sin restar ancho al viewport */
-  /* overflow-y: overlay;  */
-  /* Evita que el viewport cambie de ancho si aparece o desaparece la barra */
-  /* scrollbar-gutter: stable; */
-  /* Ancho fino para Firefox */
-  /* scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.3) transparent; */
-/* } */
 
 
 #principal_wrapper::-webkit-scrollbar {

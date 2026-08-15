@@ -36,13 +36,8 @@
 
 #inicializador {
     position: absolute;
-
-
     width: 100%; 
-
     height: 100%;
-
-
     pointer-events: none;
    }
 
@@ -115,7 +110,6 @@
   
   #flecha_puntero_final .underline{
     position: absolute;
-    /* top: -2.5px;  */
     top:var(--linea-flecha-final-top);
     left: var(--linea-flecha-final-left);
     width: var(--linea-flecha-final-width) !important;
@@ -144,8 +138,6 @@
     position: absolute;
     margin: 0px 0px;
     left: var(--punta-flecha-final-left) ;
-    /* top: var(--str-nulo-top); */
-    /* top: calc(var(--str-nulo-top) + 7.5px); */
     top: var(--punta-flecha-final-top);
     width: var(--punta-flecha-final-width);
   }
