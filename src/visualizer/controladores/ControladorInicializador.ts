@@ -13,7 +13,54 @@ declare global {
   }
 }
 
+export function prepararDOMParaEstado1(): void {
+  const root = document.documentElement;
 
+  // 1. Apagar transiciones de 2s para que los cambios sean instantáneos
+  if (DOM.str) DOM.str.style.transition = "none";
+  if (DOM.nulo) DOM.nulo.style.transition = "none";
+
+  // 2. Limpiar atributos de estilo en línea inyectados previamente
+  if (DOM.inicializador) DOM.inicializador.removeAttribute("style");
+  if (DOM.str) DOM.str.removeAttribute("style");
+  if (DOM.nulo) DOM.nulo.removeAttribute("style");
+
+  // 3. Resetear todas las CSS Custom Properties a su valor base de Estado 1
+  root.style.setProperty('--str-left', '25%');
+  root.style.setProperty('--nulo-left', '-25%');
+  root.style.setProperty('--str-top', '0px');
+  root.style.setProperty('--nulo-top', '0px');
+
+  root.style.setProperty('--rotation-angle-fpi', '0deg');
+  root.style.setProperty('--rotation-angle-fpf', '0deg');
+
+  root.style.setProperty('--linea-flecha-inicial-width', '0px');
+  root.style.setProperty('--linea-flecha-inicial-left', '0px');
+  root.style.setProperty('--linea-flecha-inicial-top', '0px');
+  root.style.setProperty('--linea-flecha-inicial-transform-origin', 'left');
+
+  root.style.setProperty('--punta-flecha-inicial-width', '0px');
+  root.style.setProperty('--punta-flecha-inicial-left', '0px');
+  root.style.setProperty('--punta-flecha-inicial-top', '0px');
+
+  root.style.setProperty('--linea-flecha-final-width', '0px');
+  root.style.setProperty('--linea-flecha-final-left', '0px');
+  root.style.setProperty('--linea-flecha-final-top', '0px');
+
+  root.style.setProperty('--punta-flecha-final-width', '0px');
+  root.style.setProperty('--punta-flecha-final-top', '0px');
+  root.style.setProperty('--punta-flecha-final-left', '0px');
+
+  // 4. Forzar reflow en el navegador para asentar los cambios inmediatamente
+  if (DOM.principal) void DOM.principal.offsetHeight;
+
+  // 5. Restablecer transiciones y posicionar punteros neutros
+  if (DOM.str) DOM.str.style.transition = "";
+  if (DOM.nulo) DOM.nulo.style.transition = "";
+
+  inicializarPuntero(1);
+  setPuntero(1);
+}
 
 function inicializarPuntero(valor: number): void {
   if (!DOM.verificarDOM() || !DOM.inicializador) return;

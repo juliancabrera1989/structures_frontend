@@ -15,6 +15,8 @@ export let inputNodo: HTMLInputElement = null!;
 export let botonAgregar1erNodo: HTMLButtonElement = null!;
 export let agregarComienzo: HTMLButtonElement = null!;
 export let agregarFinal: HTMLButtonElement = null!;
+export let borrarComienzo: HTMLButtonElement = null!;
+export let borrarFinal: HTMLButtonElement = null!;
 export let agregarIntermedio: HTMLButtonElement = null!;
 export let selectorPares: HTMLSelectElement = null!;
 export let textoSelector: HTMLElement = null!;
@@ -36,6 +38,8 @@ export function actualizarElementosDOM(): void {
   botonAgregar1erNodo = document.getElementById("agregar_1er_nodo") as HTMLButtonElement;
   agregarComienzo = document.getElementById("agregar_comienzo") as HTMLButtonElement;
   agregarFinal = document.getElementById("agregar_final") as HTMLButtonElement;
+  borrarComienzo = document.getElementById("borrar_comienzo") as HTMLButtonElement;
+  borrarFinal = document.getElementById("borrar_final") as HTMLButtonElement;
   agregarIntermedio = document.getElementById("agregar_intermedio") as HTMLButtonElement;
   selectorPares = document.getElementById("selector-pares") as HTMLSelectElement;
   textoSelector = document.getElementById("texto-selector") as HTMLElement;

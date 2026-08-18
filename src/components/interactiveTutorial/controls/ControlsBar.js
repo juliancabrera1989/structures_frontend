@@ -1,57 +1,3 @@
-// import React from "react";
-
-// const ControlsBar = () => {
-//   return (
-//     <div id="barra_superior" style={{ padding: "1rem", borderBottom: "1px solid #ccc" }}>
-//       {/* SECCIÓN A: Configuración y Creación de la Estructura */}
-//       <div id="seccion_creacion" style={{ marginBottom: "1rem" }}>
-//         <label>Name: </label>
-//         <input type="text" id="structure_name" placeholder="Ej: Mi Pila" />
-
-//         <label> Type: </label>
-//         <select id="structure_type">
-//           <option value="linkedlist">Linked List</option>
-//           <option value="doublylinkedlist">Doubly Linked List</option>
-//           <option value="stack">Stack</option>
-//           <option value="queue">Queue</option>
-//           <option value="deque">Double-Ended Queue</option>
-//         </select>
-
-//         <label> Data Type: </label>
-//         <select id="data_type">
-//           <option value="number">Numbers</option>
-//           <option value="letter">Letters</option>
-//           <option value="string">Strings</option>
-//         </select>
-
-//         <button type="button" id="inicializar">Crear Estructura</button>
-//       </div>
-
-//       <hr />
-
-//       {/* SECCIÓN B: Gestión Dinámica (Se activa tras presionar Crear) */}
-//       <div id="seccion_operaciones">
-//         <span hidden id="texto">Ingrese el valor del nodo: </span>
-//         <input type="text" name="nodo" id="nodo" hidden />
-        
-//         {/* Botones Genéricos que tu controlador prenderá/apagará o cambiará de texto */}
-//       <button type="button" id="agregar_1er_nodo" hidden>Agregar primer nodo</button>
-//       <button type="button" id="agregar_comienzo" hidden>Agregar al comienzo</button>
-//       <button type="button" id="agregar_final" hidden>Agregar al final</button>
-        
-//         <br />
-//         <span id="texto-selector" hidden>Seleccione posición: </span>
-//         <select id="selector-pares" hidden></select>
-//         <button type="button" id="agregar_intermedio" hidden>Ejecutar</button>
-//         <button type="button" id="guardar" hidden>Guardar</button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ControlsBar;
-
-
 import React, { useState } from "react";
 import HelpModal from "./HelpModal"; // Crearemos este componente abajo
 
@@ -107,6 +53,10 @@ const ControlsBar = () => {
         <button type="button" id="agregar_comienzo" hidden className="btn btn-primary btn-sm">Agregar al comienzo</button>
         <button type="button" id="agregar_final" hidden className="btn btn-primary btn-sm">Agregar al final</button>
         
+        <button type="button" id="borrar_comienzo" hidden className="btn btn-danger btn-sm">Borrar al comienzo</button>
+        <button type="button" id="borrar_final" hidden className="btn btn-danger btn-sm">Borrar al final</button>
+
+
         <span id="texto-selector" hidden>Seleccione posición: </span>
         <select id="selector-pares" hidden className="form-select form-select-sm w-auto bg-dark text-light border-secondary"></select>
         <button type="button" id="agregar_intermedio" hidden className="btn btn-warning btn-sm">Ejecutar</button>

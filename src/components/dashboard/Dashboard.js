@@ -307,24 +307,73 @@ const Dashboard = () => {
   };
 
   // 4. Función para eliminar la estructura (podés completar tu llamada al backend acá)
-  const handleDelete = async (id) => {
+  // const handleDelete = async (id) => {
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/structures/${id}`, {
+  //       method: 'DELETE',
+  //       headers: {
+  //         'Authorization': `Bearer ${auth.token}`
+  //       }
+  //     });
+
+  //     if (response.ok) {
+  //       // Filtramos el estado local para quitar la estructura eliminada al instante
+  //       setDataStructures((prev) => prev.filter((item) => (item._id || item.id) !== id));
+  //     }
+  //   } catch (error) {
+  //     console.error("Error al eliminar la estructura:", error);
+  //   }
+  // };
+
+
+  // const handleDelete = async (id) => {
+  // const targetId = String(id);
+  
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/structures/${targetId}`, {
+  //       method: 'DELETE',
+  //       headers: {
+  //         'Authorization': `Bearer ${auth.token}`
+  //       }
+  //     });
+
+  //     if (response.ok) {
+  //       // Filtrado estricto convirtiendo IDs a String
+  //       setDataStructures((prev) => 
+  //         prev.filter((item) => String(item._id || item.id) !== targetId)
+  //       );
+  //     } else {
+  //       alert("No se pudo eliminar de la base de datos.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error al eliminar la estructura:", error);
+  //   }
+  // };
+const handleDelete = async (id) => {
+  const targetId = String(id);
+  
     try {
-      const response = await fetch(`http://localhost:5000/api/structures/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/structures/${targetId}`, {
         method: 'DELETE',
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${auth.token}`
         }
       });
 
       if (response.ok) {
-        // Filtramos el estado local para quitar la estructura eliminada al instante
-        setDataStructures((prev) => prev.filter((item) => (item._id || item.id) !== id));
+        setDataStructures((prev) => 
+          prev.filter((item) => String(item._id || item.id) !== targetId)
+        );
+      } else {
+        const errData = await response.json().catch(() => ({}));
+        console.error("Detalle del error al eliminar:", response.status, errData);
+        alert(`Error ${response.status}: ${errData.message || "No se pudo eliminar de la base de datos."}`);
       }
     } catch (error) {
-      console.error("Error al eliminar la estructura:", error);
+      console.error("Error de red al eliminar:", error);
     }
   };
-
   return (
     <Container className="py-4 text-light">
       <div className="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">

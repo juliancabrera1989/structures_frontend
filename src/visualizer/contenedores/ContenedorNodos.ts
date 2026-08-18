@@ -73,21 +73,48 @@ function agregarNodo(valor: string, metodo: number): void {
   }
 }
 
-function sacarNodo(data: string): void {
+
+
+
+
+
+function sacarNodo(metodo? : number, data?: string): void {
   if (!verificarDOM() || !contenedorNodos) return;
 
-  const nodos = getNodos();
-  
-  // Recorremos al revés al eliminar elementos de una colección en vivo 
-  // para evitar problemas con la mutación de los índices
-  for (let i = nodos.length - 1; i >= 0; i--) {
-    const contenedorValor = nodos[i].getElementsByClassName("valor-nodo")[0] as HTMLElement | undefined;
-    const valor = contenedorValor?.innerHTML;
 
-    if (valor === data) {
-      contenedorNodos.removeChild(nodos[i]);
+  if(data) {
+
+    const nodos = getNodos();
+    
+    // Recorremos al revés al eliminar elementos de una colección en vivo 
+    // para evitar problemas con la mutación de los índices
+
+    for (let i = nodos.length - 1; i >= 0; i--) {
+      const contenedorValor = nodos[i].getElementsByClassName("valor-nodo")[0] as HTMLElement | undefined;
+      const valor = contenedorValor?.innerHTML;
+
+      if (valor === data) {
+        contenedorNodos.removeChild(nodos[i]);
+      }
     }
+
+  } 
+  else {
+    switch(metodo) {
+    case 0 :
+      contenedorNodos.lastElementChild?.remove();
+      break;
+    case 1 :
+    default :
+      contenedorNodos.firstElementChild?.remove();
+      break;
+    }
+    
   }
+   
+
+
+
 }
 
 export { agregarNodo, agregarNodoN, sacarNodo, getNodos, indexOf };

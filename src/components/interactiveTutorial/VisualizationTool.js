@@ -1,6 +1,3 @@
-// import "../../visualizer/estilos/contenedorNodos.css";
-// import "../../visualizer/estilos/contenedorFlechas.css";
-// import "../../visualizer/estilos/inicializador.css";
 import "../../visualizer/estilos/clasesEspeciales.css";
 import "../../visualizer/estilos/principal.css";
 
@@ -8,15 +5,6 @@ import "../../visualizer/estilos/principal.css";
 function VisualizationTool() {
   return (
     <>
-      {/* <div id="contenedor_nodos"></div>
-      <div id="inicializador">
-        <div id="str" hidden>StrPtr</div>
-        <div id="flecha_puntero_inicial"></div>
-        <div id="flecha_puntero_actual"></div>
-        <div id="flecha_puntero_final"></div>
-        <div id="nulo" hidden>NULL</div>
-      </div>
-      <div id="contenedor_flechas"></div> */}
       <div id="principal_wrapper"> 
         <div id="principal">
             <div id="contenedor_nodos"></div>
