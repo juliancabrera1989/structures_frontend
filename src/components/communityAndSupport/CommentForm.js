@@ -41,15 +41,16 @@ const CommentForm = ({ postId, onAdded }) => {
         <Form.Control
           as="textarea"
           rows={3}
-          placeholder={auth?.user ? "Write a helpful comment..." : "Login to comment"}
+          placeholder={auth?.user ? "Escribe un comentario..." : "Inicia sesión para comentar"}
           value={text}
           onChange={(e) => setText(e.target.value)}
           disabled={!token}
+          className="bg-dark text-light border-secondary placeholder-muted"
         />
       </Form.Group>
       <div className="d-flex justify-content-end mt-2">
-        <Button type="submit" disabled={!token || posting}>
-          {posting ? 'Posting...' : 'Post Comment'}
+        <Button variant="info" type="submit" disabled={!token || posting} className="text-dark fw-bold">
+          {posting ? 'Publicando...' : 'Publicar Comentario'}
         </Button>
       </div>
     </Form>

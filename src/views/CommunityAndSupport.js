@@ -12,6 +12,36 @@
 
 // export default CommunityAndSupport;
 
+
+
+
+// import React from 'react';
+// import { Container, Row, Col } from 'react-bootstrap';
+// import CommunityFeed from '../components/communityAndSupport/CommunityFeed';
+// import HelpAndFAQ from '../components/communityAndSupport/HelpAndFAQ';
+// import SupportContact from '../components/communityAndSupport/SupportContact';
+
+// const CommunityAndSupport = () => {
+//   return (
+//     <Container className="mt-4">
+//       <Row>
+//         <Col xs={12} lg={8}>
+//           <CommunityFeed />
+//         </Col>
+//         <Col xs={12} lg={4} className="mt-4 mt-lg-0">
+//           <HelpAndFAQ />
+//           <SupportContact />
+//         </Col>
+//       </Row>
+//     </Container>
+//   );
+// };
+
+// export default CommunityAndSupport;
+
+
+
+// CommunityAndSupport.jsx
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import CommunityFeed from '../components/communityAndSupport/CommunityFeed';
@@ -20,7 +50,16 @@ import SupportContact from '../components/communityAndSupport/SupportContact';
 
 const CommunityAndSupport = () => {
   return (
-    <Container className="mt-4">
+    <Container className="mt-4 pb-5">
+      {/* Encabezado Estandarizado */}
+      <div className="text-center my-4">
+        <h1 className="fw-bold" style={{ color: '#00d8ff' }}>Comunidad y Soporte</h1>
+        <p className="text-muted">
+          Comparte dudas, publica discusiones sobre algoritmos y resuelve tus preguntas frecuentes.
+        </p>
+        <hr className="border-secondary opacity-25 my-4" />
+      </div>
+
       <Row>
         <Col xs={12} lg={8}>
           <CommunityFeed />

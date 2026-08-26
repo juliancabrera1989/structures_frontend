@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, Card } from 'react-bootstrap';
+import { Accordion } from 'react-bootstrap';
 
 const faqs = [
   { id: 1, q: "How do I save my data structure?", a: "You must be logged in. Use the Save button inside the tutorial to persist your structure to your profile." },
@@ -10,12 +10,16 @@ const faqs = [
 const HelpAndFAQ = () => {
   return (
     <div>
-      <h5 className="mb-3">Help & FAQ</h5>
+      <h5 className="mb-3 text-light">Help & FAQ</h5>
       <Accordion defaultActiveKey="0">
         {faqs.map((f, idx) => (
-          <Accordion.Item eventKey={`${idx}`} key={f.id}>
-            <Accordion.Header>{f.q}</Accordion.Header>
-            <Accordion.Body>{f.a}</Accordion.Body>
+          <Accordion.Item eventKey={`${idx}`} key={f.id} className="bg-dark text-light border-secondary">
+            <Accordion.Header className="custom-accordion-header">
+              {f.q}
+            </Accordion.Header>
+            <Accordion.Body className="bg-dark border-top border-secondary">
+              {f.a}
+            </Accordion.Body>
           </Accordion.Item>
         ))}
       </Accordion>

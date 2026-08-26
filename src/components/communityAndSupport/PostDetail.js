@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Card, Spinner, Alert } from 'react-bootstrap';
+import { useParams, Link } from 'react-router-dom';
+import { Container, Card, Spinner, Alert, Button } from 'react-bootstrap';
 import communityService from '../../services/communityService';
 import CommentList from './CommentList';
 import CommentForm from './CommentForm';
@@ -27,29 +27,36 @@ const PostDetail = () => {
 
   useEffect(() => {
     if (id) fetchPost();
-    // eslint-disable-next-line
   }, [id]);
 
   const handleAddedComment = (comment) => {
     setPost(prev => ({ ...prev, comments: [...(prev.comments || []), comment] }));
   };
 
-  if (loading) return <div className="text-center py-5"><Spinner animation="border" /></div>;
+  if (loading) return <div className="text-center py-5"><Spinner animation="border" variant="info" /></div>;
   if (error) return <Container className="mt-4"><Alert variant="danger">{error}</Alert></Container>;
   if (!post) return null;
 
   return (
-    <Container className="mt-4">
-      <Card className="p-4 shadow-sm">
-        <h3>{post.title}</h3>
-        <div className="text-muted mb-2">by {post.author?.username || post.author?.email} · {new Date(post.createdAt).toLocaleString()}</div>
-        <p>{post.content}</p>
+    <Container className="mt-4 pb-5" style={{ maxWidth: '800px' }}>
+      <Link to="/community-support" className="btn btn-sm btn-outline-info mb-3">
+        ← Volver a la Comunidad
+      </Link>
 
-        <hr />
+      <Card className="p-4 shadow-sm bg-dark text-light border-secondary">
+        <h3 style={{ color: '#00d8ff' }}>{post.title}</h3>
+        <div className="text-muted small mb-3">
+          por <span className="text-light">{post.author?.username || post.author?.email || 'Anónimo'}</span> · {new Date(post.createdAt).toLocaleString()}
+        </div>
+        
+        <p className="fs-5" style={{ color: '#e6edf3' }}>{post.content || post.body}</p>
 
-        <h5>Comments</h5>
+        <hr className="border-secondary my-4" />
+
+        <h5 className="mb-3 text-info">Comentarios ({post.comments?.length || 0})</h5>
         <CommentList comments={post.comments || []} />
-        <div className="mt-3">
+        
+        <div className="mt-4 pt-3 border-top border-secondary">
           <CommentForm postId={post._id} onAdded={handleAddedComment} />
         </div>
       </Card>

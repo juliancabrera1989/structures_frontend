@@ -54,27 +54,35 @@ const CommunityFeed = () => {
       <Row>
         {posts.map((post) => (
           <Col xs={12} md={6} lg={6} key={post._id} className="mb-3">
-            <Card className="h-100 shadow-sm">
-              <Card.Body>
-                <Card.Title className="mb-2">
-                  <Link to={`/community-support/post/${post._id}`} className="text-decoration-none">
-                    {post.title}
-                  </Link>
-                </Card.Title>
+            <Card className="h-100 border-secondary bg-dark text-light shadow-sm">
+              <Card.Body className="d-flex flex-column justify-content-between">
+                <div>
+                  <Card.Title className="mb-2">
+                    <Link to={`/community-support/post/${post._id}`} className="text-decoration-none fw-bold" style={{ color: '#00d8ff' }}>
+                      {post.title}
+                    </Link>
+                  </Card.Title>
 
-                <Card.Subtitle className="mb-2 text-muted">
-                  by {post.author?.username || post.author?.email || 'Unknown'} · {new Date(post.createdAt).toLocaleString()}
-                </Card.Subtitle>
+                  <Card.Subtitle className="mb-3 text-muted small">
+                    por <span className="text-light">{post.author?.username || 'Anónimo'}</span> · {new Date(post.createdAt).toLocaleDateString()}
+                  </Card.Subtitle>
 
-                <Card.Text className="text-truncate" style={{ maxHeight: 64, overflow: 'hidden' }}>
-                  {post.body}
-                </Card.Text>
+                  <Card.Text className="text-muted small" style={{ maxHeight: 60, overflow: 'hidden' }}>
+                    {post.body}
+                  </Card.Text>
+                </div>
 
-                <div className="d-flex justify-content-between align-items-center mt-3">
+                <div className="d-flex justify-content-between align-items-center mt-3 pt-2 border-top border-secondary">
                   <div>
-                    {(post.tags || []).map((t, i) => <Badge bg="secondary" key={i} className="me-1">{t}</Badge>)}
+                    {(post.tags || []).map((t, i) => (
+                      <Badge bg="info" text="dark" key={i} className="me-1">
+                        {t}
+                      </Badge>
+                    ))}
                   </div>
-                  <Link to={`/community-support/post/${post._id}`} className="btn btn-sm btn-outline-primary">Read</Link>
+                  <Link to={`/community-support/post/${post._id}`} className="btn btn-sm btn-outline-info">
+                    Leer →
+                  </Link>
                 </div>
               </Card.Body>
             </Card>

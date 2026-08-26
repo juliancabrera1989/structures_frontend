@@ -96,19 +96,6 @@ export const MAPA_CONFIG_ESTRUCTURAS: Record<string, any> = {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 const root = document.documentElement;
 
 // Variable global interna del módulo para recordar qué estructura estamos emulando
@@ -214,24 +201,7 @@ function inicializar(): void {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 // ... Las funciones setContainer y renderizar quedan EXACTAMENTE IGUALES a como las tenías
-
-
-
-
-
-
 
 
 

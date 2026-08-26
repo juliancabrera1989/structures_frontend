@@ -22,6 +22,9 @@ import VideoTutorialDetail from './components/resourceCenter/VideoTutorialDetail
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
+import './App.css';
+
+
 
 const App = () => {
   return (

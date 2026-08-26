@@ -36,3 +36,33 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* Fix definitivo para Accordion en Dark Mode */
+.accordion-item {
+  background-color: #1c2128 !important;
+  border-color: #444c56 !important;
+}
+
+.accordion-button {
+  background-color: #1c2128 !important;
+  color: #00d8ff !important;
+  box-shadow: none !important;
+}
+
+/* Estado cuando la pregunta está desplegada */
+.accordion-button:not(.collapsed) {
+  background-color: #2d333b !important;
+  color: #00d8ff !important;
+  border-bottom: 1px solid #444c56;
+}
+
+/* Cambia la flechita desplegable a color blanco/claro */
+.accordion-button::after {
+  filter: invert(1) brightness(2);
+}
+
+.accordion-body {
+  background-color: #1c2128 !important;
+  color: #e6edf3 !important; /* Gris claro de alto contraste */
+}
