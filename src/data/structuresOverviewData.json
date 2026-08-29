@@ -1,64 +1,62 @@
 [
   {
     "id": "linked-list",
-    "type": "LinkedList",
-    "name": "Lista Enlazada Simple",
-    "badge": "Dinámica",
-    "description": "Secuencia de nodos donde cada uno apunta al siguiente mediante un puntero 'next'. Ideal para inserciones y eliminaciones rápidas.",
+    "type": "Singly Linked List",
+    "name": "Singly Linked List",
+    "badge": "Dynamic",
+    "description": "Sequence of nodes where each points to the next via a 'next' pointer. Ideal for fast insertions and deletions.",
     "complexity": {
       "access": "O(n)",
       "search": "O(n)",
       "insertion": "O(1)",
       "deletion": "O(1)"
     },
-    "useCases": ["Listas de reproducción", "Navegación Historial (atrás/adelante)"],
-    "defaultNodes": ["Inicio", "Nodo A", "Nodo B"]
+    "useCases": ["Playlists", "Browser History Navigation (back/forward)"],
+    "defaultNodes": ["Start", "Node A", "Node B"]
   },
   {
     "id": "stack",
     "type": "Stack",
-    "name": "Pila (Stack)",
+    "name": "Stack",
     "badge": "LIFO",
-    "description": "Estructura LIFO (Last In, First Out). Los elementos se insertan y remueven únicamente por el extremo superior (Top).",
+    "description": "LIFO (Last In, First Out) structure. Elements are inserted and removed solely from the top end.",
     "complexity": {
       "access": "O(n)",
       "search": "O(n)",
       "insertion": "O(1)",
       "deletion": "O(1)"
     },
-    "useCases": ["Call Stack de la CPU", "Evaluación de expresiones", "Función Deshacer (Undo)"],
+    "useCases": ["CPU Call Stack", "Expression evaluation", "Undo feature"],
     "defaultNodes": ["Base", "Mid", "Top"]
   },
   {
     "id": "queue",
-    "type": "Cola (Queue)",
-    "name": "Cola Simple",
+    "type": "Queue",
+    "name": "Simple Queue",
     "badge": "FIFO",
-    "description": "Estructura FIFO (First In, First Out). Los elementos entran por el extremo posterior (Rear) y salen por el frente (Front).",
+    "description": "FIFO (First In, First Out) structure. Elements enter through the rear and exit through the front.",
     "complexity": {
       "access": "O(n)",
       "search": "O(n)",
       "insertion": "O(1)",
       "deletion": "O(1)"
     },
-    "useCases": ["Event Loop de JavaScript", "Gestión de colas de impresión", "Buffers I/O"],
+    "useCases": ["JavaScript Event Loop", "Print queue management", "I/O Buffers"],
     "defaultNodes": ["Front", "Item 1", "Rear"]
   },
   {
     "id": "deque",
     "type": "Deque",
-    "name": "Doble Cola (Deque)",
-    "badge": "Bi-direccional",
-    "description": "Cola de doble extremo. Permite insertar y eliminar elementos eficientemente tanto por el frente como por el final.",
+    "name": "Double-Ended Queue (Deque)",
+    "badge": "Bi-directional",
+    "description": "Double-ended queue. Allows efficiently inserting and removing elements from both the front and the back.",
     "complexity": {
       "access": "O(n)",
       "search": "O(n)",
       "insertion": "O(1)",
       "deletion": "O(1)"
     },
-    "useCases": ["Algoritmos de Robo / Web Crawlers", "Planificación de procesos bi-direccional"],
+    "useCases": ["Web Crawlers / Bots", "Bi-directional process scheduling"],
     "defaultNodes": ["Left", "Center", "Right"]
   }
 ]
-
-

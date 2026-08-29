@@ -43,12 +43,12 @@ export function nodoSeleccionado(data: string): void {
 
       switch (indice) {
         case 0: {
-          borrarNodoAlComienzo(data);
+          borrarNodoAlComienzo();
           break;
         }
         case cantidad_flechas: {
           console.log("Entro aqui");
-          borrarNodoAlFinal(data);
+          borrarNodoAlFinal();
           break;
         }
         default: {

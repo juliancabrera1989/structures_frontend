@@ -44,7 +44,7 @@ const VideoTutorialList = () => {
               <Card.Title className="text-info fw-bold">{video.title}</Card.Title>
               <Card.Text className="text-secondary flex-grow-1">{video.description}</Card.Text>
               <Button as={Link} to={`/resources/videos/${video.id}`} variant="outline-primary" size="sm" className="mt-2">
-                Ver Video Tutorial ▶
+                Watch Tutorial Video ▶
               </Button>
             </Card.Body>
           </Card>

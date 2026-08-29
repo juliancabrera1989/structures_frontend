@@ -1,25 +1,3 @@
-// import React from 'react';
-
-// const StructureList = ({ structures, onSelect }) => {
-//     return (
-//         <div>
-//             <h2>Available Structures</h2>
-//             <ul>
-//                 {structures.map((structure, index) => (
-//                     <li key={index}>
-//                         <button onClick={() => onSelect(structure)}>
-//                             {structure.name}
-//                         </button>
-//                     </li>
-//                 ))}
-//             </ul>
-//         </div>
-//     );
-// };
-
-// export default StructureList;
-
-
 import React from 'react';
 import { Row, Col, Card, Badge, Button, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -48,14 +26,14 @@ const StructureList = () => {
                 {item.description}
               </Card.Text>
 
-              <h6 className="text-warning mb-2">Complejidad Algorítmica (Big-O)</h6>
+              <h6 className="text-warning mb-2">Algorythmic complexity (Big-O)</h6>
               <Table size="sm" bordered responsive variant="dark" className="text-center mb-3 border-secondary">
                 <thead>
                   <tr>
-                    <th className="text-secondary">Acceso</th>
-                    <th className="text-secondary">Búsqueda</th>
-                    <th className="text-secondary">Inserción</th>
-                    <th className="text-secondary">Borrado</th>
+                    <th className="text-secondary">Access</th>
+                    <th className="text-secondary">Search</th>
+                    <th className="text-secondary">Insertion</th>
+                    <th className="text-secondary">Deletion</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -74,7 +52,7 @@ const StructureList = () => {
                   className="w-100 fw-bold"
                   onClick={() => handleOpenInVisualizer(item.type)}
                 >
-                  Cargar plantilla en el Visualizador 🚀
+                  Load template on Visualizer 🚀
                 </Button>
               </div>
             </Card.Body>

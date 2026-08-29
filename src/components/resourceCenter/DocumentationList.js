@@ -48,7 +48,7 @@ const DocumentationList = () => {
               <Card.Title className="text-info fw-bold">{doc.title}</Card.Title>
               <Card.Text className="text-secondary flex-grow-1">{doc.summary}</Card.Text>
               <Button as={Link} to={`/resources/docs/${doc.id}`} variant="outline-info" size="sm" className="mt-2">
-                Leer Documentación Completa →
+                Read full documentation →
               </Button>
             </Card.Body>
           </Card>

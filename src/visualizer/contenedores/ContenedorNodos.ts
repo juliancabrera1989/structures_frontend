@@ -4,6 +4,7 @@ import { crearNodo } from "../elementosGraficos/Nodo.ts";
 
 import { nodoSeleccionado } from "../controladores/ControladorEventosNodos.ts";
 import { contenedorNodos, verificarDOM } from "../utils/elementosDOM.ts";
+import { estructuraActiva } from "../controladores/ControladorBarraSuperior.ts";
 
 /**
  * Obtiene la colección actualizada de nodos en el DOM.
@@ -50,15 +51,42 @@ function agregarNodoN(valor: string, indice: number): void {
 }
 
 
+// function agregarNodo(valor: string, metodo: number): void {
+//   if (!verificarDOM() || !contenedorNodos) return;
+
+//   const elemento = crearNodo(valor);
+
+//   // Evento con tipado correcto y seguro
+//   elemento.addEventListener('click', () => {
+//     nodoSeleccionado(valor);
+//   });
+
+//   switch (metodo) {
+//     case 0: {
+//       contenedorNodos.append(elemento);
+//       break;
+//     }
+//     case 1: {
+//       contenedorNodos.prepend(elemento);
+//       break;
+//     }
+
+//   }
+// }
+
 function agregarNodo(valor: string, metodo: number): void {
   if (!verificarDOM() || !contenedorNodos) return;
 
   const elemento = crearNodo(valor);
 
-  // Evento con tipado correcto y seguro
-  elemento.addEventListener('click', () => {
-    nodoSeleccionado(valor);
-  });
+  // SOLO si la estructura es LinkedList asignamos el cursor y el evento de click
+  if (estructuraActiva?.type === "linkedlist") {
+    elemento.style.cursor = "pointer";
+    
+    elemento.addEventListener('click', () => {
+      nodoSeleccionado(valor);
+    });
+  }
 
   switch (metodo) {
     case 0: {
@@ -69,9 +97,9 @@ function agregarNodo(valor: string, metodo: number): void {
       contenedorNodos.prepend(elemento);
       break;
     }
-
   }
 }
+
 
 
 

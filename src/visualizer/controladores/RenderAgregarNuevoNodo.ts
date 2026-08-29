@@ -2,7 +2,7 @@ import { setFlechasNodos, setFlechasNodos2, RolCurva, setFlechasNodosDefinitiva 
 import { agregarNodo, agregarNodoN,  getNodos } from "../contenedores/ContenedorNodos.ts";
 import { agregarFlecha, agregarFlechaN, getFlechas } from "../contenedores/ContenedorFlechas.ts";
 import { inicializarPuntero, setPuntero, setFlechaInicial, setFlechaFinal } from "./ControladorInicializador.ts";
-import { renderizar  } from "./ControladorBarraSuperior.ts";
+import { renderizar , estructuraActiva } from "./ControladorBarraSuperior.ts";
 import { animarPath, animarPuntaAzul, crearFlechaCurvaInterfila } from "../elementosGraficos/FlechaCurva.ts";
 import { obtenerInfoLayout, getCantidadNodosFila } from "../utils/layoutHelpers.ts";
 import { esperar, esperarTransicion } from "../utils/asyncUtils.ts";
@@ -313,6 +313,7 @@ async function paso5_ReacomodarYLimpiar(
   DOM.nulo.classList.remove("inmediato_reacomodo");
   inicialUl?.classList.remove("cambio_top");
 
+
   if (window.innerWidth !== (DOM.principalWrapper.offsetWidth + 33)) {
     DOM.principalWrapper.removeAttribute("style");
     renderizar();
@@ -344,6 +345,7 @@ async function paso5_ReacomodarYLimpiar(
   await paso4_ActivarFlechasDiagonales(finalUl);
   await paso5_ReacomodarYLimpiar(finalUl, inicialUl);
 
+  actualizarSelectoresIntermedios();
 
   document.dispatchEvent(new CustomEvent("animacion_nodo_completada"));
 }
@@ -1327,18 +1329,214 @@ function agregarNodoIntermedio(): void {
 
 
 
+// function actualizarSelectoresIntermedios(): void {
+//   if (DOM.contenedorNodos.childElementCount > 1 && DOM.agregarIntermedio && DOM.textoSelector && DOM.selectorPares) {
+//     DOM.agregarIntermedio.removeAttribute("hidden");
+//     DOM.textoSelector.removeAttribute("hidden");
+//     DOM.selectorPares.removeAttribute("hidden");
+
+//     const opt = document.createElement('option');
+//     const cuenta = DOM.contenedorNodos.childElementCount.toString();
+//     opt.value = cuenta;
+//     opt.innerHTML = cuenta;
+//     DOM.selectorPares.appendChild(opt);
+//   }
+// }
+
+
+// function actualizarSelectoresIntermedios(): void {
+//   if (DOM.contenedorNodos.childElementCount > 1 && DOM.agregarIntermedio && DOM.textoSelector && DOM.selectorPares) {
+//     DOM.agregarIntermedio.removeAttribute("hidden");
+//     DOM.textoSelector.removeAttribute("hidden");
+//     DOM.selectorPares.removeAttribute("hidden");
+
+//     const opt = document.createElement('option');
+//     const cuenta = DOM.contenedorNodos.childElementCount.toString();
+//     opt.value = cuenta;
+//     opt.innerHTML = cuenta;
+//     DOM.selectorPares.appendChild(opt);
+//   }
+// }
+
+// function actualizarSelectoresIntermedios(): void {
+//   if (DOM.contenedorNodos.childElementCount > 1 && DOM.agregarIntermedio && DOM.textoSelector && DOM.selectorPares) {
+//     DOM.agregarIntermedio.removeAttribute("hidden");
+//     DOM.textoSelector.removeAttribute("hidden");
+//     DOM.selectorPares.removeAttribute("hidden");
+
+//     // Habilitamos controles al haber 2 o más nodos
+//     DOM.agregarIntermedio.disabled = false;
+//     DOM.selectorPares.disabled = false;
+
+//     const opt = document.createElement('option');
+//     const cuenta = DOM.contenedorNodos.childElementCount.toString();
+//     opt.value = cuenta;
+//     opt.innerHTML = cuenta;
+//     DOM.selectorPares.appendChild(opt);
+//   } else if (DOM.agregarIntermedio && DOM.selectorPares) {
+//     // Deshabilitamos controles cuando hay menos de 2 nodos
+//     DOM.agregarIntermedio.disabled = true;
+//     DOM.selectorPares.disabled = true;
+//   }
+// }
+
+
+
+// function actualizarSelectoresIntermedios(): void {
+//   // CASO 1: Hay 2 o más nodos (Se muestran y habilitan los controles)
+//   if (DOM.contenedorNodos.childElementCount > 1 && DOM.agregarIntermedio && DOM.textoSelector && DOM.selectorPares) {
+//     DOM.agregarIntermedio.removeAttribute("hidden");
+//     DOM.textoSelector.removeAttribute("hidden");
+//     DOM.selectorPares.removeAttribute("hidden");
+
+//     DOM.agregarIntermedio.disabled = false;
+//     DOM.selectorPares.disabled = false;
+
+//     const opt = document.createElement('option');
+//     const cuenta = DOM.contenedorNodos.childElementCount.toString(); // Posición N
+//     opt.value = cuenta;
+//     opt.innerHTML = cuenta;
+//     DOM.selectorPares.appendChild(opt);
+//   } 
+//   // CASO 2: Hay 1 nodo o menos (SE DESHABILITAN)
+//   else if (DOM.agregarIntermedio && DOM.selectorPares) {
+//     DOM.agregarIntermedio.disabled = true;
+//     DOM.selectorPares.disabled = true;
+//     DOM.selectorPares.innerHTML = '<option value="">-</option>';
+//   }
+// }
+
 function actualizarSelectoresIntermedios(): void {
-  if (DOM.contenedorNodos.childElementCount > 1 && DOM.agregarIntermedio && DOM.textoSelector && DOM.selectorPares) {
+  const cantidadNodos = DOM.contenedorNodos.childElementCount;
+
+  // CASO 1: Hay 2 o más nodos (Se muestran, limpian el guión y habilitan)
+  if (cantidadNodos > 1 && DOM.agregarIntermedio && DOM.textoSelector && DOM.selectorPares) {
     DOM.agregarIntermedio.removeAttribute("hidden");
     DOM.textoSelector.removeAttribute("hidden");
     DOM.selectorPares.removeAttribute("hidden");
 
-    const opt = document.createElement('option');
-    const cuenta = DOM.contenedorNodos.childElementCount.toString();
-    opt.value = cuenta;
-    opt.innerHTML = cuenta;
-    DOM.selectorPares.appendChild(opt);
+    DOM.agregarIntermedio.disabled = false;
+    DOM.selectorPares.disabled = false;
+
+    // 🧹 Limpiamos el guión viejo o las opciones desactualizadas
+    DOM.selectorPares.innerHTML = "";
+
+    // Poblamo de nuevo todas las posiciones intermedias válidas (2 hasta N)
+    for (let i = 2; i <= cantidadNodos; i++) {
+      const opt = document.createElement('option');
+      opt.value = i.toString();
+      opt.innerHTML = i.toString();
+      DOM.selectorPares.appendChild(opt);
+    }
+  } 
+  // CASO 2: Hay 1 nodo o menos (Se deshabilitan y vuelve el guión)
+  else if (DOM.agregarIntermedio && DOM.selectorPares) {
+    DOM.agregarIntermedio.disabled = true;
+    DOM.selectorPares.disabled = true;
+    DOM.selectorPares.innerHTML = '<option value="">-</option>';
   }
 }
+
+
+
+// function actualizarSelectoresIntermedios(): void {
+//   // 1. Si no es una lista enlazada, ocultamos los selectores y salimos inmediatamente
+//   if (estructuraActiva?.type !== "linkedlist") {
+//     DOM.agregarIntermedio?.setAttribute("hidden", "hidden");
+//     DOM.textoSelector?.setAttribute("hidden", "hidden");
+//     DOM.selectorPares?.setAttribute("hidden", "hidden");
+//     return;
+//   }
+
+//   // 2. Si es Lista Enlazada y hay más de un nodo, actualizamos la interfaz
+//   if (DOM.contenedorNodos.childElementCount > 1 && DOM.agregarIntermedio && DOM.textoSelector && DOM.selectorPares) {
+//     DOM.agregarIntermedio.removeAttribute("hidden");
+//     DOM.textoSelector.removeAttribute("hidden");
+//     DOM.selectorPares.removeAttribute("hidden");
+
+//     const opt = document.createElement('option');
+//     const cuenta = DOM.contenedorNodos.childElementCount.toString();
+//     opt.value = cuenta;
+//     opt.innerHTML = cuenta;
+//     DOM.selectorPares.appendChild(opt);
+//   }
+// }
+
+
+// export function actualizarSelectoresIntermedios(): void {
+//   const cantidadNodos = DOM.contenedorNodos?.childElementCount || 0;
+
+//   // Regla 1: Si NO es LinkedList O si tiene 1 nodo o menos, ocultamos todo y salimos
+//   if (estructuraActiva?.type !== "linkedlist" || cantidadNodos <= 1) {
+//     DOM.agregarIntermedio?.setAttribute("hidden", "hidden");
+//     DOM.textoSelector?.setAttribute("hidden", "hidden");
+//     DOM.selectorPares?.setAttribute("hidden", "hidden");
+    
+//     // Si la lista volvió a tener 1 o 0 nodos, reseteamos las opciones del <select>
+//     if (DOM.selectorPares) {
+//       DOM.selectorPares.innerHTML = "";
+//     }
+//     return;
+//   }
+
+//   // Regla 2: Solo si es LinkedList Y tiene 2 o más nodos, mostramos los controles
+//   if (DOM.agregarIntermedio && DOM.textoSelector && DOM.selectorPares) {
+//     DOM.agregarIntermedio.removeAttribute("hidden");
+//     DOM.textoSelector.removeAttribute("hidden");
+//     DOM.selectorPares.removeAttribute("hidden");
+
+//     // Limpiamos y repoblamos las opciones para evitar duplicados en el <select>
+//     DOM.selectorPares.innerHTML = "";
+//     for (let i = 1; i < cantidadNodos; i++) {
+//       const opt = document.createElement("option");
+//       opt.value = i.toString();
+//       opt.innerHTML = i.toString();
+//       DOM.selectorPares.appendChild(opt);
+//     }
+//   }
+// }
+
+// export function actualizarSelectoresIntermedios(): void {
+//   const cantidadNodos = DOM.contenedorNodos?.childElementCount || 0;
+//   const esLinkedList = estructuraActiva?.type === "linkedlist";
+
+//   // 1. Si NO es LinkedList, ocultamos los controles por completo
+//   if (!esLinkedList) {
+//     DOM.agregarIntermedio?.setAttribute("hidden", "hidden");
+//     DOM.textoSelector?.setAttribute("hidden", "hidden");
+//     DOM.selectorPares?.setAttribute("hidden", "hidden");
+//     return;
+//   }
+
+//   // 2. Si SÍ es LinkedList, mostramos los elementos en la interfaz
+//   DOM.agregarIntermedio?.removeAttribute("hidden");
+//   DOM.textoSelector?.removeAttribute("hidden");
+//   DOM.selectorPares?.removeAttribute("hidden");
+
+//   // 3. Regla de activación/desactivación por cantidad de nodos
+//   if (cantidadNodos <= 1) {
+//     // Con 0 o 1 nodo: Deshabilitamos el botón y el selector
+//     if (DOM.agregarIntermedio) DOM.agregarIntermedio.disabled = true;
+//     if (DOM.selectorPares) {
+//       DOM.selectorPares.disabled = true;
+//       DOM.selectorPares.innerHTML = '<option value="">-</option>';
+//     }
+//   } else {
+//     // Con 2 o más nodos: Habilitamos el botón y cargamos los índices
+//     if (DOM.agregarIntermedio) DOM.agregarIntermedio.disabled = false;
+//     if (DOM.selectorPares) {
+//       DOM.selectorPares.disabled = false;
+//       DOM.selectorPares.innerHTML = ""; // Limpiamos opciones previas
+
+//       for (let i = 1; i < cantidadNodos; i++) {
+//         const opt = document.createElement("option");
+//         opt.value = i.toString();
+//         opt.innerHTML = i.toString();
+//         DOM.selectorPares.appendChild(opt);
+//       }
+//     }
+//   }
+// }
+
 
 export { agregarNodoAlComienzo, agregarNodoIntermedio, agregarNodoAlFinal, agregarPrimerNodo };

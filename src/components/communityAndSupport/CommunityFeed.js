@@ -81,7 +81,7 @@ const CommunityFeed = () => {
                     ))}
                   </div>
                   <Link to={`/community-support/post/${post._id}`} className="btn btn-sm btn-outline-info">
-                    Leer →
+                    Read →
                   </Link>
                 </div>
               </Card.Body>

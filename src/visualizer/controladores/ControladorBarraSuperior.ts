@@ -1,5 +1,3 @@
-
-
 import { 
   agregarNodoAlComienzo, 
   agregarNodoIntermedio, 
@@ -38,14 +36,14 @@ export const MAPA_CONFIG_ESTRUCTURAS: Record<string, any> = {
     etiquetaTail: "NULL",
     mostrarAgregarPrimerNodo: true,
     mostrarAgregarComienzo: true,
-    etiquetaAgregarComienzo: "Agregar al Comienzo",
+    etiquetaAgregarComienzo: "Add at start",
     mostrarAgregarFinal: true,
-    etiquetaAgregarFinal: "Agregar al Final",
+    etiquetaAgregarFinal: "Add at end",
     mostrarAgregarIntermedio: true,
     mostrarBorrarComienzo: true,
-    etiquetaBorrarComienzo: "Borrar al Comienzo",
+    etiquetaBorrarComienzo: "Delete from start",
     mostrarBorrarFinal: true,
-    etiquetaBorrarFinal: "Borrar al Final",
+    etiquetaBorrarFinal: "Delete from end",
   },
   stack: {
     etiquetaHead: "TOP",
@@ -68,10 +66,10 @@ export const MAPA_CONFIG_ESTRUCTURAS: Record<string, any> = {
     mostrarAgregarComienzo: false,
     etiquetaAgregarComienzo: "",
     mostrarAgregarFinal: true,
-    etiquetaAgregarFinal: "Enqueue (Encolar)",
+    etiquetaAgregarFinal: "Enqueue",
     mostrarAgregarIntermedio: false,
     mostrarBorrarComienzo: true,
-    etiquetaBorrarComienzo: "Dequeue (Desencolar)",
+    etiquetaBorrarComienzo: "Dequeue",
     mostrarBorrarFinal: false,
     etiquetaBorrarFinal: "",
   },
@@ -99,7 +97,7 @@ export const MAPA_CONFIG_ESTRUCTURAS: Record<string, any> = {
 const root = document.documentElement;
 
 // Variable global interna del módulo para recordar qué estructura estamos emulando
-let estructuraActiva: BaseStructure<any> | null = null;
+export let estructuraActiva: BaseStructure<any> | null = null;
 
 declare global {
   interface Window {
@@ -144,17 +142,73 @@ export function initControladorBarraSuperior(): void {
   console.log("✅ ControladorBarraSuperior dinámico asignado.");
 }
 
+// function inicializar(): void {
+//   if (!DOM.verificarDOM()) return;
+
+//   // 1. CAPTURAMOS LOS DATOS DEL FORMULARIO USANDO EL DOM
+//   const inputName = (document.getElementById("structure_name") as HTMLInputElement)?.value || "Estructura sin nombre";
+//   const selectType = (document.getElementById("structure_type") as HTMLSelectElement)?.value;
+//   const selectDataType = (document.getElementById("data_type") as HTMLSelectElement)?.value;
+
+//   console.log(`Inicializando: ${inputName} de tipo ${selectType}`);
+
+//   // 2. POLIMORFISMO: Instanciamos tu clase lógica de TS correspondiente
+//   if (selectType === "linkedlist") {
+//     estructuraActiva = new LinkedList<any>(inputName, selectDataType);
+//   } else if (selectType === "deque") {
+//     estructuraActiva = new Deque<any>(inputName, selectDataType);
+//   } else if (selectType === "stack") {
+//     estructuraActiva = new Stack<any>(inputName, selectDataType);
+//   } else if (selectType === "queue") {
+//     estructuraActiva = new Queue<any>(inputName, selectDataType);
+//   }
+
+//   // 3. ADAPTAMOS LA INTERFAZ SEGÚN LA ESTRUCTURA SELECCIONADA
+//   configurarBotonesSegunEstructura(selectType, false);
+
+//   // Ocultamos formulario de creación y mostramos operaciones (Tu lógica original)
+//   DOM.inic.setAttribute("hidden", "hidden");
+//   DOM.texto.removeAttribute("hidden");
+//   DOM.inputNodo.removeAttribute("hidden");
+//   DOM.str.removeAttribute("hidden");
+//   DOM.nulo.removeAttribute("hidden");
+//   DOM.guardarEstructura.removeAttribute("hidden");
+//   DOM.botonAgregar1erNodo.removeAttribute("hidden");
+
+
+
+//   if (DOM.inicializador) {
+//     DOM.inicializador.style.display = "flex";
+//     DOM.inicializador.style.justifyContent = "space-between";
+//     DOM.inicializador.style.alignItems = "center";
+
+//   }
+//   DOM.str.style.position = "relative";
+//   DOM.nulo.style.position = "relative";
+
+//   inicializarPuntero(1);
+
+//   const necesitaTransicion = 1;
+//   setTimeout(() => {
+//     setFlechaInicial(true, necesitaTransicion);
+//   }, 100);
+// }
+
 function inicializar(): void {
   if (!DOM.verificarDOM()) return;
 
-  // 1. CAPTURAMOS LOS DATOS DEL FORMULARIO USANDO EL DOM
-  const inputName = (document.getElementById("structure_name") as HTMLInputElement)?.value || "Estructura sin nombre";
-  const selectType = (document.getElementById("structure_type") as HTMLSelectElement)?.value;
-  const selectDataType = (document.getElementById("data_type") as HTMLSelectElement)?.value;
+  // 1. CAPTURAMOS ELEMENTOS DESDE EL DOM
+  const inputNameEl = document.getElementById("structure_name") as HTMLInputElement;
+  const selectTypeEl = document.getElementById("structure_type") as HTMLSelectElement;
+  const selectDataTypeEl = document.getElementById("data_type") as HTMLSelectElement;
+
+  const inputName = inputNameEl?.value.trim() || "Estructura sin nombre";
+  const selectType = selectTypeEl?.value;
+  const selectDataType = selectDataTypeEl?.value;
 
   console.log(`Inicializando: ${inputName} de tipo ${selectType}`);
 
-  // 2. POLIMORFISMO: Instanciamos tu clase lógica de TS correspondiente
+  // 2. INSTANCIAMOS LA ESTRUCTURA
   if (selectType === "linkedlist") {
     estructuraActiva = new LinkedList<any>(inputName, selectDataType);
   } else if (selectType === "deque") {
@@ -165,11 +219,22 @@ function inicializar(): void {
     estructuraActiva = new Queue<any>(inputName, selectDataType);
   }
 
-  // 3. ADAPTAMOS LA INTERFAZ SEGÚN LA ESTRUCTURA SELECCIONADA
+  // 3. DESHABILITAMOS LOS CAMPOS Y EL BOTÓN
+  if (inputNameEl) inputNameEl.disabled = true;
+  if (selectTypeEl) selectTypeEl.disabled = true;
+  if (selectDataTypeEl) selectDataTypeEl.disabled = true;
+
+  // Si tenés el botón guardado en DOM (ej. DOM.botonCrear), deshabilitar también:
+  const btnCrear = document.getElementById("create_button") as HTMLButtonElement;
+  if (btnCrear) btnCrear.disabled = true;
+
+  // 4. ADAPTAMOS LA INTERFAZ
   configurarBotonesSegunEstructura(selectType, false);
 
-  // Ocultamos formulario de creación y mostramos operaciones (Tu lógica original)
+  // NOTA: Si DOM.inic contiene a los inputs y le ponés "hidden", los oculta por completo.
+  // Si querés que SE VEAN pero DESHABILITADOS, no le pongas hidden a DOM.inic.
   DOM.inic.setAttribute("hidden", "hidden");
+  
   DOM.texto.removeAttribute("hidden");
   DOM.inputNodo.removeAttribute("hidden");
   DOM.str.removeAttribute("hidden");
@@ -177,13 +242,10 @@ function inicializar(): void {
   DOM.guardarEstructura.removeAttribute("hidden");
   DOM.botonAgregar1erNodo.removeAttribute("hidden");
 
-
-
   if (DOM.inicializador) {
     DOM.inicializador.style.display = "flex";
     DOM.inicializador.style.justifyContent = "space-between";
     DOM.inicializador.style.alignItems = "center";
-
   }
   DOM.str.style.position = "relative";
   DOM.nulo.style.position = "relative";
@@ -195,98 +257,6 @@ function inicializar(): void {
     setFlechaInicial(true, necesitaTransicion);
   }, 100);
 }
-
-
-
-
-
-
-// ... Las funciones setContainer y renderizar quedan EXACTAMENTE IGUALES a como las tenías
-
-
-
-
-
-// function configurarBotonesSegunEstructura(tipo: string): void {
-//   1. Validamos que el DOM esté disponible por las dudas
-//   if (!DOM.verificarDOM()) return;
-
-//   2. Reseteamos TODOS tus botones reales a oculto por seguridad antes de decidir cuáles prender
-//   DOM.botonAgregar1erNodo?.setAttribute("hidden", "hidden");
-//   DOM.agregarComienzo?.setAttribute("hidden", "hidden");
-//   DOM.agregarFinal?.setAttribute("hidden", "hidden");
-//   DOM.agregarIntermedio?.setAttribute("hidden", "hidden");
-  
-//   Asumo que estos son los nombres en tu archivo elementosDOM.ts (ajustalos si difieren un poquito)
-//   DOM.textoSelector?.setAttribute("hidden", "hidden"); 
-//   DOM.selectorPares?.setAttribute("hidden", "hidden");
-
-//   3. Prendemos solo los botones que corresponden a la estructura elegida
-//   if (tipo === "linkedlist" || tipo === "doublylinkedlist") {
-//     Las listas usan absolutamente todo
-//     DOM.botonAgregar1erNodo?.removeAttribute("hidden");
-//     DOM.agregarComienzo?.removeAttribute("hidden");
-//     DOM.agregarFinal?.removeAttribute("hidden");
-//     DOM.agregarIntermedio?.removeAttribute("hidden");
-//     DOM.textoSelector?.removeAttribute("hidden");
-//     DOM.selectorPares?.removeAttribute("hidden");
-//   } 
-  
-//   else if (tipo === "stack") {
-//     REGLA DE LA PILA: Operás solo por un extremo (por ejemplo, el comienzo)
-//     DOM.botonAgregar1erNodo?.removeAttribute("hidden"); // Para el primer elemento
-//     DOM.agregarComienzo?.removeAttribute("hidden");     // Las inserciones van al comienzo (Top)
-    
-//     El botón de agregar_final y el intermedio se quedan ocultos
-//   } 
-  
-//   else if (tipo === "queue") {
-//     REGLA DE LA COLA: Insertás siempre por el final (Rear)
-//     DOM.botonAgregar1erNodo?.removeAttribute("hidden"); // Para el primer elemento
-//     DOM.agregarFinal?.removeAttribute("hidden");        // Las inserciones van al final
-    
-//     El botón de agregar_comienzo y el intermedio se quedan ocultos
-//   } 
-  
-//   else if (tipo === "deque") {
-//     REGLA DE LA DOBLE COLA: Podés insertar tanto al comienzo como al final
-//     DOM.botonAgregar1erNodo?.removeAttribute("hidden");
-//     DOM.agregarComienzo?.removeAttribute("hidden");
-//     DOM.agregarFinal?.removeAttribute("hidden");
-    
-//     El intermedio se queda oculto
-//   }
-// }
-
-// function configurarBotonesSegunEstructura(tipo: string): void {
-//   if (!DOM.verificarDOM()) return;
-
-//   const config = MAPA_CONFIG_ESTRUCTURAS[tipo] || MAPA_CONFIG_ESTRUCTURAS.linkedlist;
-
-//   // 1. Re-etiquetar punteros visuales
-//   if (DOM.str) DOM.str.textContent = config.etiquetaHead;
-//   if (DOM.nulo) DOM.nulo.textContent = config.etiquetaTail;
-
-//   // 2. Controlar Visibilidad y Etiquetas de Botones de Inserción
-//   gestionarBoton(DOM.botonAgregar1erNodo, config.mostrarAgregarPrimerNodo, "Agregar 1er Nodo");
-//   gestionarBoton(DOM.agregarComienzo, config.mostrarAgregarComienzo, config.etiquetaAgregarComienzo);
-//   gestionarBoton(DOM.agregarFinal, config.mostrarAgregarFinal, config.etiquetaAgregarFinal);
-//   gestionarBoton(DOM.agregarIntermedio, config.mostrarAgregarIntermedio, "Agregar Intermedio");
-
-//   // 3. Controlar Visibilidad y Etiquetas de Botones de Borrado (si los tenés en el DOM)
-//   gestionarBoton(DOM.borrarComienzo, config.mostrarBorrarComienzo, config.etiquetaBorrarComienzo);
-//   gestionarBoton(DOM.borrarFinal, config.mostrarBorrarFinal, config.etiquetaBorrarFinal);
-
-
-//   // 4. Selectores opcionales para listas
-//   if (config.mostrarAgregarIntermedio) {
-//     DOM.textoSelector?.removeAttribute("hidden");
-//     DOM.selectorPares?.removeAttribute("hidden");
-//   } else {
-//     DOM.textoSelector?.setAttribute("hidden", "hidden");
-//     DOM.selectorPares?.setAttribute("hidden", "hidden");
-//   }
-// }
 
 export function configurarBotonesSegunEstructura(
   tipo: string,
@@ -302,7 +272,7 @@ export function configurarBotonesSegunEstructura(
 
   if (!tieneNodos) {
     // ESTADO VACÍO (0 Nodos): Solo mostramos el botón inicial verde
-    gestionarBoton(DOM.botonAgregar1erNodo, true, "Agregar 1er Nodo");
+    gestionarBoton(DOM.botonAgregar1erNodo, true, "Add first node");
 
     gestionarBoton(DOM.agregarComienzo, false, "");
     gestionarBoton(DOM.agregarFinal, false, "");
@@ -352,56 +322,6 @@ function gestionarBoton(
 
 
 
-
-
-
-// export function bloquearInterfaz(): void {
-//   if (!DOM.verificarDOM()) return;
-
-//   const botones = [
-//     DOM.botonAgregar1erNodo,
-//     DOM.agregarComienzo,
-//     DOM.agregarFinal,
-//     DOM.agregarIntermedio,
-//     DOM.borrarComienzo,
-//     DOM.borrarFinal,
-//     DOM.guardarEstructura
-//   ];
-
-//   botones.forEach((boton) => {
-//     if (boton) boton.disabled = true;
-//   });
-// }
-
-// // Reactiva los botones respetando el mapa de la estructura activa
-// export function liberarInterfaz(): void {
-//   if (!DOM.verificarDOM()) return;
-
-//   // 1. Nos aseguramos de sincronizar qué botones van visibles/ocultos según el tipo de estructura
-//   if (estructuraActiva) {
-//     configurarBotonesSegunEstructura(estructuraActiva.type);
-//   }
-
-//   // 2. A todos los botones que NO estén ocultos les quitamos el disabled
-//   const botones = [
-//     DOM.botonAgregar1erNodo,
-//     DOM.agregarComienzo,
-//     DOM.agregarFinal,
-//     DOM.agregarIntermedio,
-//     DOM.borrarComienzo,
-//     DOM.borrarFinal,
-//     DOM.guardarEstructura
-//   ];
-
-//   botones.forEach((boton) => {
-//     if (boton) {
-//       const estaOculto = boton.hasAttribute("hidden") || boton.style.display === "none";
-//       boton.disabled = estaOculto; // Si está visible -> disabled = false. Si está oculto -> disabled = true.
-//     }
-//   });
-// }
-
-
 export function bloquearInterfaz(): void {
   if (!DOM.verificarDOM()) return;
 
@@ -439,32 +359,6 @@ export function liberarInterfaz(): void {
     if (el) el.disabled = false;
   });
 }
-
-// export function desocultarBotonesEstructura(): void {
-//   if (!DOM.verificarDOM()) return;
-//   // Ocultamos el botón de 1er nodo y desocultamos según la estructura activa
-//   DOM.botonAgregar1erNodo?.setAttribute("hidden", "hidden");
-//   if (estructuraActiva) {
-//     configurarBotonesSegunEstructura(estructuraActiva.type);
-//   }
-// }
-
-// export function ocultarBotonesEstructura(): void {
-//   if (!DOM.verificarDOM()) return;
-//   // Ocultamos los botones operativos y volvemos a desocultar el del 1er nodo
-//   gestionarBoton(DOM.agregarComienzo, false, "");
-//   gestionarBoton(DOM.agregarFinal, false, "");
-//   gestionarBoton(DOM.agregarIntermedio, false, "");
-//   gestionarBoton(DOM.borrarComienzo, false, "");
-//   gestionarBoton(DOM.borrarFinal, false, "");
-
-//   gestionarBoton(DOM.botonAgregar1erNodo, true, "Agregar primer nodo");
-// }
-
-
-
-
-
 
 
 
@@ -621,39 +515,69 @@ function renderizar(): void {
 
 
 
+function validarYFormatearValor(valor: string, tipoDato: string): string | null {
+  const v = valor.trim();
+  if (!v) return null;
+
+  if (tipoDato === "number") {
+    if (isNaN(Number(v))) {
+      alert("Error: Esta estructura solo acepta números.");
+      return null;
+    }
+    return v;
+  }
+
+  if (tipoDato === "letter") {
+    // Valida que sea exactamente un carácter y que sea una letra
+    if (v.length !== 1 || !/^[a-zA-Z]$/.test(v)) {
+      alert("Error: Esta estructura solo acepta una única letra (A-Z).");
+      return null;
+    }
+    return v;
+  }
+
+  // Si es 'string' o cualquier otro tipo, pasa directo
+  return v;
+}
 
 
 
-// function ejecutarAgregarPrimerNodo(): void {
-//   const valor = DOM.inputNodo?.value;
-//   if (!valor) return;
-
-//   if (estructuraActiva) {
-//     if (estructuraActiva instanceof LinkedList) {
-//       estructuraActiva.add(valor); // El método add ya maneja si head está vacío
-//     } else if (estructuraActiva instanceof Deque) {
-//       estructuraActiva.addFront(valor); // O addBack, el que prefieras para el primero
-//     }
-//     // ... Tu Stack o Queue usarían su método push / enqueue respectivo
-//   }
-//   console.log(estructuraActiva);
-//   // Llama a tu función visual nativa
-//   agregarPrimerNodo();
-// }
-
+// 1. Helper para comprobar duplicados en el DOM real
+function esValorDuplicado(nuevoValor: string): boolean {
+  const nodosExistentes = Array.from(DOM.contenedorNodos.children) as HTMLElement[];
+  
+  return nodosExistentes.some((nodo) => {
+    // Buscamos el texto interno del nodo (se omite la etiqueta del puntero si la hay)
+    const textoNodo = nodo.querySelector(".valor-nodo")?.textContent?.trim() || nodo.textContent?.trim();
+    return textoNodo === nuevoValor;
+  });
+}
 
 export async function ejecutarAgregarPrimerNodo(): Promise<void> {
-  const valor = DOM.inputNodo?.value;
-  if (!valor) return;
+  const rawValor = DOM.inputNodo?.value;
+  if (!rawValor) return;
+
+  
+  const tipoDato = estructuraActiva?.dataType || "string";
+  
+  // Validamos según la regla configurada
+  const valorFormateado = validarYFormatearValor(rawValor, tipoDato);
+  if (!valorFormateado) return; // Corta si el formato es inválido
+
+  // Paso 2: Validar que NO esté duplicado
+  if (esValorDuplicado(valorFormateado)) {
+    alert(`Error: El valor "${valorFormateado}" ya existe en la estructura.`);
+    return; // Corta si el valor está repetido
+  }
 
   bloquearInterfaz();
 
   // Actualizamos la estructura lógica TS
   if (estructuraActiva) {
-    if (estructuraActiva instanceof LinkedList) estructuraActiva.addFirst(valor);
-    else if (estructuraActiva instanceof Stack) estructuraActiva.push(valor);
-    else if (estructuraActiva instanceof Queue) estructuraActiva.enqueue(valor);
-    else if (estructuraActiva instanceof Deque) estructuraActiva.addFront(valor);
+    if (estructuraActiva instanceof LinkedList) estructuraActiva.addFirst(valorFormateado);
+    else if (estructuraActiva instanceof Stack) estructuraActiva.push(valorFormateado);
+    else if (estructuraActiva instanceof Queue) estructuraActiva.enqueue(valorFormateado);
+    else if (estructuraActiva instanceof Deque) estructuraActiva.addFront(valorFormateado);
   }
 
   // Cambiamos visibilidad (desocultamos los botones de la estructura)
@@ -667,15 +591,28 @@ export async function ejecutarAgregarPrimerNodo(): Promise<void> {
 
 
 export async function ejecutarAgregarNodoAlComienzo(): Promise<void> {
-  const valor = DOM.inputNodo?.value;
-  if (!valor) return;
+  const rawValor = DOM.inputNodo?.value;
+  if (!rawValor) return;
 
+  
+  const tipoDato = estructuraActiva?.dataType || "string";
+  
+  // Validamos según la regla configurada
+  const valorFormateado = validarYFormatearValor(rawValor, tipoDato);
+  if (!valorFormateado) return; // Corta si el formato es inválido
+
+  // Paso 2: Validar que NO esté duplicado
+  if (esValorDuplicado(valorFormateado)) {
+    alert(`Error: El valor "${valorFormateado}" ya existe en la estructura.`);
+    return; // Corta si el valor está repetido
+  }
+  
   bloquearInterfaz();
 
   if (estructuraActiva) {
-    if (estructuraActiva instanceof LinkedList) estructuraActiva.addFirst(valor);
-    else if (estructuraActiva instanceof Stack) estructuraActiva.push(valor);
-    else if (estructuraActiva instanceof Deque) estructuraActiva.addFront(valor);
+    if (estructuraActiva instanceof LinkedList) estructuraActiva.addFirst(valorFormateado);
+    else if (estructuraActiva instanceof Stack) estructuraActiva.push(valorFormateado);
+    else if (estructuraActiva instanceof Deque) estructuraActiva.addFront(valorFormateado);
   }
 
   await agregarNodoAlComienzo();
@@ -683,15 +620,27 @@ export async function ejecutarAgregarNodoAlComienzo(): Promise<void> {
 }
 
 export async function ejecutarAgregarNodoAlFinal(): Promise<void> {
-  const valor = DOM.inputNodo?.value;
-  if (!valor) return;
+  const rawValor = DOM.inputNodo?.value;
+  if (!rawValor) return;
 
+  
+  const tipoDato = estructuraActiva?.dataType || "string";
+  
+  // Validamos según la regla configurada
+  const valorFormateado = validarYFormatearValor(rawValor, tipoDato);
+  if (!valorFormateado) return; // Corta si el formato es inválido
+
+  // Paso 2: Validar que NO esté duplicado
+  if (esValorDuplicado(valorFormateado)) {
+    alert(`Error: El valor "${valorFormateado}" ya existe en la estructura.`);
+    return; // Corta si el valor está repetido
+  }
   bloquearInterfaz();
 
   if (estructuraActiva) {
-    if (estructuraActiva instanceof LinkedList) estructuraActiva.addLast(valor);
-    else if (estructuraActiva instanceof Queue) estructuraActiva.enqueue(valor);
-    else if (estructuraActiva instanceof Deque) estructuraActiva.addBack(valor);
+    if (estructuraActiva instanceof LinkedList) estructuraActiva.addLast(valorFormateado);
+    else if (estructuraActiva instanceof Queue) estructuraActiva.enqueue(valorFormateado);
+    else if (estructuraActiva instanceof Deque) estructuraActiva.addBack(valorFormateado);
   }
 
   await agregarNodoAlFinal();
@@ -743,98 +692,22 @@ export async function ejecutarBorrarNodoAlFinal(): Promise<void> {
 }
 
 
-// function ejecutarAgregarNodoAlComienzo(): void {
-//   const valor = DOM.inputNodo?.value;
-//   if (!valor) return;
-
-//   if (estructuraActiva) {
-//     if (estructuraActiva instanceof LinkedList) {
-//       estructuraActiva.add(valor); // El método add ya maneja si head está vacío
-//     } else if (estructuraActiva instanceof Deque) {
-//       estructuraActiva.addFront(valor); // O addBack, el que prefieras para el primero
-//     }
-//     // ... Tu Stack o Queue usarían su método push / enqueue respectivo
-//   }
-//   console.log(estructuraActiva);
-//   // Llama a tu función visual nativa
-//   agregarNodoAlComienzo();
-// }
-
-
-
-
-// function ejecutarAgregarNodoAlFinal(): void {
-//   const valor = DOM.inputNodo?.value;
-//   if (!valor) return;
-
-//   if (estructuraActiva) {
-//     if (estructuraActiva instanceof LinkedList) {
-//       estructuraActiva.add(valor); // El método add ya maneja si head está vacío
-//     } else if (estructuraActiva instanceof Deque) {
-//       estructuraActiva.addBack(valor); // O addBack, el que prefieras para el primero
-//     }
-//     // ... Tu Stack o Queue usarían su método push / enqueue respectivo
-//   }
-//   console.log(estructuraActiva);
-//   // Llama a tu función visual nativa
-//   agregarNodoAlFinal();
-// }
-
-
-// async function ejecutarBorrarNodoAlComienzo(): Promise<void> {
-//   if (estructuraActiva) {
-//     estructuraActiva.remove(); // Actualiza la clase lógica TS (Queue/Deque/LinkedList/Stack)
-//   }
-//   await borrarNodoAlComienzo(); // Ejecuta tu animación monolítica limpia
-// }
-
-// async function ejecutarBorrarNodoAlFinal(): Promise<void> {
-//   if (estructuraActiva) {
-//     // Si tu estructura es Deque o LinkedList y borra al final:
-//     if (typeof (estructuraActiva as any).removeBack === "function") {
-//       (estructuraActiva as any).removeBack();
-//     } else {
-//       estructuraActiva.remove();
-//     }
-//   }
-//   await borrarNodoAlFinal(); // Ejecuta tu animación monolítica limpia
-// }
-
-
-
-// function ejecutarAgregarNodoIntermedio(): void {
-//   const valor = DOM.inputNodo?.value;
-//   if (!valor) return;
-
-//   if (estructuraActiva) {
-//     if (estructuraActiva instanceof LinkedList) {
-//       estructuraActiva.add(valor); // El método add ya maneja si head está vacío
-//     } 
-//     // ... Tu Stack o Queue usarían su método push / enqueue respectivo
-//   }
-//   console.log(estructuraActiva);
-//   // Llama a tu función visual nativa
-//   agregarNodoIntermedio();
-// }
-
-// function ejecutarAgregarNodoIntermedio(): void {
-//   const valor = DOM.inputNodo?.value;
-//   if (!valor) return;
-
-//   if (estructuraActiva) {
-//     if (estructuraActiva instanceof LinkedList) {
-//       estructuraActiva.insertAt(valor); // El método add ya maneja si head está vacío
-//     } 
-//     // ... Tu Stack o Queue usarían su método push / enqueue respectivo
-//   }
-//   console.log(estructuraActiva);
-//   // Llama a tu función visual nativa
-//   agregarNodoIntermedio();
-// }
 export async function ejecutarAgregarNodoIntermedio(): Promise<void> {
-  const valor = DOM.inputNodo?.value;
-  if (!valor) return;
+  const rawValor = DOM.inputNodo?.value;
+  if (!rawValor) return;
 
+  
+  const tipoDato = estructuraActiva?.dataType || "string";
+  
+  // Validamos según la regla configurada
+  const valorFormateado = validarYFormatearValor(rawValor, tipoDato);
+  if (!valorFormateado) return; // Corta si el formato es inválido
+
+  // Paso 2: Validar que NO esté duplicado
+  if (esValorDuplicado(valorFormateado)) {
+    alert(`Error: El valor "${valorFormateado}" ya existe en la estructura.`);
+    return; // Corta si el valor está repetido
+  }
   // 1. Leemos la posición seleccionada en la UI
   const posicion = Number(DOM.selectorPares?.value || 0);
 
@@ -842,7 +715,7 @@ export async function ejecutarAgregarNodoIntermedio(): Promise<void> {
 
   // 2. Actualizamos la estructura de datos en memoria (Back-end)
   if (estructuraActiva && estructuraActiva instanceof LinkedList) {
-    (estructuraActiva as LinkedList<string>).insertAt(posicion, valor);
+    (estructuraActiva as LinkedList<string>).insertAt(posicion, valorFormateado);
   }
 
   // 3. Ejecutamos la animación de la interfaz (Front-end)
@@ -851,31 +724,7 @@ export async function ejecutarAgregarNodoIntermedio(): Promise<void> {
   liberarInterfaz();
 }
 
-// Importamos el servicio arriba de todo
 
-
-// Esta función la vinculás al click de un botón "Guardar"
-// async function ejecutarGuardarEstructura(): Promise<void> {
-//   if (!estructuraActiva) {
-//     alert("Primero tenés que inicializar una estructura.");
-//     return;
-//   }
-
-//   // Extraemos los datos lógicos de tu clase de TS actual
-//   const nombre = estructuraActiva.name;
-//   const tipo = estructuraActiva.type;
-//   const tipoDato = estructuraActiva.dataType;
-//   const valores = estructuraActiva.values; // ¡Tu array plano de datos lógicos! (Ej: [10, 20, 30])
-
-//   try {
-//     console.log("Enviando datos al backend...");
-//     const resultado = await estructuraService.guardar(nombre, tipo, tipoDato, valores);
-//     console.log("¡Guardado con éxito en el backend!", resultado);
-//     alert("Estructura guardada correctamente.");
-//   } catch (error) {
-//     alert("No se pudo guardar la estructura.");
-//   }
-// }
 
 async function ejecutarGuardarEstructura(): Promise<void> {
   if (!estructuraActiva) {
@@ -883,9 +732,7 @@ async function ejecutarGuardarEstructura(): Promise<void> {
     return;
   }
 
-  // const nombre = DOM.inputNombre?.value || "Mi Estructura";
-  // const tipo = DOM.selectTipo?.value || "linkedlist";
-  // const tipoDato = DOM.selectDataType?.value || "number";
+
      const nombre = estructuraActiva.name;
      const tipo = estructuraActiva.type;
      const tipoDato = estructuraActiva.dataType;
@@ -903,243 +750,6 @@ async function ejecutarGuardarEstructura(): Promise<void> {
     alert("No se pudo guardar la estructura.");
   }
 }
-
-
-
-
-// // En tu controlador de Vanilla TS
-// export function reiniciarVisualizador(): void {
-//   // 1. Destruir nodos y flechas del DOM
-//   if (DOM.contenedorNodos) DOM.contenedorNodos.innerHTML = "";
-//   if (DOM.contenedorFlechas) DOM.contenedorFlechas.innerHTML = "";
-//   if (DOM.contenedorFlechasCurvas) DOM.contenedorFlechasCurvas.innerHTML = "";
-
-//   // 2. Resetear clases y atributos de los contenedores principales
-//   if (DOM.str) DOM.str.removeAttribute("style");
-//   if (DOM.nulo) DOM.nulo.removeAttribute("style");
-//   if (DOM.inicializador) DOM.inicializador.removeAttribute("style");
-
-//   // 3. Resetear modelo lógico en memoria
-//   estructuraActiva = null;
-
-//   // 4. Resetear campos de entrada
-//   if (DOM.inputNodo) DOM.inputNodo.value = "";
-// }
-
-// let cancelAnimacionActual = false;
-
-// export function reiniciarVisualizador(): void {
-//   // 1. Marcar cancelación para frenar bucles o pausas activas
-//   cancelAnimacionActual = true;
-
-//   // 2. Limpieza absoluta de los contenedores
-//   if (DOM.contenedorNodos) DOM.contenedorNodos.innerHTML = "";
-//   if (DOM.contenedorFlechas) DOM.contenedorFlechas.innerHTML = "";
-//   if (DOM.contenedorFlechasCurvas) DOM.contenedorFlechasCurvas.innerHTML = "";
-
-//   // 3. Resetear estilos aplicados al wrapper principal
-//   if (DOM.principalWrapper) DOM.principalWrapper.removeAttribute("style");
-//   if (DOM.principal) DOM.principal.removeAttribute("style");
-
-//   // 4. Limpiar la referencia lógica
-//   estructuraActiva = null;
-// }
-
-
-// export function reiniciarVisualizador(): void {
-//   // 1. Vaciar contenedores de nodos y flechas dinámicas
-//   if (DOM.contenedorNodos) DOM.contenedorNodos.innerHTML = "";
-//   if (DOM.contenedorFlechas) DOM.contenedorFlechas.innerHTML = "";
-//   if (DOM.contenedorFlechasCurvas) DOM.contenedorFlechasCurvas.innerHTML = "";
-
-//   // 2. Resetear las clases y estilos de las flechas de puntero iniciales/finales
-//   const inicialUl = DOM.inicialUl();
-//   const inicialLs = DOM.inicialLs();
-//   const inicialLi = DOM.inicialLi();
-
-//   if (inicialUl) {
-//     inicialUl.className = ""; // Limpia todas las clases acumuladas
-//     inicialUl.removeAttribute("style");
-//   }
-//   if (inicialLs) {
-//     inicialLs.className = "";
-//     inicialLs.removeAttribute("style");
-//   }
-//   if (inicialLi) {
-//     inicialLi.className = "";
-//     inicialLi.removeAttribute("style");
-//   }
-
-//   // 3. Resetear el puntero StrPtr / TailPtr a su posición de inicio
-//   if (DOM.str) DOM.str.removeAttribute("style");
-//   if (DOM.nulo) DOM.nulo.removeAttribute("style");
-
-//   // 4. Limpiar modelo en memoria
-//   estructuraActiva = null;
-// }
-
-// export function reiniciarVisualizador(): void {
-//   // 1. Vaciar contenedores dinámicos de nodos y flechas
-//   if (DOM.contenedorNodos) DOM.contenedorNodos.innerHTML = "";
-//   if (DOM.contenedorFlechas) DOM.contenedorFlechas.innerHTML = "";
-//   if (DOM.contenedorFlechasCurvas) DOM.contenedorFlechasCurvas.innerHTML = "";
-
-//   // 2. Limpiar estilos inline y clases de los punteros iniciales/finales
-//   // (Ajustá las referencias según las funciones que uses en tu DOM helper)
-//   const elementosPunteros = [
-//     DOM.str,
-//     DOM.nulo,
-//     DOM.inicializador,
-//     DOM.inicialUl?.(),
-//     DOM.inicialLs?.(),
-//     DOM.inicialLi?.()
-//   ];
-
-//   elementosPunteros.forEach((el) => {
-//     if (el) {
-//       el.removeAttribute("style"); // Elimina tops/lefts calculados
-//       el.className = "";            // Remueve clases de animación previas
-//     }
-//   });
-
-//   // 3. Resetear el modelo lógico global
-//   estructuraActiva = null;
-
-//   // 4. Volver a llamar a tu inicializador base de UI (si existe)
-//   // Esto restablece la flecha inicial al estado "lista vacía" original
-//   if (typeof inicializar === "function") {
-//     inicializar();
-//   }
-// }
-
-
-// export function hardResetPunterosYFlechas() {
-//   // 1. Limpiar variables de estado global que recuerden posiciones viejas
-//   // (Ajustá los nombres según tus variables globales reales)
-//   // ej: posicionesCache = {}; 
-//   // ej: listaFlechas = [];
-
-//   // 2. Seleccionar todos los elementos de punteros e inicializadores
-//   // Si usás IDs o Clases específicas, agregalas acá:
-//   const elementosAClarear = document.querySelectorAll(
-//     '#str, #nulo, #inicializador, .puntero-head, .puntero-tail, .puntero-top, .flecha-inicial, .flecha-puntero, [id*="puntero"], [id*="flecha"]'
-//   );
-
-//   elementosAClarear.forEach((el) => {
-//     const htmlEl = el as HTMLElement;
-//     // Remueve todos los estilos inline (top, left, transform, width, height, position, etc.)
-//     htmlEl.removeAttribute("style");
-//     // Remueve clases de animación/posicionamiento que se hayan agregado
-//     htmlEl.className = htmlEl.className
-//       .split(" ")
-//       .filter((c) => !c.includes("anim") && !c.includes("posic"))
-//       .join(" ");
-//   });
-
-//   // 3. Limpiar contenedores de SVG o canvas de flechas si existen
-//   const contenedorFlechas = document.getElementById("contenedor-flechas"); // Cambiá por tu ID real
-//   if (contenedorFlechas) {
-//     contenedorFlechas.innerHTML = "";
-//   }
-// }
-
-
-
-// export function reiniciarVisualizador() {
-//   // 1. Limpiar contenedores dinámicos de flechas
-//   const contFlechas = document.getElementById("contenedor_flechas");
-//   if (contFlechas) contFlechas.innerHTML = "";
-
-//   const contFlechasCurvas = document.getElementById("contenedor_flechas_curvas");
-//   if (contFlechasCurvas) contFlechasCurvas.innerHTML = "";
-
-//   // 2. Limpiar el contenedor principal de nodos
-//   const canvas = document.getElementById("canvas") || document.getElementById("lienzo");
-//   if (canvas) canvas.innerHTML = "";
-
-//   // 3. RESTAURAR EL CONTENEDOR INICIALIZADOR A SU ESTADO VIRGEN EXACTO
-//   const inicializador = document.getElementById("inicializador");
-//   if (inicializador) {
-//     // Restablecer estilos inline del contenedor principal
-//     inicializador.setAttribute(
-//       "style",
-//       "display: flex; justify-content: space-between; align-items: center;"
-//     );
-
-//     // Inyectar el HTML limpio exacto de la imagen
-//     inicializador.innerHTML = `
-//       <div id="str" style="position: relative;">StrPtr</div>
-//       <div class="arrow" id="flecha_puntero_inicial" style="height: 0px;">
-//         <div class="underline cambio_top flecha_puntero_lista-vacia"></div>
-//         <div class="linea-s"></div>
-//         <div class="linea-i"></div>
-//       </div>
-//       <div id="flecha_puntero_previo"></div>
-//       <div id="flecha_puntero_actual"></div>
-//       <div id="flecha_puntero_nuevo"></div>
-//       <div id="flecha_puntero_final"></div>
-//       <div id="nulo" style="position: relative;">NULL</div>
-//     `;
-//   }
-
-//   // 4. Resetear cualquier variable global de TS/JS que recuerde referencias a elementos viejos
-//   // (Si tenés arreglos globales como 'nodos = []', 'flechas = []', resetealos acá)
-// }
-
-
-// export function reiniciarVisualizador(): void {
-//   DOM.actualizarElementosDOM();
-
-//   // 1. Limpiar los contenedores SVG / HTML de flechas dinámicas y nodos
-//   if (DOM.contenedorFlechas) DOM.contenedorFlechas.innerHTML = "";
-//   if (DOM.contenedorFlechasCurvas) DOM.contenedorFlechasCurvas.innerHTML = "";
-//   if (DOM.contenedorNodos) DOM.contenedorNodos.innerHTML = "";
-
-//   // Helper local para vaciar elementos de forma segura (soporta getters o funciones)
-//   const vaciarElemento = (el: HTMLElement | (() => HTMLElement | null) | null) => {
-//     const nodo = typeof el === "function" ? el() : el;
-//     if (nodo) nodo.innerHTML = "";
-//   };
-
-//   // 2. Limpiar las flechas del contenedor inicializador
-//   vaciarElemento(DOM.flechaPunteroInicial);
-//   vaciarElemento(DOM.flechaPunteroFinal);
-//   vaciarElemento(DOM.flechaPunteroPrevio);
-//   vaciarElemento(DOM.flechaPunteroActual);
-//   vaciarElemento(DOM.flechaPunteroNuevo);
-
-//   // 3. Resetear banderas globales de TypeScript
-//   window.banderaFlechaInicial = 0;
-//   window.banderaFlechaFinal = 0;
-//   window.banderaFlecha = 0;
-
-//   // 4. Volver la UI al Estado 0 (Contenedor Vacío / Formulario visible)
-//   if (DOM.inic) DOM.inic.removeAttribute("hidden");
-  
-//   DOM.texto?.setAttribute("hidden", "hidden");
-//   DOM.inputNodo?.setAttribute("hidden", "hidden");
-//   DOM.str?.setAttribute("hidden", "hidden");
-//   DOM.nulo?.setAttribute("hidden", "hidden");
-//   DOM.guardarEstructura?.setAttribute("hidden", "hidden");
-//   DOM.botonAgregar1erNodo?.setAttribute("hidden", "hidden");
-//   DOM.agregarComienzo?.setAttribute("hidden", "hidden");
-//   DOM.agregarFinal?.setAttribute("hidden", "hidden");
-//   DOM.agregarIntermedio?.setAttribute("hidden", "hidden");
-//   DOM.borrarComienzo?.setAttribute("hidden", "hidden");
-//   DOM.borrarFinal?.setAttribute("hidden", "hidden");
-//   DOM.textoSelector?.setAttribute("hidden", "hidden");
-//   DOM.selectorPares?.setAttribute("hidden", "hidden");
-
-//   // 5. Reiniciar estilos del contenedor inicializador
-//   if (DOM.inicializador) {
-//     DOM.inicializador.style.display = "flex";
-//     DOM.inicializador.style.justifyContent = "space-between";
-//     DOM.inicializador.style.alignItems = "center";
-//   }
-
-//   // Desvincular instancia lógica anterior
-//   estructuraActiva = null;
-// }
 
 
 

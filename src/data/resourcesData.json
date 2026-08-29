@@ -2,59 +2,59 @@
   "docs": [
     {
       "id": "1",
-      "title": "Conceptos Fundamentales y TDA",
-      "category": "Teoría Base",
-      "badge": "Principiante",
-      "summary": "Estructuras estáticas vs. dinámicas e importancia de los Tipos de Datos Abstractos (TDA) con Genéricos <T>.",
-      "content": "Las estructuras de datos son formas organizadas de almacenar y manipular información en memoria. A diferencia de las estructuras estáticas (como arreglos de tamaño fijo), las dinámicas se expanden o contraen según las necesidades de la ejecución. Gracias al uso de TypeScript con tipos genéricos <T>, un nodo no se limita a almacenar primitivos como enteros o caracteres: puede contener objetos complejos, registros de base de datos o tokens sintácticos.",
-      "realWorldUse": "Creación de modelos de datos abstractos y librerías reutilizables en desarrollo de software profesional."
+      "title": "Fundamental Concepts and ADT",
+      "category": "Core Theory",
+      "badge": "Beginner",
+      "summary": "Static vs. dynamic structures and the importance of Abstract Data Types (ADT) with Generics <T>.",
+      "content": "Data structures are organized ways to store and manipulate information in memory. Unlike static structures (such as fixed-size arrays), dynamic ones expand or contract according to execution needs. Thanks to TypeScript's use of generic types <T>, a node is not limited to storing primitives like integers or characters: it can hold complex objects, database records, or syntax tokens.",
+      "realWorldUse": "Creation of abstract data models and reusable libraries in professional software development."
     },
     {
       "id": "2",
-      "title": "Pilas (Stacks) y el Call Stack",
-      "category": "Compiladores y Sistemas",
-      "badge": "Avanzado",
-      "summary": "Cómo la estructura LIFO (Last In, First Out) gestiona la ejecución de funciones y evaluación sintáctica.",
-      "content": "Las pilas son esenciales en el diseño de sistemas de bajo nivel y compiladores. Cada vez que un programa invoca una función, el entorno crea un 'Stack Frame' que almacena variables locales y la dirección de retorno. Además, se utilizan en parsers sintácticos para la evaluación de expresiones matemáticas (notación Infija a Postfija/Polaca) y en la función 'Deshacer/Rehacer' (Undo/Redo) de los editores de código.",
-      "realWorldUse": "Motor V8 de JavaScript (Call Stack), parsers de compiladores, botones Deshacer/Rehacer."
+      "title": "Stacks and the Call Stack",
+      "category": "Compilers and Systems",
+      "badge": "Advanced",
+      "summary": "How the LIFO (Last In, First Out) structure manages function execution and syntax evaluation.",
+      "content": "Stacks are essential in low-level system design and compilers. Every time a program calls a function, the environment creates a 'Stack Frame' that stores local variables and the return address. In addition, they are used in syntax parsers for evaluating mathematical expressions (Infix to Postfix/Polish notation) and in the 'Undo/Redo' feature of code editors.",
+      "realWorldUse": "JavaScript V8 Engine (Call Stack), compiler parsers, Undo/Redo buttons."
     },
     {
       "id": "3",
-      "title": "Colas, Deques y Algoritmos de Grafos",
-      "category": "Algoritmos y Redes",
-      "badge": "Intermedio",
-      "summary": "Uso de la estructura FIFO en algoritmos como BFS y arquitecturas orientadas a eventos.",
-      "content": "Las Colas y Doble Colas (Deques) administran flujos de datos asíncronos y planificaciones de tareas (Scheduling). Son la columna vertebral de algoritmos de grafos como BFS (Breadth-First Search) para encontrar el camino más corto en redes. En entornos como Node.js y el navegador, la 'Task Queue' del Event Loop administra los eventos de I/O de manera no bloqueante.",
-      "realWorldUse": "Algoritmo BFS en grafos/redes, Event Loop de Node.js, colas de impresión y tareas en background."
+      "title": "Queues, Deques, and Graph Algorithms",
+      "category": "Algorithms and Networks",
+      "badge": "Intermediate",
+      "summary": "Use of the FIFO structure in algorithms like BFS and event-driven architectures.",
+      "content": "Queues and Double-Ended Queues (Deques) manage asynchronous data streams and task scheduling. They are the backbone of graph algorithms like BFS (Breadth-First Search) to find the shortest path in networks. In environments like Node.js and the browser, the Event Loop's 'Task Queue' manages I/O events in a non-blocking manner.",
+      "realWorldUse": "BFS algorithm in graphs/networks, Node.js Event Loop, print queues, and background tasks."
     },
     {
       "id": "4",
-      "title": "Listas Enlazadas y Gestión de Memoria",
-      "category": "Manejo de Memoria",
-      "badge": "Intermedio",
-      "summary": "Gestión del Heap de memoria, punteros dinámicos y resolución de colisiones.",
-      "content": "Las Listas Enlazadas eliminan la necesidad de bloques de memoria contiguos, reasignando punteros `next` y `prev`. En la construcción de bases de datos y sistemas operativos, se emplean para la gestión de bloques libres en el Heap y en la resolución de colisiones en Tablas Hash mediante el algoritmo de Chaining (encadenamiento).",
-      "realWorldUse": "Asignadores de memoria en C/C++, encadenamiento en Hash Maps, reproductores de música (lista de reproducción)."
+      "title": "Linked Lists and Memory Management",
+      "category": "Memory Management",
+      "badge": "Intermediate",
+      "summary": "Heap memory management, dynamic pointers, and collision resolution.",
+      "content": "Linked Lists eliminate the need for contiguous memory blocks by reassigning `next` and `prev` pointers. In database building and operating systems, they are used to manage free blocks in the Heap and to resolve collisions in Hash Tables using the Chaining algorithm.",
+      "realWorldUse": "Memory allocators in C/C++, chaining in Hash Maps, music players (playlists)."
     }
   ],
   "videos": [
     {
       "id": "1",
-      "title": "Estructuras de Datos Explicadas Visualmente",
-      "description": "Una introducción conceptual a Pilas, Colas y Listas Enlazadas con animaciones.",
+      "title": "Data Structures Visually Explained",
+      "description": "A conceptual introduction to Stacks, Queues, and Linked Lists with animations.",
       "embedUrl": "https://www.youtube.com/embed/RBSGKlAvoiM"
     },
     {
       "id": "2",
-      "title": "Big-O Notation y Complejidad Algorítmica",
-      "description": "Aprende a analizar el tiempo de ejecución O(1), O(n) y O(log n) de tus estructuras.",
+      "title": "Big-O Notation and Algorithmic Complexity",
+      "description": "Learn to analyze the O(1), O(n), and O(log n) execution time of your structures.",
       "embedUrl": "https://www.youtube.com/embed/g2o22C3CRfU"
     }
   ],
   "external": [
     {
       "id": "1",
-      "title": "VisuAlgo - Visualización Interactiva de Algoritmos",
+      "title": "VisuAlgo - Interactive Algorithm Visualization",
       "link": "https://visualgo.net/",
       "badge": "Web App"
     },
@@ -62,13 +62,13 @@
       "id": "2",
       "title": "TypeScript Documentation - Generics <T>",
       "link": "https://www.typescriptlang.org/docs/handbook/2/generics.html",
-      "badge": "Doc Oficial"
+      "badge": "Official Doc"
     },
     {
       "id": "3",
       "title": "GeeksforGeeks - Data Structures Tutorial",
       "link": "https://www.geeksforgeeks.org/data-structures/",
-      "badge": "Artículos & Código"
+      "badge": "Articles & Code"
     }
   ]
 }

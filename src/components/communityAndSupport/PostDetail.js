@@ -40,7 +40,7 @@ const PostDetail = () => {
   return (
     <Container className="mt-4 pb-5" style={{ maxWidth: '800px' }}>
       <Link to="/community-support" className="btn btn-sm btn-outline-info mb-3">
-        ← Volver a la Comunidad
+        ← Return to Community 
       </Link>
 
       <Card className="p-4 shadow-sm bg-dark text-light border-secondary">
@@ -53,7 +53,7 @@ const PostDetail = () => {
 
         <hr className="border-secondary my-4" />
 
-        <h5 className="mb-3 text-info">Comentarios ({post.comments?.length || 0})</h5>
+        <h5 className="mb-3 text-info">Comments ({post.comments?.length || 0})</h5>
         <CommentList comments={post.comments || []} />
         
         <div className="mt-4 pt-3 border-top border-secondary">

@@ -8,167 +8,167 @@ const HelpModal = ({ show, onHide }) => {
     <Modal show={show} onHide={onHide} size="lg" centered className="text-light">
       <Modal.Header closeButton closeVariant="white" className="bg-dark border-secondary">
         <Modal.Title className="text-info fw-bold d-flex align-items-center gap-2">
-          <span>📚</span> Manual Completo del Visualizador
+          <span>📚</span> Visualizer Complete Manual
         </Modal.Title>
       </Modal.Header>
 
       <Modal.Body className="bg-dark text-light p-4">
         <Tab.Container id="help-tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
-          {/* Navegación por Pestañas */}
+          {/* Navigation Tabs */}
           <Nav variant="pills" className="nav-justified bg-body-tertiary p-1 rounded mb-4 border border-secondary">
             <Nav.Item>
               <Nav.Link eventKey="creacion" className="fw-semibold">
-                1. Creación y Tipos
+                1. Creation & Types
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Nav.Link eventKey="operaciones" className="fw-semibold">
-                2. Nodos e Índices
+                2. Nodes & Indexes
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Nav.Link eventKey="estructuras" className="fw-semibold">
-                3. Reglas por Estructura
+                3. Structure Rules
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Nav.Link eventKey="guardado" className="fw-semibold">
-                4. Guardar en Nube
+                4. Save to Cloud
               </Nav.Link>
             </Nav.Item>
           </Nav>
 
-          {/* Contenido de cada Pestaña */}
+          {/* Tab Content */}
           <Tab.Content>
             
-            {/* PESTAÑA 1: CREACIÓN Y TIPOS DE DATOS */}
+            {/* TAB 1: CREATION & DATA TYPES */}
             <Tab.Pane eventKey="creacion">
-              <h5 className="text-info mb-3">Configuración Inicial</h5>
+              <h5 className="text-info mb-3">Initial Configuration</h5>
               <div className="d-flex flex-column gap-3">
                 <Card className="bg-body-tertiary text-light border-secondary">
                   <Card.Body>
-                    <h6>🏷️ 1. Name (Nombre):</h6>
+                    <h6>🏷️ 1. Name:</h6>
                     <p className="small text-secondary mb-0">
-                      Asigna un identificador único a tu estructura (ej: <code>"Lista de Clientes"</code> o <code>"Pila de Deshacer"</code>). Este nombre facilitará encontrarla en tu Dashboard.
+                      Assign a unique identifier to your structure (e.g., <code>"Customer List"</code> or <code>"Undo Stack"</code>). This name will make it easy to find in your Dashboard.
                     </p>
                   </Card.Body>
                 </Card>
 
                 <Card className="bg-body-tertiary text-light border-secondary">
                   <Card.Body>
-                    <h6>🔤 2. Data Type (Tipo de Datos):</h6>
+                    <h6>🔤 2. Data Type:</h6>
                     <p className="small text-secondary mb-2">
-                      Define qué clase de información aceptará el campo de entrada al crear cada nodo:
+                      Defines what kind of information the input field will accept when creating each node:
                     </p>
                     <ul className="small text-secondary mb-0 ps-3">
-                      <li><strong className="text-warning">Numbers:</strong> Solo permite números enteros o decimales (ej: <code>10</code>, <code>42</code>, <code>-5</code>).</li>
-                      <li><strong className="text-warning">Letters:</strong> Acepta un único carácter alfabético (ej: <code>'A'</code>, <code>'Z'</code>).</li>
-                      <li><strong className="text-warning">Strings:</strong> Permite palabras o cadenas cortas de texto (ej: <code>"Inicio"</code>, <code>"Nodo A"</code>).</li>
+                      <li><strong className="text-warning">Numbers:</strong> Only allows integers or decimals (e.g., <code>10</code>, <code>42</code>, <code>-5</code>).</li>
+                      <li><strong className="text-warning">Letters:</strong> Accepts a single alphabetic character (e.g., <code>'A'</code>, <code>'Z'</code>).</li>
+                      <li><strong className="text-warning">Strings:</strong> Allows words or short text strings (e.g., <code>"Start"</code>, <code>"Node A"</code>).</li>
                     </ul>
                   </Card.Body>
                 </Card>
 
                 <Card className="bg-body-tertiary text-light border-secondary">
                   <Card.Body>
-                    <h6>🚀 3. Botón "Crear Estructura":</h6>
+                    <h6>🚀 3. "Create Structure" Button:</h6>
                     <p className="small text-secondary mb-0">
-                      Limpia el lienzo actual, reinicia las referencias de memoria y prepara el selector para empezar a recibir nodos con la configuración establecida.
+                      Clears the current canvas, resets memory references, and prepares the selector to start accepting nodes with the established configuration.
                     </p>
                   </Card.Body>
                 </Card>
               </div>
             </Tab.Pane>
 
-            {/* PESTAÑA 2: OPERACIONES DE NODOS É ÍNDICES */}
+            {/* TAB 2: NODE OPERATIONS & INDICES */}
             <Tab.Pane eventKey="operaciones">
-              <h5 className="text-info mb-3">Manipulación de Nodos</h5>
+              <h5 className="text-info mb-3">Node Manipulation</h5>
               
               <div className="d-flex flex-column gap-3">
                 <div className="p-3 bg-body-tertiary rounded border border-secondary">
-                  <h6 className="text-warning">➕ Insertar Nodos</h6>
+                  <h6 className="text-warning">➕ Insert Nodes</h6>
                   <ol className="small text-secondary mb-0 ps-3 d-flex flex-column gap-2">
                     <li>
-                      <strong>Agregar Primer Nodo:</strong> Cuando la estructura está vacía, habilita la base e inicializa el puntero principal (<code>head</code> / <code>top</code> / <code>front</code>).
+                      <strong>Add First Node:</strong> When the structure is empty, enables the base and initializes the main pointer (<code>head</code> / <code>top</code> / <code>front</code>).
                     </li>
                     <li>
-                      <strong>Agregar al Comienzo:</strong> Inserta el nuevo elemento en la primera posición y desplaza la referencia del puntero inicial.
+                      <strong>Add to Start:</strong> Inserts the new element at the first position and shifts the initial pointer reference.
                     </li>
                     <li>
-                      <strong>Agregar al Final:</strong> Engancha el nodo al último elemento apuntado por <code>tail</code> o <code>rear</code>.
+                      <strong>Add to End:</strong> Hooks the node to the last element pointed to by <code>tail</code> or <code>rear</code>.
                     </li>
                   </ol>
                 </div>
 
                 <div className="p-3 bg-body-tertiary rounded border border-secondary">
-                  <h6 className="text-warning">📍 Inserción Intermedia (Uso del Selector de Índice)</h6>
+                  <h6 className="text-warning">📍 Intermediate Insertion (Index Selector Usage)</h6>
                   <p className="small text-secondary mb-2">
-                    Exclusivo para estructuras flexibles como <strong>Listas Enlazadas</strong>:
+                    Exclusive to flexible structures like <strong>Linked Lists</strong>:
                   </p>
                   <ul className="small text-secondary mb-0 ps-3">
-                    <li>Al haber 2 o más nodos, el desplegable <strong>"Seleccione posición"</strong> genera dinámicamente los pares de enlaces disponibles (ej: <code>Entre Nodo 0 y Nodo 1</code>).</li>
-                    <li>Elige la posición deseada, ingresa el nuevo valor y presiona <strong className="text-info">Ejecutar</strong> para reasignar dinámicamente el puntero <code>next</code> del nodo anterior.</li>
+                    <li>When there are 2 or more nodes, the <strong>"Select position"</strong> dropdown dynamically generates available link pairs (e.g., <code>Between Node 0 and Node 1</code>).</li>
+                    <li>Choose the desired position, enter the new value, and press <strong className="text-info">Execute</strong> to dynamically reassign the previous node's <code>next</code> pointer.</li>
                   </ul>
                 </div>
 
                 <div className="p-3 bg-body-tertiary rounded border border-secondary">
-                  <h6 className="text-warning">➖ Eliminación / Desapilado (Sacar Nodos)</h6>
+                  <h6 className="text-warning">➖ Deletion / Popping (Remove Nodes)</h6>
                   <p className="small text-secondary mb-0">
-                    Dependiendo de la regla del tipo de estructura cargada, el botón de extracción borrará el nodo según la política de acceso (primer elemento, último elemento o cima).
+                    Depending on the loaded structure type rule, the removal button will delete the node according to its access policy (first element, last element, or top).
                   </p>
                 </div>
               </div>
             </Tab.Pane>
 
-            {/* PESTAÑA 3: REGLAS POR TIPO DE ESTRUCTURA */}
+            {/* TAB 3: RULES BY STRUCTURE TYPE */}
             <Tab.Pane eventKey="estructuras">
-              <h5 className="text-info mb-3">Comportamiento según el Tipo de Estructura</h5>
+              <h5 className="text-info mb-3">Behavior by Structure Type</h5>
               
               <Accordion defaultActiveKey="0" flush className="border border-secondary rounded">
                 <Accordion.Item eventKey="0" className="bg-body-tertiary text-light">
-                  <Accordion.Header>🔗 Lista Enlazada (Linked List & Doubly Linked List)</Accordion.Header>
+                  <Accordion.Header>🔗 Linked List (Singly & Doubly Linked List)</Accordion.Header>
                   <Accordion.Body className="small text-secondary">
-                    Permite inserción libre al inicio, al final o en cualquier posición intermedia. Los punteros <code>next</code> (y <code>prev</code> en la doblemente enlazada) se dibujan y apuntan secuencialmente.
+                    Allows free insertion at the beginning, end, or any intermediate position. The <code>next</code> pointers (and <code>prev</code> in doubly linked) are drawn and point sequentially.
                   </Accordion.Body>
                 </Accordion.Item>
 
                 <Accordion.Item eventKey="1" className="bg-body-tertiary text-light">
-                  <Accordion.Header>🥞 Pila (Stack - LIFO)</Accordion.Header>
+                  <Accordion.Header>🥞 Stack (LIFO)</Accordion.Header>
                   <Accordion.Body className="small text-secondary">
-                    Funciona bajo el principio <strong>Last In, First Out</strong> (Último en entrar, primero en salir). Las inserciones (Push) y extracciones (Pop) solo se permiten por el extremo superior (<code>Top</code>).
+                    Operates under the <strong>Last In, First Out</strong> principle. Insertions (Push) and removals (Pop) are only allowed from the top end (<code>Top</code>).
                   </Accordion.Body>
                 </Accordion.Item>
 
                 <Accordion.Item eventKey="2" className="bg-body-tertiary text-light">
-                  <Accordion.Header>🚶‍♂️ Cola (Queue - FIFO)</Accordion.Header>
+                  <Accordion.Header>🚶‍♂️ Queue (FIFO)</Accordion.Header>
                   <Accordion.Body className="small text-secondary">
-                    Funciona bajo el principio <strong>First In, First Out</strong> (Primero en entrar, primero en salir). Las inserciones entran por la parte posterior (<code>Rear</code>) y las salidas se efectúan por el frente (<code>Front</code>).
+                    Operates under the <strong>First In, First Out</strong> principle. Insertions enter from the rear (<code>Rear</code>) and removals take place from the front (<code>Front</code>).
                   </Accordion.Body>
                 </Accordion.Item>
 
                 <Accordion.Item eventKey="3" className="bg-body-tertiary text-light">
-                  <Accordion.Header>🔄 Doble Cola (Deque)</Accordion.Header>
+                  <Accordion.Header>🔄 Double-Ended Queue (Deque)</Accordion.Header>
                   <Accordion.Body className="small text-secondary">
-                    Cola de doble extremo. Permite insertar y eliminar nodos con eficiencia $O(1)$ tanto por el frente como por el extremo final.
+                    Double-ended queue. Allows inserting and deleting nodes with O(1) efficiency from both the front and rear ends.
                   </Accordion.Body>
                 </Accordion.Item>
               </Accordion>
             </Tab.Pane>
 
-            {/* PESTAÑA 4: GUARDADO Y SINCRONIZACIÓN */}
+            {/* TAB 4: SAVE & SYNC */}
             <Tab.Pane eventKey="guardado">
-              <h5 className="text-info mb-3">Persistencia en la Nube</h5>
+              <h5 className="text-info mb-3">Cloud Persistence</h5>
               <Card className="bg-body-tertiary text-light border-secondary mb-3">
                 <Card.Body>
-                  <h6>☁️ Botón "Guardar en la Nube":</h6>
+                  <h6>☁️ "Save to Cloud" Button:</h6>
                   <p className="small text-secondary mb-2">
-                    Una vez armada tu estructura con todos sus nodos:
+                    Once your structure is built with all its nodes:
                   </p>
                   <ol className="small text-secondary mb-0 ps-3">
-                    <li>Asegúrate de estar autenticado con tu cuenta de usuario.</li>
-                    <li>Haz clic en el botón <span className="badge bg-outline-success border border-success text-success">Guardar</span>.</li>
-                    <li>El sistema capturará el nombre, tipo de estructura, tipo de datos y la secuencia exacta de nodos cargados en el lienzo.</li>
-                    <li>Se enviará una petición a MongoDB para guardarla permanentemente.</li>
-                    <li>Podrás reabrir, editar o eliminar esta estructura desde tu <strong>Dashboard Personal</strong> en cualquier momento.</li>
+                    <li>Make sure you are authenticated with your user account.</li>
+                    <li>Click the <span className="badge bg-outline-success border border-success text-success">Save</span> button.</li>
+                    <li>The system will capture the name, structure type, data type, and exact sequence of nodes loaded on the canvas.</li>
+                    <li>A request will be sent to MongoDB to save it permanently.</li>
+                    <li>You can reopen, edit, or delete this structure from your <strong>Personal Dashboard</strong> at any time.</li>
                   </ol>
                 </Card.Body>
               </Card>
@@ -180,7 +180,7 @@ const HelpModal = ({ show, onHide }) => {
 
       <Modal.Footer className="bg-dark border-secondary">
         <Button variant="info" onClick={onHide} className="fw-bold px-4">
-          ¡Entendido, ir al lienzo! 🚀
+          Got it, take me to canvas! 🚀
         </Button>
       </Modal.Footer>
     </Modal>

@@ -53,9 +53,9 @@ const CommunityAndSupport = () => {
     <Container className="mt-4 pb-5">
       {/* Encabezado Estandarizado */}
       <div className="text-center my-4">
-        <h1 className="fw-bold" style={{ color: '#00d8ff' }}>Comunidad y Soporte</h1>
+        <h1 className="fw-bold" style={{ color: '#00d8ff' }}>Community And Support</h1>
         <p className="text-muted">
-          Comparte dudas, publica discusiones sobre algoritmos y resuelve tus preguntas frecuentes.
+          Share queries, start and post discussions on algorithms, and resolve your frequently asked questions."
         </p>
         <hr className="border-secondary opacity-25 my-4" />
       </div>

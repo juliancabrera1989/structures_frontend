@@ -19,13 +19,13 @@ const UserProfile = ({ user }) => {
           <Card className="bg-dark text-light border-secondary shadow-sm">
             <Card.Body className="p-4">
               <Card.Title className="border-bottom border-secondary pb-2 mb-3 text-info fw-bold">
-                Perfil de Usuario
+                User Profile
               </Card.Title>
               <Card.Text className="mb-2">
-                <strong className="text-secondary">Nombre:</strong> {decoded.username || 'Usuario'}
+                <strong className="text-secondary">Name:</strong> {decoded.username || 'User'}
               </Card.Text>
               <Card.Text className="mb-0">
-                <strong className="text-secondary">Email:</strong> {decoded.email || 'No registrado'}
+                <strong className="text-secondary">Email:</strong> {decoded.email || 'No registered'}
               </Card.Text>
             </Card.Body>
           </Card>

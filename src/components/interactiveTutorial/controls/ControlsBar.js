@@ -8,13 +8,13 @@ const ControlsBar = () => {
     <div id="barra_superior" className="bg-dark text-light p-3 border-bottom border-secondary d-flex flex-column gap-2">
       {/* Botón de Ayuda Flotante / Superior */}
       <div className="d-flex justify-content-between align-items-center">
-        <span className="fw-bold text-info">Panel de Control del Visualizador</span>
+        <span className="fw-bold text-info">Visualizer Control Panel</span>
         <button 
           type="button" 
           className="btn btn-outline-info btn-sm"
           onClick={() => setShowHelp(true)}
         >
-          ❓ ¿Cómo usar el lienzo?
+          ❓ ¿How to use the canvas?
         </button>
       </div>
 
@@ -39,28 +39,28 @@ const ControlsBar = () => {
           <option value="string">Strings</option>
         </select>
 
-        <button type="button" id="inicializar" className="btn btn-info btn-sm fw-bold">Crear Estructura</button>
+        <button type="button" id="inicializar" className="btn btn-info btn-sm fw-bold">Create Structure</button>
       </div>
 
       <hr className="border-secondary my-1" />
 
       {/* SECCIÓN B: Gestión Dinámica */}
       <div id="seccion_operaciones" className="d-flex align-items-center gap-2 flex-wrap">
-        <span hidden id="texto">Ingrese el valor del nodo: </span>
+        <span hidden id="texto">Enter the node value: </span>
         <input type="text" name="nodo" id="nodo" hidden className="form-control form-control-sm w-auto bg-dark text-light border-secondary" />
         
-        <button type="button" id="agregar_1er_nodo" hidden className="btn btn-success btn-sm">Agregar primer nodo</button>
-        <button type="button" id="agregar_comienzo" hidden className="btn btn-primary btn-sm">Agregar al comienzo</button>
-        <button type="button" id="agregar_final" hidden className="btn btn-primary btn-sm">Agregar al final</button>
+        <button type="button" id="agregar_1er_nodo" hidden className="btn btn-success btn-sm">Add 1st node</button>
+        <button type="button" id="agregar_comienzo" hidden className="btn btn-primary btn-sm">Add at start</button>
+        <button type="button" id="agregar_final" hidden className="btn btn-primary btn-sm">Add at end</button>
         
-        <button type="button" id="borrar_comienzo" hidden className="btn btn-danger btn-sm">Borrar al comienzo</button>
-        <button type="button" id="borrar_final" hidden className="btn btn-danger btn-sm">Borrar al final</button>
+        <button type="button" id="borrar_comienzo" hidden className="btn btn-danger btn-sm">Remove at start</button>
+        <button type="button" id="borrar_final" hidden className="btn btn-danger btn-sm">Remove at end</button>
 
 
-        <span id="texto-selector" hidden>Seleccione posición: </span>
+        <span id="texto-selector" hidden>Select position: </span>
         <select id="selector-pares" hidden className="form-select form-select-sm w-auto bg-dark text-light border-secondary"></select>
-        <button type="button" id="agregar_intermedio" hidden className="btn btn-warning btn-sm">Ejecutar</button>
-        <button type="button" id="guardar" hidden className="btn btn-outline-success btn-sm">Guardar en la Nube</button>
+        <button type="button" id="agregar_intermedio" hidden className="btn btn-warning btn-sm">Run</button>
+        <button type="button" id="guardar" hidden className="btn btn-outline-success btn-sm">Save on Cloud</button>
       </div>
 
       {/* Modal Emergente de Ayuda */}
