@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // 1. Importamos useNavigate
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 import UserProfile from './UserProfile';
 import SavedDataStructures from './SavedDataStructures';
 import { Container, Button, Spinner } from 'react-bootstrap';
 
+// Definimos la URL base usando la variable de entorno
+const API_URL = process.env.REACT_APP_API_URL 
+  ? `${process.env.REACT_APP_API_URL}/structures` 
+  : 'http://localhost:5000/api/structures';
+
 const Dashboard = () => {
   const { auth, logout } = useAuth();
   const [dataStructures, setDataStructures] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // 2. Inicializamos navigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStructures = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/structures', {
+        const response = await fetch(API_URL, {
           headers: {
             'Authorization': `Bearer ${auth.token}`
           }
@@ -35,7 +40,6 @@ const Dashboard = () => {
     }
   }, [auth]);
 
-  //  Función para cargar en el visualizador al hacer clic en "Cargar en Visualizador"
   const handleLoad = (id) => {
     const structureToLoad = dataStructures.find((item) => (item._id || item.id) === id);
 
@@ -49,12 +53,11 @@ const Dashboard = () => {
     }
   };
 
- 
-const handleDelete = async (id) => {
-  const targetId = String(id);
-  
+  const handleDelete = async (id) => {
+    const targetId = String(id);
+    
     try {
-      const response = await fetch(`http://localhost:5000/api/structures/${targetId}`, {
+      const response = await fetch(`${API_URL}/${targetId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -75,6 +78,7 @@ const handleDelete = async (id) => {
       console.error("Error de red al eliminar:", error);
     }
   };
+
   return (
     <Container className="py-4 text-light">
       <div className="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
@@ -91,7 +95,6 @@ const handleDelete = async (id) => {
           <Spinner animation="border" variant="info" />
         </div>
       ) : (
-        /*  Le pasamos onLoad y onDelete que faltaban */
         <SavedDataStructures 
           dataStructures={dataStructures} 
           onLoad={handleLoad} 
