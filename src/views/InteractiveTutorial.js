@@ -62,34 +62,92 @@ useEffect(() => {
 
 
 //Este es el ultimo que agregué, y el de arriba es el 6to creo, y anda bien, ahora este es el 7mo es actualizado.
-const cargarEstructuraEnLienzo = async (tipoRaw, nodos) => {
+// const cargarEstructuraEnLienzo = async (tipoRaw, nodos) => {
+//   const selectType = document.getElementById("structure_type");
+//   const btnInicializar = document.getElementById("inicializar");
+//   const inputNodo = document.getElementById("nodo");
+
+//   if (!selectType || !btnInicializar || !inputNodo) return;
+
+//   // 1. Resetear variables CSS y geométrica de :root de forma instantánea
+//   if (typeof prepararDOMParaEstado1 === "function") {
+//     prepararDOMParaEstado1();
+//   }
+
+//   // 2. Normalización del tipo
+//   const tipoLimpio = (tipoRaw || "").toLowerCase();
+//   const tipoFinal = tipoLimpio.includes("stack") ? "stack" :
+//                     tipoLimpio.includes("queue") && !tipoLimpio.includes("deque") ? "queue" :
+//                     tipoLimpio.includes("deque") ? "deque" : "linkedlist";
+
+//   // 3. Seteo del tipo e inicialización del lienzo
+//   selectType.value = tipoFinal;
+//   btnInicializar.click();
+
+//   if (!nodos || nodos.length === 0) return;
+
+//   // Pausa para asentamiento inicial del DOM
+//   await new Promise((res) => setTimeout(res, 250));
+
+//   // 4. Inserción secuencial respetando tus promesas de animación
+//   for (let i = 0; i < nodos.length; i++) {
+//     inputNodo.value = nodos[i];
+
+//     if (i === 0) {
+//       await ejecutarAgregarPrimerNodo();
+//     } else {
+//       if (tipoFinal === "stack") {
+//         await ejecutarAgregarNodoAlComienzo();
+//       } else {
+//         await ejecutarAgregarNodoAlFinal();
+//       }
+//     }
+//   }
+
+//   // Limpieza del campo
+//   inputNodo.value = "";
+// };
+const cargarEstructuraEnLienzo = async (tipoRaw, nodos, dataTypeParam) => {
   const selectType = document.getElementById("structure_type");
+  const selectDataType = document.getElementById("data_type"); // Selector de tipo de dato en UI
   const btnInicializar = document.getElementById("inicializar");
   const inputNodo = document.getElementById("nodo");
 
   if (!selectType || !btnInicializar || !inputNodo) return;
 
-  // 1. Resetear variables CSS y geométrica de :root de forma instantánea
   if (typeof prepararDOMParaEstado1 === "function") {
     prepararDOMParaEstado1();
   }
 
-  // 2. Normalización del tipo
   const tipoLimpio = (tipoRaw || "").toLowerCase();
   const tipoFinal = tipoLimpio.includes("stack") ? "stack" :
                     tipoLimpio.includes("queue") && !tipoLimpio.includes("deque") ? "queue" :
                     tipoLimpio.includes("deque") ? "deque" : "linkedlist";
 
-  // 3. Seteo del tipo e inicialización del lienzo
   selectType.value = tipoFinal;
+
+  // 1. Detectar o forzar el dataType antes de inicializar
+  // Si no viene dataType, comprobamos si los nodos tienen letras para forzar 'string' o 'letter'
+  const tieneLetras = nodos?.some(n => isNaN(Number(n)));
+  const dataTypeFinal = dataTypeParam || (tieneLetras ? "string" : "number");
+
+  if (selectDataType) {
+    selectDataType.value = dataTypeFinal;
+  }
+
+  // 2. Inicializar el lienzo (esto creará estructuraActiva con el dataType correcto)
   btnInicializar.click();
 
   if (!nodos || nodos.length === 0) return;
 
-  // Pausa para asentamiento inicial del DOM
+  // Si por alguna razón la UI no sincronizó el dataType, lo ajustamos en el modelo lógico
+  if (window.estructuraActiva) {
+    window.estructuraActiva.dataType = dataTypeFinal;
+  }
+
   await new Promise((res) => setTimeout(res, 250));
 
-  // 4. Inserción secuencial respetando tus promesas de animación
+  // 3. Inserción de nodos
   for (let i = 0; i < nodos.length; i++) {
     inputNodo.value = nodos[i];
 
@@ -104,10 +162,8 @@ const cargarEstructuraEnLienzo = async (tipoRaw, nodos) => {
     }
   }
 
-  // Limpieza del campo
   inputNodo.value = "";
 };
-
 
   return (
     <div>
