@@ -125,6 +125,7 @@
 // };
 
 
+const API_URL = (import.meta as any).env?.VITE_API_URL || "https://structures-backend.onrender.com/api";
 
 export const estructuraService = {
   guardar: async (nombre: string, tipo: string, tipoDato: string, valores: any[]) => {
@@ -138,7 +139,7 @@ export const estructuraService = {
       // Aseguramos que valores sea un array válido
       const listaValores = Array.isArray(valores) ? valores : [];
 
-      const response = await fetch(`http://localhost:5000/api/structures`, {
+      const response = await fetch(`${API_URL}/structures`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
