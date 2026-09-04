@@ -1,19 +1,21 @@
-import axios from 'axios';
+// import axios from 'axios';
 
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/auth';
+// const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/auth';
 
-export const login = async (email, password) => {
-  const response = await axios.post(`${API_URL}/login`, { email, password });
-  console.log(response.data);
-  return response.data;
-};
+// export const login = async (email, password) => {
+//   const response = await axios.post(`${API_URL}/login`, { email, password });
+//   console.log(response.data);
+//   return response.data;
+// };
 
-export const register = async (username, email, password) => {
-  const response = await axios.post(`${API_URL}/register`, { username, email, password });
-  return response.data;
+// export const register = async (username, email, password) => {
+//   const response = await axios.post(`${API_URL}/register`, { username, email, password });
+//   return response.data;
   
-};
+// };
+
+
 
 // export const getUser = async (token) => {
 //   const response = await axios.get(`${API_URL}/user`, {
@@ -24,3 +26,24 @@ export const register = async (username, email, password) => {
 //   console.log(response.data);
 //   return response.data;
 // };
+
+
+
+
+import axios from 'axios';
+
+// Construye la URL base para autenticación de forma segura
+const API_URL = process.env.REACT_APP_API_URL 
+  ? `${process.env.REACT_APP_API_URL}/auth` 
+  : 'http://localhost:5000/api/auth';
+
+export const login = async (email, password) => {
+  const response = await axios.post(`${API_URL}/login`, { email, password });
+  console.log(response.data);
+  return response.data;
+};
+
+export const register = async (username, email, password) => {
+  const response = await axios.post(`${API_URL}/register`, { username, email, password });
+  return response.data;
+};

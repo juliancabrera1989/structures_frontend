@@ -1,0 +1,108 @@
+
+@import 'containers/contenedorFlechas.css';
+@import 'containers/contenedorNodos.css';
+@import 'containers/inicializador.css';
+
+:root {
+    --principal-width: 100%;
+    --principal-height: 400px;
+    --wrapper-height: 400px;
+    --wrapper-height-min: 400px;
+    --principal-width-min: 100%;
+      }
+
+
+
+body {
+  background: #121212 !important;
+  color: #ffffff !important;
+}
+
+
+
+
+
+
+
+    #principal {
+      max-width: var(--principal-width);
+      min-width: var(--principal-width-min);
+      height: var(--principal-height);
+      resize: horizontal;
+      display: flow-root;
+    }
+
+
+
+    #principal_wrapper {
+      outline: 2px solid #f0f;
+      max-width: 100%;
+      margin: 24px 8px 8px 8px !important;
+      max-width: calc(100% - 16px) !important;
+      height: var(--wrapper-height); 
+      min-height: var(--wrapper-height-min);
+    /* Sacamos el max-height rígido inline o lo seteamos para que acompañe al height.
+       Al no ponerle un tope estático de 400px, JS va a poder estirar el contenedor sin trabas. */
+      /* max-height: none; */
+      transition: height 2s ease-in-out, min-height 2s ease-in-out, max-height 2s ease-in-out;
+      box-sizing: border-box !important;
+      overflow-y: overlay !important; 
+      overflow-x: hidden !important;
+      scrollbar-gutter: stable;
+    }
+
+
+
+    
+
+
+#principal_wrapper, #principal {
+    position: relative; /* 👈 Obliga a los absolutos internos a calcular desde acá */
+}
+
+
+/* 2. Estilo para Chrome, Edge, Brave, Opera y Safari */
+
+/* Tamaño total de la barra (muy finita) */
+#principal_wrapper::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+/* El carril por donde corre la barra (100% invisible para no ocupar espacio visual) */
+#principal_wrapper::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+/* La pastilla/indicador que se desplaza */
+#principal_wrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  border-radius: 10px !important;
+}
+
+/* Estado cuando el usuario pasa el cursor por encima */
+#principal_wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+
+
+#principal_wrapper::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+#principal_wrapper::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+#principal_wrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 10px !important;
+}
+
+#principal_wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+
+

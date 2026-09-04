@@ -1,70 +1,112 @@
-# Getting Started with Create React App
+# 🧩 Interactive Data Structure Visualizer & Learning Tool
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> A full-stack educational web application designed to visually simulate and manipulate dynamic linear data structures in real-time. Built using the MERN stack and strictly typed with TypeScript.
 
-## Available Scripts
+[🚀 Live Demo](https://structures-frontend.onrender.com) | [📄 Case Study (PDF)](https://juliancabrera1989.github.io/static-portfolio/projects.html/Structures.PDF)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Key Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+* **Dynamic Geometric Rendering:** Translates complex abstract coding logic into smooth, real-time geometric visual renders directly manipulating the DOM.
+* **Full-Stack State Persistence:** Users can save, modify, and log their custom data structure states and learning progress via a dedicated backend REST API.
+* **Strict Type Safety:** Completely refactored architecture ensuring robust memory simulation, preventing runtime errors during pointer mutations.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🧠 Core Engineering & Data Structures
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+This application visualizes the behavior of dynamic memory allocation and pointer manipulation across linear data structures. Every node mutation updates the UI dynamically using raw coordinates and geometric calculations.
 
-### `npm run build`
+### 1. Stack Simulation (LIFO - Last In, First Out)
+* Simulates sequential memory allocation where insertion (`push`) and deletion (`pop`) are restricted to a single end (the top pointer).
+* Renders continuous visual transformations to demonstrate pointer updates and memory stack tracking.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 2. Queue Simulation (FIFO - First In, First Out)
+* Models a linear structure managing insertions at the back (`enqueue`) and removals at the front (`dequeue`).
+* Visualizes the shift of tracking pointers (`front` and `rear`) dynamically across the screen layout.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 3. Singly Linked List Simulation
+* Animates dynamic node instantiation where each object contains a data field and a structural pointer reference (`next`) linking to the adjacent node.
+* Detailed visual representation of complex pointer reassignments during sequential insertion, mid-list deletion, and full structural traversal.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 🛠️ Tech Stack & Architectural Design
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* **Frontend:** React, TypeScript, Advanced Custom DOM Manipulation, CSS Keyframe Animations.
+* **Backend:** Node.js, Express.js (RESTful API Architecture).
+* **Database:** MongoDB (Persistent state caching managed via MongoDB Atlas).
+* **Development Workflow:** AI-assisted engineering leveraged for structural optimization, test-driven validation, and Vanilla JS to TypeScript architectural migration.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 📊 Project Structure & Data Flow
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Project Directory Structure
+```text
+structures-frontend/
+├── public/
+│   ├── index.html
+│   └── favicon.ico
+├── src/
+│   ├── assets/             # SVG icons, animations, and static media
+│   ├── components/         # Reusable UI elements (Navbar, Controls, Visualizers)
+│   ├── dataStructures/     # Core algorithms (Stack, Queue, LinkedList models)
+│   ├── services/           # API client methods for Node.js/MongoDB interaction
+│   ├── types/              # TypeScript interfaces and global type definitions
+│   ├── App.tsx             # Main application orchestrator & routing
+│   └── index.tsx           # React DOM entry point
+├── .env.example
+├── package.json
+└── tsconfig.json
+```
 
-## Learn More
+### Data Flow Architecture
+1. **User Interaction & State Dispatch:** The user selects a data structure and triggers an action (e.g., `push`, `pop`, `enqueue`, `insertAt`).
+2. **Local Algorithmic Execution:** The TypeScript engines inside `/dataStructures` calculate the mutation, updating pointer locations and DOM coordinate maps in real time.
+3. **Visual Engine Render:** React components re-render the dynamic geometric nodes using CSS keyframe animations based on the updated coordinates.
+4. **Backend State Persistence:** An asynchronous HTTP request is sent via `/services` to the Node.js/Express API to log or store the user's progress and custom structural state in MongoDB Atlas.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## ⚙️ Local Setup
+This repository contains the client-side code. To run the full-stack application locally, you need to spin up both the Frontend and the Backend servers simultaneously in separate terminal windows.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Prerequisites
+* Node.js (v18 or higher)
+* npm or yarn
+* A MongoDB Atlas connection URI (or local MongoDB instance)
 
-### Code Splitting
+### Step-by-Step Installation
+#### 1. Backend Setup
+```bash
+# Clone the backend repository
+git clone https://github.com/juliancabrera1989/structures-backend.git
+cd structures-backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# Install dependencies
+npm install
 
-### Analyzing the Bundle Size
+# Create a .env file in the root directory and add:
+# PORT=5000
+# MONGO_URI=your_mongodb_connection_string
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# Start the development server
+npm run dev
+```
+#### 2. Frontend Setup (This Repository)
 
-### Making a Progressive Web App
+```bash
+# In a NEW terminal window, clone the frontend repository
+git clone https://github.com/juliancabrera1989/structures-frontend.git
+cd structures-frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Install dependencies
+npm install
 
-### Advanced Configuration
+# Create a .env file in the root directory and add:
+# REACT_APP_API_URL=http://localhost:5000/api
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Start the React development server
+npm start
+```
+Once both servers are running, open `http://localhost:3000` in your browser to interact with the application.

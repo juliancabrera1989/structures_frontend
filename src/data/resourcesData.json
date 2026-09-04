@@ -1,0 +1,74 @@
+{
+  "docs": [
+    {
+      "id": "1",
+      "title": "Fundamental Concepts and ADT",
+      "category": "Core Theory",
+      "badge": "Beginner",
+      "summary": "Static vs. dynamic structures and the importance of Abstract Data Types (ADT) with Generics <T>.",
+      "content": "Data structures are organized ways to store and manipulate information in memory. Unlike static structures (such as fixed-size arrays), dynamic ones expand or contract according to execution needs. Thanks to TypeScript's use of generic types <T>, a node is not limited to storing primitives like integers or characters: it can hold complex objects, database records, or syntax tokens.",
+      "realWorldUse": "Creation of abstract data models and reusable libraries in professional software development."
+    },
+    {
+      "id": "2",
+      "title": "Stacks and the Call Stack",
+      "category": "Compilers and Systems",
+      "badge": "Advanced",
+      "summary": "How the LIFO (Last In, First Out) structure manages function execution and syntax evaluation.",
+      "content": "Stacks are essential in low-level system design and compilers. Every time a program calls a function, the environment creates a 'Stack Frame' that stores local variables and the return address. In addition, they are used in syntax parsers for evaluating mathematical expressions (Infix to Postfix/Polish notation) and in the 'Undo/Redo' feature of code editors.",
+      "realWorldUse": "JavaScript V8 Engine (Call Stack), compiler parsers, Undo/Redo buttons."
+    },
+    {
+      "id": "3",
+      "title": "Queues, Deques, and Graph Algorithms",
+      "category": "Algorithms and Networks",
+      "badge": "Intermediate",
+      "summary": "Use of the FIFO structure in algorithms like BFS and event-driven architectures.",
+      "content": "Queues and Double-Ended Queues (Deques) manage asynchronous data streams and task scheduling. They are the backbone of graph algorithms like BFS (Breadth-First Search) to find the shortest path in networks. In environments like Node.js and the browser, the Event Loop's 'Task Queue' manages I/O events in a non-blocking manner.",
+      "realWorldUse": "BFS algorithm in graphs/networks, Node.js Event Loop, print queues, and background tasks."
+    },
+    {
+      "id": "4",
+      "title": "Linked Lists and Memory Management",
+      "category": "Memory Management",
+      "badge": "Intermediate",
+      "summary": "Heap memory management, dynamic pointers, and collision resolution.",
+      "content": "Linked Lists eliminate the need for contiguous memory blocks by reassigning `next` and `prev` pointers. In database building and operating systems, they are used to manage free blocks in the Heap and to resolve collisions in Hash Tables using the Chaining algorithm.",
+      "realWorldUse": "Memory allocators in C/C++, chaining in Hash Maps, music players (playlists)."
+    }
+  ],
+  "videos": [
+    {
+      "id": "1",
+      "title": "Data Structures Visually Explained",
+      "description": "A conceptual introduction to Stacks, Queues, and Linked Lists with animations.",
+      "embedUrl": "https://www.youtube.com/embed/RBSGKlAvoiM"
+    },
+    {
+      "id": "2",
+      "title": "Big-O Notation and Algorithmic Complexity",
+      "description": "Learn to analyze the O(1), O(n), and O(log n) execution time of your structures.",
+      "embedUrl": "https://www.youtube.com/embed/g2o22C3CRfU"
+    }
+  ],
+  "external": [
+    {
+      "id": "1",
+      "title": "VisuAlgo - Interactive Algorithm Visualization",
+      "link": "https://visualgo.net/",
+      "badge": "Web App"
+    },
+    {
+      "id": "2",
+      "title": "TypeScript Documentation - Generics <T>",
+      "link": "https://www.typescriptlang.org/docs/handbook/2/generics.html",
+      "badge": "Official Doc"
+    },
+    {
+      "id": "3",
+      "title": "GeeksforGeeks - Data Structures Tutorial",
+      "link": "https://www.geeksforgeeks.org/data-structures/",
+      "badge": "Articles & Code"
+    }
+  ]
+}

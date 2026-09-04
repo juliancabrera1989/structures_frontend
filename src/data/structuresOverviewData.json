@@ -1,0 +1,62 @@
+[
+  {
+    "id": "linked-list",
+    "type": "Singly Linked List",
+    "name": "Singly Linked List",
+    "badge": "Dynamic",
+    "description": "Sequence of nodes where each points to the next via a 'next' pointer. Ideal for fast insertions and deletions.",
+    "complexity": {
+      "access": "O(n)",
+      "search": "O(n)",
+      "insertion": "O(1)",
+      "deletion": "O(1)"
+    },
+    "useCases": ["Playlists", "Browser History Navigation (back/forward)"],
+    "defaultNodes": ["Start", "Node A", "Node B"]
+  },
+  {
+    "id": "stack",
+    "type": "Stack",
+    "name": "Stack",
+    "badge": "LIFO",
+    "description": "LIFO (Last In, First Out) structure. Elements are inserted and removed solely from the top end.",
+    "complexity": {
+      "access": "O(n)",
+      "search": "O(n)",
+      "insertion": "O(1)",
+      "deletion": "O(1)"
+    },
+    "useCases": ["CPU Call Stack", "Expression evaluation", "Undo feature"],
+    "defaultNodes": ["Base", "Mid", "Top"]
+  },
+  {
+    "id": "queue",
+    "type": "Queue",
+    "name": "Simple Queue",
+    "badge": "FIFO",
+    "description": "FIFO (First In, First Out) structure. Elements enter through the rear and exit through the front.",
+    "complexity": {
+      "access": "O(n)",
+      "search": "O(n)",
+      "insertion": "O(1)",
+      "deletion": "O(1)"
+    },
+    "useCases": ["JavaScript Event Loop", "Print queue management", "I/O Buffers"],
+    "defaultNodes": ["Front", "Item 1", "Rear"]
+  },
+  {
+    "id": "deque",
+    "type": "Deque",
+    "name": "Double-Ended Queue (Deque)",
+    "badge": "Bi-directional",
+    "description": "Double-ended queue. Allows efficiently inserting and removing elements from both the front and the back.",
+    "complexity": {
+      "access": "O(n)",
+      "search": "O(n)",
+      "insertion": "O(1)",
+      "deletion": "O(1)"
+    },
+    "useCases": ["Web Crawlers / Bots", "Bi-directional process scheduling"],
+    "defaultNodes": ["Left", "Center", "Right"]
+  }
+]

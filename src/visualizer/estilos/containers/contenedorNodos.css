@@ -1,0 +1,50 @@
+:root{
+       --opacity-cajanodo: 0;
+}
+
+
+
+
+#contenedor_nodos {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap; /* Permitimos el quiebre de filas nativo */
+    width: var(--principal-width); 
+    height: var(--principal-height); 
+    border-right: 50px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.caja-nodo {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    height: 100px;
+    width: 200px;
+    align-items: center;
+    justify-content: space-around;
+    background-color: yellow;
+    opacity: var(--opacity-cajanodo);
+    transition-property: opacity, width, height, left;
+    transition-duration: 2s, 2s, 2s, 2s;
+    
+    
+}
+
+  .circle {
+    width: 5px;
+    height: 5px;
+    background: red;
+    border-radius: 50%;
+}
+
+
+.valor-nodo {
+    color: black;
+}
+
+
+#contenedor_nodos.margin-flex > .caja-nodo {
+    margin-top: 150px;
+}
