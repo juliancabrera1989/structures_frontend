@@ -521,7 +521,7 @@ function validarYFormatearValor(valor: string, tipoDato: string): string | null 
 
   if (tipoDato === "number") {
     if (isNaN(Number(v))) {
-      alert("Error: Esta estructura solo acepta números.");
+      alert("Error: This structure only accepts numbers.");
       return null;
     }
     return v;
@@ -530,7 +530,7 @@ function validarYFormatearValor(valor: string, tipoDato: string): string | null 
   if (tipoDato === "letter") {
     // Valida que sea exactamente un carácter y que sea una letra
     if (v.length !== 1 || !/^[a-zA-Z]$/.test(v)) {
-      alert("Error: Esta estructura solo acepta una única letra (A-Z).");
+      alert("Error: This structures only accepts one letter (A-Z).");
       return null;
     }
     return v;
@@ -566,7 +566,7 @@ export async function ejecutarAgregarPrimerNodo(): Promise<void> {
 
   // Paso 2: Validar que NO esté duplicado
   if (esValorDuplicado(valorFormateado)) {
-    alert(`Error: El valor "${valorFormateado}" ya existe en la estructura.`);
+    alert(`Error: Value "${valorFormateado}" already exists on this structure.`);
     return; // Corta si el valor está repetido
   }
 
@@ -603,7 +603,7 @@ export async function ejecutarAgregarNodoAlComienzo(): Promise<void> {
 
   // Paso 2: Validar que NO esté duplicado
   if (esValorDuplicado(valorFormateado)) {
-    alert(`Error: El valor "${valorFormateado}" ya existe en la estructura.`);
+    alert(`Error: Value "${valorFormateado}" already exists on this structure.`);
     return; // Corta si el valor está repetido
   }
   
@@ -632,7 +632,7 @@ export async function ejecutarAgregarNodoAlFinal(): Promise<void> {
 
   // Paso 2: Validar que NO esté duplicado
   if (esValorDuplicado(valorFormateado)) {
-    alert(`Error: El valor "${valorFormateado}" ya existe en la estructura.`);
+    alert(`Error: Value "${valorFormateado}" already exists on this structure.`);
     return; // Corta si el valor está repetido
   }
   bloquearInterfaz();
@@ -705,7 +705,7 @@ export async function ejecutarAgregarNodoIntermedio(): Promise<void> {
 
   // Paso 2: Validar que NO esté duplicado
   if (esValorDuplicado(valorFormateado)) {
-    alert(`Error: El valor "${valorFormateado}" ya existe en la estructura.`);
+    alert(`Error: Value "${valorFormateado}" already exists on this structure.`);
     return; // Corta si el valor está repetido
   }
   // 1. Leemos la posición seleccionada en la UI
@@ -728,7 +728,7 @@ export async function ejecutarAgregarNodoIntermedio(): Promise<void> {
 
 async function ejecutarGuardarEstructura(): Promise<void> {
   if (!estructuraActiva) {
-    alert("Primero tenés que inicializar una estructura.");
+    alert("First you need to initialize a structure");
     return;
   }
 
@@ -742,12 +742,12 @@ async function ejecutarGuardarEstructura(): Promise<void> {
                        .map(div => div.textContent?.trim() || "");
 
   try {
-    console.log("Enviando datos al backend...", valores);
+    console.log("Sending data to backend...", valores);
     const resultado = await estructuraService.guardar(nombre, tipo, tipoDato, valores);
-    console.log("¡Guardado con éxito en el backend!", resultado);
-    alert("Estructura guardada correctamente.");
+    console.log("¡Successfully saved at backend!", resultado);
+    alert("Structure saved correctly.");
   } catch (error) {
-    alert("No se pudo guardar la estructura.");
+    alert("Structure could not be saved.");
   }
 }
 
