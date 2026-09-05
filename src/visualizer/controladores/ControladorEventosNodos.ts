@@ -13,9 +13,9 @@ import * as DOM from "../utils/elementosDOM.ts";
 export function nodoSeleccionado(data: string): void {
   if (!DOM.verificarDOM() || !DOM.contenedorFlechas) return;
 
-  const result = window.confirm('¿Desea eliminar el nodo?');
+  const result = window.confirm('¿Do you want to remove the node?');
   if (!result) {
-    console.log("no se borrara el nodo");
+    console.log("Node won't be removed");
     return;
   }
   

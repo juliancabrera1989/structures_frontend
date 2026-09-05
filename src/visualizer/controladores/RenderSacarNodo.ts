@@ -38,154 +38,6 @@ function obtenerSubElemento(padre: HTMLElement, clase: string): HTMLElement {
 }
 
 
-// export function borrarUltimoNodo(): void {
-//   if (!DOM.verificarDOM()) return;
-
-//   // Deshabilitamos interacción mientras dura la secuencia
-//   DOM.botonAgregar1erNodo.removeAttribute("hidden");
-//   DOM.botonAgregar1erNodo.disabled = true;
-//   DOM.agregarComienzo.setAttribute("hidden", "hidden");
-//   DOM.agregarFinal.setAttribute("hidden", "hidden");
-
-//   const ancho = DOM.principal.offsetWidth;
-//   DOM.principal.style.width = `${ancho}px`;
-
-//   if (root.style.getPropertyValue("--principal-height") === '50vw') {
-//     const altura = DOM.principal.offsetHeight; 
-//     root.style.setProperty("--principal-height", `${altura}px`);
-//   }
-
-//   document.addEventListener("click", handler, true);
-
-//   const finalUl = DOM.finalUl();
-//   const inicialUl = DOM.inicialUl();
-//   const inicialLs = DOM.inicialLs();
-//   const inicialLi = DOM.inicialLi();
-  
-//   const primerNodo = DOM.contenedorNodos.firstElementChild as HTMLElement;
-
-//   // =========================================================================
-//   // PASO 1: Contracción de la flecha final (derecha)
-//   // =========================================================================
-//   setFlechaFinal(false, 1);
-
-//   if (finalUl) {
-//     finalUl.addEventListener("transitionend", function fPaso1(e) {
-//       if (e.target !== finalUl) return;
-//       finalUl.removeEventListener("transitionend", fPaso1);
-
-//       // =========================================================================
-//       // PASO 2: Contracción de la flecha inicial (izquierda) hacia StrPtr
-//       // =========================================================================
-//       setFlechaInicial(false, 1);
-
-
-      
-//       if (inicialUl) {
-//         inicialUl.addEventListener("transitionend", function fPaso2(e) {
-//           if (e.target !== inicialUl) return;
-          
-//           inicialUl.removeEventListener("transitionend", fPaso2);
-
-//           // Limpieza de clases de rotación/diagonal
-//           inicialUl.classList.remove("arrowend-first-ul");
-//           inicialLs?.classList.remove("arrowend-first");
-//           inicialLi?.classList.remove("arrowend-first");
-
-//           root.style.setProperty('--rotation-angle-fpi', '0deg');
-
-//           // =========================================================================
-//           // PASO 3: Re-extensión de la flecha inicial superior (StrPtr -> NULL arriba)
-//           // =========================================================================
-//           // RESTAURACIÓN DE ESTILOS: Se colocan aquí para acompañar la re-extensión
-        
-
-//           //Calculamos el ancho entre los márgenes del 3%/5% antes de moverlos
-//           const fpiLeft = 0.03 * DOM.contenedorNodos.offsetWidth + DOM.str.offsetWidth;
-//           const fpiWidth = DOM.contenedorNodos.offsetWidth - 2 * fpiLeft;
-
-//           root.style.setProperty('--linea-flecha-inicial-width', `${fpiWidth}px`);
-//           root.style.setProperty('--punta-flecha-inicial-width', `20px`);
-//           root.style.setProperty('--punta-flecha-inicial-left', `${fpiLeft + fpiWidth}px`);
-//           root.style.setProperty('--linea-flecha-final-top', `-2.5px`);
-//       inicialUl?.classList.add("cambio_top");    
-//       DOM.str.classList.add("inmediato_reacomodo");
-//       DOM.nulo.classList.add("inmediato_reacomodo");
-  
-//           inicialUl.addEventListener("transitionend", function fPaso3(e) {
-//           inicialUl.classList.add("inmediato");
-//           inicialLs?.classList.add("inmediato");
-//           inicialLi?.classList.add("inmediato");  
-//             if (e.target !== inicialUl) return;
-//             inicialUl.removeEventListener("transitionend", fPaso3);
-//         setPuntero(1);
-//         if (DOM.inicializador) {
-//             DOM.inicializador.style.display = "flex";
-//             DOM.inicializador.style.justifyContent = "space-between";
-//             DOM.inicializador.style.alignItems = "center";
-//           }
-//           DOM.str.style.position = "relative";
-//           DOM.nulo.style.position = "relative";
- 
-
-
-          
-//     root.style.setProperty('--linea-flecha-inicial-width', `${fpiWidth}px`);
-//     root.style.setProperty('--punta-flecha-inicial-width', `20px`);
-//     root.style.setProperty('--punta-flecha-inicial-top', `-100px`);
-//     root.style.setProperty('--punta-flecha-inicial-left', `${fpiLeft + fpiWidth}px`);
-
-
-//             // =========================================================================
-//             // PASO 4: Desvanecer el nodo del centro (opacity: 1 -> 0)
-//             // =========================================================================
-//             if (primerNodo) {
-//               primerNodo.classList.remove("inmediato-nodo");
-//               primerNodo.style.opacity = "0";
-
-//               primerNodo.addEventListener("transitionend", function fPaso4(e) {
-//                 if (e.target !== primerNodo) return;
-//                 primerNodo.removeEventListener("transitionend", fPaso4);
-                
-//                 // =========================================================================
-//                 // PASO 5: Sacar nodo del DOM y reacomodar StrPtr / NULL al 25% y centro vertical
-//                 // =========================================================================
-//                   const divValor = primerNodo.firstElementChild;
-//                   const valor = divValor?.innerHTML;
-//                   sacarNodo(valor!);
-//                     DOM.str.classList.remove("inmediato_reacomodo");
-//                     DOM.nulo.classList.remove("inmediato_reacomodo");
-//                     inicialUl.classList.remove("inmediato");
-//                     inicialLs?.classList.remove("inmediato");
-//                     inicialLi?.classList.remove("inmediato");   
-//                 // Vuelve a la geometría de la imagen 1 (centrado y 25%)
-//                 setPuntero(0);
-
-//                 if (DOM.str) {
-//                   DOM.str.addEventListener("transitionend", function fPaso5(e) {
-//                     if (e.target !== DOM.str) return;
-//                     DOM.str.removeEventListener("transitionend", fPaso5);
-
-//                     // --- FIN DE LA ANIMACIÓN ---
-//                     DOM.botonAgregar1erNodo.disabled = false;
-//                     document.removeEventListener("click", handler, true);
-//                     // renderizar();
-//                     DOM.principal.removeAttribute("style");
-//                   });
-//                 } else {
-//                   DOM.botonAgregar1erNodo.disabled = false;
-//                   document.removeEventListener("click", handler, true);
-//                   renderizar();
-//                   DOM.principal.removeAttribute("style");
-//                 }
-//               });
-//             }
-//           });
-//         });
-//       }
-//     });
-//   }
-// }
 
 
 // Configuración previa de interfaz
@@ -495,13 +347,13 @@ export async function borrarNodoAlComienzo(): Promise<void> {
         );
 
         await esperar(100);
-
-        const puedeAchicarse = auxAltura < DOM.principalWrapper.offsetHeight;
+        const altoDeseado = auxAltura - 200 - 50 * (layout.totalFilas > 2 ? 1 : 0);
+        const puedeAchicarse =  altoDeseado < DOM.principalWrapper.offsetHeight;
         if (puedeAchicarse || window.alturaDeVentana !== window.innerHeight) {
           window.alturaDeVentana = window.innerHeight;
           const maxPermitido = window.alturaDeVentana - 8 - DOM.principalWrapper.offsetTop;
-          const altoDeseado = auxAltura - 200 - 50 * (layout.totalFilas > 2 ? 1 : 0);
-
+          // const altoDeseado = auxAltura - 200 - 50 * (layout.totalFilas > 2 ? 1 : 0);
+       
           console.log("El alto deseado es: ", altoDeseado);
           console.log("El max permitido es: ", maxPermitido);
           const altoFinal = Math.min(altoDeseado, maxPermitido);
@@ -584,7 +436,6 @@ export async function borrarNodoAlComienzo(): Promise<void> {
         flechasCurvasLimpio.forEach((flecha) => {
           (flecha as HTMLElement).classList.remove("transicion-flechas-negativa");
           const alturaFC = (flecha as HTMLElement).style.getPropertyValue("top");
-          console.log("La altura de la flecha curva es: ", alturaFC);
           (flecha as HTMLElement).style.setProperty("top", `calc(${alturaFC} - 250px)`);
         });
 
@@ -808,9 +659,6 @@ export async function borrarNodoAlFinal(): Promise<void> {
 
         const saltoFlechas = DOM.contenedorFlechas.querySelectorAll(".salto-flex")[layout.totalFilas - 2];
         if (saltoFlechas) saltoFlechas.remove();
-
-        console.log("estoy en una posicion en la que no se borra margin flex");
-        console.log("la cantidad de filas es: ", layout.totalFilas);
 
         if (layout.totalFilas === 2) {
           DOM.contenedorNodos.classList.remove("cambio-flex", "margin-flex");

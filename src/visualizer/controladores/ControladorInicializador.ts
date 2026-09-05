@@ -214,22 +214,13 @@ function setFlechaInicial(mostrar: boolean, necesitaTransicion: number, s2?: num
           } else {
             var x2 = s2;
           }
-                 console.log("S2 es:"+x2);
-                 console.log("str.offsetLeft es es: "+str.offsetLeft);
-                 console.log("str.offsetWidth es es: "+str.offsetWidth);         
-                 
                  
           var x1 = str.offsetLeft + str.offsetWidth + 5;
           var flecha_puntero_inicial_left = x1;
 
           var flecha_puntero_inicial_width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(100, 2));
 
-                  console.log("flecha_puntero_inicial_width es: "+flecha_puntero_inicial_width);
-                  console.log("str.offsetHeight es:"+str.offsetHeight);
-                  console.log("str.offsetTop es:"+str.offsetTop);
-
           var angulo = (Math.asin((((firstChild.offsetTop + firstChild.offsetHeight / 2) - (str.offsetTop + str.offsetHeight - 7.5)) / flecha_puntero_inicial_width)) * 180 / Math.PI);
-          console.log("En angulo es: "+angulo);
           root.style.setProperty('--rotation-angle-fpi', `${angulo}deg`);
           // root.style.setProperty('--punta-flecha-inicial-top', `202px`);
           break;

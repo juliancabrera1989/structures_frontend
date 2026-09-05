@@ -258,6 +258,51 @@ function inicializar(): void {
   }, 100);
 }
 
+// export function configurarBotonesSegunEstructura(
+//   tipo: string,
+//   tieneNodos: boolean = false
+// ): void {
+//   if (!DOM.verificarDOM()) return;
+
+//   const config = MAPA_CONFIG_ESTRUCTURAS[tipo] || MAPA_CONFIG_ESTRUCTURAS.linkedlist;
+
+//   // 1. Re-etiquetar punteros visuales (HEAD/TAIL, TOP/NULL, etc.)
+//   if (DOM.str) DOM.str.textContent = config.etiquetaHead;
+//   if (DOM.nulo) DOM.nulo.textContent = config.etiquetaTail;
+
+//   if (!tieneNodos) {
+//     // ESTADO VACÍO (0 Nodos): Solo mostramos el botón inicial verde
+//     gestionarBoton(DOM.botonAgregar1erNodo, true, "Add first node");
+
+//     gestionarBoton(DOM.agregarComienzo, false, "");
+//     gestionarBoton(DOM.agregarFinal, false, "");
+//     gestionarBoton(DOM.agregarIntermedio, false, "");
+//     gestionarBoton(DOM.borrarComienzo, false, "");
+//     gestionarBoton(DOM.borrarFinal, false, "");
+
+//     DOM.textoSelector?.setAttribute("hidden", "hidden");
+//     DOM.selectorPares?.setAttribute("hidden", "hidden");
+//   } else {
+//     // ESTADO CON NODOS (>= 1 Nodo): Ocultamos botón inicial y mostramos la botonera propia
+//     gestionarBoton(DOM.botonAgregar1erNodo, false, "");
+
+//     gestionarBoton(DOM.agregarComienzo, config.mostrarAgregarComienzo, config.etiquetaAgregarComienzo);
+//     gestionarBoton(DOM.agregarFinal, config.mostrarAgregarFinal, config.etiquetaAgregarFinal);
+//     gestionarBoton(DOM.agregarIntermedio, config.mostrarAgregarIntermedio, "Agregar Intermedio");
+//     gestionarBoton(DOM.borrarComienzo, config.mostrarBorrarComienzo, config.etiquetaBorrarComienzo);
+//     gestionarBoton(DOM.borrarFinal, config.mostrarBorrarFinal, config.etiquetaBorrarFinal);
+
+//     if (config.mostrarAgregarIntermedio) {
+//       DOM.textoSelector?.removeAttribute("hidden");
+//       DOM.selectorPares?.removeAttribute("hidden");
+//     } else {
+//       DOM.textoSelector?.setAttribute("hidden", "hidden");
+//       DOM.selectorPares?.setAttribute("hidden", "hidden");
+//     }
+//   }
+// }
+
+
 export function configurarBotonesSegunEstructura(
   tipo: string,
   tieneNodos: boolean = false
