@@ -796,10 +796,23 @@ function agregarNodoIntermedio(): void {
 
 
 
-function actualizarSelectoresIntermedios(): void {
+export function actualizarSelectoresIntermedios(): void {
+  // Obtenemos el tipo de estructura actual (ajustá el getter según tu estado/DOM si usás otra variable)
+  const tipoEstructura = (DOM.selectorTipoEstructura?.value || "").toLowerCase();
+
+  // 🛡️ REGLA DE ORO: Si NO es una LinkedList, forzamos ocultamiento y cortamos la ejecución.
+  if (tipoEstructura !== "linkedlist" && tipoEstructura !== "lista enlazada") {
+    DOM.textoSelector?.setAttribute("hidden", "hidden");
+    DOM.selectorPares?.setAttribute("hidden", "hidden");
+    if (DOM.agregarIntermedio) {
+      DOM.agregarIntermedio.setAttribute("hidden", "hidden");
+    }
+    return;
+  }
+
   const cantidadNodos = DOM.contenedorNodos.childElementCount;
 
-  // CASO 1: Hay 2 o más nodos (Se muestran, limpian el guión y habilitan)
+  // CASO 1: Hay 2 o más nodos en LinkedList (Se muestran, limpian el guión y habilitan)
   if (cantidadNodos > 1 && DOM.agregarIntermedio && DOM.textoSelector && DOM.selectorPares) {
     DOM.agregarIntermedio.removeAttribute("hidden");
     DOM.textoSelector.removeAttribute("hidden");
@@ -811,7 +824,7 @@ function actualizarSelectoresIntermedios(): void {
     // 🧹 Limpiamos el guión viejo o las opciones desactualizadas
     DOM.selectorPares.innerHTML = "";
 
-    // Poblamo de nuevo todas las posiciones intermedias válidas (2 hasta N)
+    // Poblamos de nuevo todas las posiciones intermedias válidas (2 hasta N)
     for (let i = 2; i <= cantidadNodos; i++) {
       const opt = document.createElement('option');
       opt.value = i.toString();
@@ -819,7 +832,7 @@ function actualizarSelectoresIntermedios(): void {
       DOM.selectorPares.appendChild(opt);
     }
   } 
-  // CASO 2: Hay 1 nodo o menos (Se deshabilitan y vuelve el guión)
+  // CASO 2: Hay 1 nodo o menos en LinkedList (Se deshabilitan y vuelve el guión)
   else if (DOM.agregarIntermedio && DOM.selectorPares) {
     DOM.agregarIntermedio.disabled = true;
     DOM.selectorPares.disabled = true;

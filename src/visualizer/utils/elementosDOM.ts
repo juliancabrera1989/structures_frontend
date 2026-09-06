@@ -10,6 +10,7 @@ export let contenedorFlechas: HTMLDivElement = null!;
 export let contenedorFlechasCurvas: HTMLDivElement = null!;
 export let inicializador: HTMLDivElement = null!;
 export let barraSuperior: HTMLDivElement = null!;
+export let selectorTipoEstructura: HTMLSelectElement = null!;
 export let inic: HTMLButtonElement = null!;
 export let inputNodo: HTMLInputElement = null!;
 export let botonAgregar1erNodo: HTMLButtonElement = null!;
@@ -33,6 +34,7 @@ export function actualizarElementosDOM(): void {
   inicializador = document.getElementById("inicializador") as HTMLDivElement;
   contenedorFlechasCurvas = document.getElementById("contenedor_flechas_curvas") as HTMLDivElement;
   barraSuperior = document.getElementById("barra_superior") as HTMLDivElement;
+  selectorTipoEstructura = document.getElementById("structure_type") as HTMLSelectElement;
   inic = document.getElementById("inicializar") as HTMLButtonElement;
   inputNodo = document.getElementById("nodo") as HTMLInputElement;
   botonAgregar1erNodo = document.getElementById("agregar_1er_nodo") as HTMLButtonElement;

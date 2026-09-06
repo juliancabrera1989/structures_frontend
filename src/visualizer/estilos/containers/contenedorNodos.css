@@ -16,7 +16,7 @@
     justify-content: space-evenly;
 }
 
-.caja-nodo {
+/* .caja-nodo {
     position: relative;
     display: flex;
     flex-direction: row;
@@ -42,6 +42,48 @@
 
 .valor-nodo {
     color: black;
+} */
+
+
+.caja-nodo {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    height: 100px;
+    width: 200px;
+    background-color: yellow;
+    opacity: var(--opacity-cajanodo);
+    transition-property: opacity, width, height, left;
+    transition-duration: 2s, 2s, 2s, 2s;
+    box-sizing: border-box;
+}
+
+/* Mitad izquierda (0px a 100px): Centra el texto en su propia mitad */
+.valor-nodo {
+    width: 100px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Mitad derecha (100px a 200px): Centra el punto exacto a los 150px */
+.circle {
+    position: absolute;
+    left: 150px;
+    top: 50%;
+    /* El offset -2.5px garantiza que el CENTRO exacto del punto de 5px quede en x=150px, y=50px */
+    transform: translate(-2.5px, -50%); 
+    width: 5px;
+    height: 5px;
+    background: red;
+    border-radius: 50%;
+    z-index: 2; /* Para que quede visible por encima si la flecha roza el borde */
 }
 
 

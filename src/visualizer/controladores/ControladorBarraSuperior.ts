@@ -303,13 +303,61 @@ function inicializar(): void {
 // }
 
 
+// export function configurarBotonesSegunEstructura(
+//   tipo: string,
+//   tieneNodos: boolean = false
+// ): void {
+//   if (!DOM.verificarDOM()) return;
+
+//   const config = MAPA_CONFIG_ESTRUCTURAS[tipo] || MAPA_CONFIG_ESTRUCTURAS.linkedlist;
+
+//   // 1. Re-etiquetar punteros visuales (HEAD/TAIL, TOP/NULL, etc.)
+//   if (DOM.str) DOM.str.textContent = config.etiquetaHead;
+//   if (DOM.nulo) DOM.nulo.textContent = config.etiquetaTail;
+
+//   if (!tieneNodos) {
+//     // ESTADO VACÍO (0 Nodos): Solo mostramos el botón inicial verde
+//     gestionarBoton(DOM.botonAgregar1erNodo, true, "Add first node");
+
+//     gestionarBoton(DOM.agregarComienzo, false, "");
+//     gestionarBoton(DOM.agregarFinal, false, "");
+//     gestionarBoton(DOM.agregarIntermedio, false, "");
+//     gestionarBoton(DOM.borrarComienzo, false, "");
+//     gestionarBoton(DOM.borrarFinal, false, "");
+
+//     DOM.textoSelector?.setAttribute("hidden", "hidden");
+//     DOM.selectorPares?.setAttribute("hidden", "hidden");
+//   } else {
+//     // ESTADO CON NODOS (>= 1 Nodo): Ocultamos botón inicial y mostramos la botonera propia
+//     gestionarBoton(DOM.botonAgregar1erNodo, false, "");
+
+//     gestionarBoton(DOM.agregarComienzo, config.mostrarAgregarComienzo, config.etiquetaAgregarComienzo);
+//     gestionarBoton(DOM.agregarFinal, config.mostrarAgregarFinal, config.etiquetaAgregarFinal);
+//     gestionarBoton(DOM.agregarIntermedio, config.mostrarAgregarIntermedio, "Agregar Intermedio");
+//     gestionarBoton(DOM.borrarComienzo, config.mostrarBorrarComienzo, config.etiquetaBorrarComienzo);
+//     gestionarBoton(DOM.borrarFinal, config.mostrarBorrarFinal, config.etiquetaBorrarFinal);
+
+//     if (config.mostrarAgregarIntermedio) {
+//       DOM.textoSelector?.removeAttribute("hidden");
+//       DOM.selectorPares?.removeAttribute("hidden");
+//     } else {
+//       DOM.textoSelector?.setAttribute("hidden", "hidden");
+//       DOM.selectorPares?.setAttribute("hidden", "hidden");
+//     }
+//   }
+// }
+
+
+
 export function configurarBotonesSegunEstructura(
   tipo: string,
   tieneNodos: boolean = false
 ): void {
   if (!DOM.verificarDOM()) return;
 
-  const config = MAPA_CONFIG_ESTRUCTURAS[tipo] || MAPA_CONFIG_ESTRUCTURAS.linkedlist;
+  // Normalizamos a minúsculas para asegurar que encuentre la clave en el mapa
+  const tipoLimpio = (tipo || "").toLowerCase();
+  const config = MAPA_CONFIG_ESTRUCTURAS[tipoLimpio] || MAPA_CONFIG_ESTRUCTURAS.linkedlist;
 
   // 1. Re-etiquetar punteros visuales (HEAD/TAIL, TOP/NULL, etc.)
   if (DOM.str) DOM.str.textContent = config.etiquetaHead;
@@ -346,7 +394,6 @@ export function configurarBotonesSegunEstructura(
     }
   }
 }
-
 
 // Función auxiliar simple para evitar repetición
 function gestionarBoton(
@@ -588,7 +635,23 @@ function validarYFormatearValor(valor: string, tipoDato: string): string | null 
 
 
 // 1. Helper para comprobar duplicados en el DOM real
+// function esValorDuplicado(nuevoValor: string): boolean {
+//   const nodosExistentes = Array.from(DOM.contenedorNodos.children) as HTMLElement[];
+  
+//   return nodosExistentes.some((nodo) => {
+//     // Buscamos el texto interno del nodo (se omite la etiqueta del puntero si la hay)
+//     const textoNodo = nodo.querySelector(".valor-nodo")?.textContent?.trim() || nodo.textContent?.trim();
+//     return textoNodo === nuevoValor;
+//   });
+// }
+
 function esValorDuplicado(nuevoValor: string): boolean {
+  // 🛡️ Si la entrada está deshabilitada (por carga inicial o bloqueo de animación),
+  // significa que el lienzo se está poblando de forma automática y NO debe validar duplicados.
+  if (DOM.inputNodo?.disabled) {
+    return false;
+  }
+
   const nodosExistentes = Array.from(DOM.contenedorNodos.children) as HTMLElement[];
   
   return nodosExistentes.some((nodo) => {
@@ -597,6 +660,7 @@ function esValorDuplicado(nuevoValor: string): boolean {
     return textoNodo === nuevoValor;
   });
 }
+
 
 export async function ejecutarAgregarPrimerNodo(): Promise<void> {
   const rawValor = DOM.inputNodo?.value;
