@@ -11,16 +11,6 @@ import { initControladorBarraSuperior ,
 import {prepararDOMParaEstado1 } from "../visualizer/controladores/ControladorInicializador.ts";
 import structuresData from "../data/structuresOverviewData.json";
 
-// Helper que pausa la ejecución hasta que TypeScript dispare el evento 'animacion_nodo_completada'
-// const esperarFinAnimacion = () => {
-//   return new Promise((resolve) => {
-//     const alTerminar = () => {
-//       document.removeEventListener("animacion_nodo_completada", alTerminar);
-//       resolve();
-//     };
-//     document.addEventListener("animacion_nodo_completada", alTerminar);
-//   });
-// };
 
 function InteractiveTutorial() {
   const [searchParams] = useSearchParams();
@@ -37,11 +27,20 @@ useEffect(() => {
   const typeParam = searchParams.get("type");
   const dataParam = searchParams.get("data"); // <--- Leemos los nodos de la URL
 
+  // setTimeout(() => {
+  //   // Caso A: Navegación interna con React Router State
+  //   if (savedType && savedNodes) {
+  //     cargarEstructuraEnLienzo(savedType, savedNodes);
+  //   } 
+  if (typeof prepararDOMParaEstado1 === "function") {
+    prepararDOMParaEstado1();
+  }
+
   setTimeout(() => {
     // Caso A: Navegación interna con React Router State
     if (savedType && savedNodes) {
       cargarEstructuraEnLienzo(savedType, savedNodes);
-    } 
+    }
     // Caso B: Redirección desde Dashboard usando URL (?type=...&data=A,CD,CG)
     else if (typeParam && dataParam) {
       const nodesArray = dataParam.split(",");
@@ -60,53 +59,6 @@ useEffect(() => {
 }, [searchParams, location.state]);
 
 
-
-//Este es el ultimo que agregué, y el de arriba es el 6to creo, y anda bien, ahora este es el 7mo es actualizado.
-// const cargarEstructuraEnLienzo = async (tipoRaw, nodos) => {
-//   const selectType = document.getElementById("structure_type");
-//   const btnInicializar = document.getElementById("inicializar");
-//   const inputNodo = document.getElementById("nodo");
-
-//   if (!selectType || !btnInicializar || !inputNodo) return;
-
-//   // 1. Resetear variables CSS y geométrica de :root de forma instantánea
-//   if (typeof prepararDOMParaEstado1 === "function") {
-//     prepararDOMParaEstado1();
-//   }
-
-//   // 2. Normalización del tipo
-//   const tipoLimpio = (tipoRaw || "").toLowerCase();
-//   const tipoFinal = tipoLimpio.includes("stack") ? "stack" :
-//                     tipoLimpio.includes("queue") && !tipoLimpio.includes("deque") ? "queue" :
-//                     tipoLimpio.includes("deque") ? "deque" : "linkedlist";
-
-//   // 3. Seteo del tipo e inicialización del lienzo
-//   selectType.value = tipoFinal;
-//   btnInicializar.click();
-
-//   if (!nodos || nodos.length === 0) return;
-
-//   // Pausa para asentamiento inicial del DOM
-//   await new Promise((res) => setTimeout(res, 250));
-
-//   // 4. Inserción secuencial respetando tus promesas de animación
-//   for (let i = 0; i < nodos.length; i++) {
-//     inputNodo.value = nodos[i];
-
-//     if (i === 0) {
-//       await ejecutarAgregarPrimerNodo();
-//     } else {
-//       if (tipoFinal === "stack") {
-//         await ejecutarAgregarNodoAlComienzo();
-//       } else {
-//         await ejecutarAgregarNodoAlFinal();
-//       }
-//     }
-//   }
-
-//   // Limpieza del campo
-//   inputNodo.value = "";
-// };
 const cargarEstructuraEnLienzo = async (tipoRaw, nodos, dataTypeParam) => {
   const selectType = document.getElementById("structure_type");
   const selectDataType = document.getElementById("data_type"); // Selector de tipo de dato en UI

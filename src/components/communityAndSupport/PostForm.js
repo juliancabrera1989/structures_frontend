@@ -101,8 +101,114 @@
 
 
 
-import React, { useState } from 'react';
-import { Modal, Button, Form, Alert } from 'react-bootstrap';
+// import React, { useState } from 'react';
+// import { Modal, Button, Form, Alert } from 'react-bootstrap';
+// import communityService from '../../services/communityService';
+// import { useAuth } from '../../hooks/useAuth';
+
+// const PostForm = ({ show, onClose, onCreated }) => {
+//   const { auth } = useAuth();
+//   const token = auth?.token;
+//   const [title, setTitle] = useState('');
+//   const [body, setBody] = useState('');
+//   const [tags, setTags] = useState('');
+//   const [error, setError] = useState('');
+//   const [submitting, setSubmitting] = useState(false);
+
+//   const handleSubmit = async (e) => {
+//     e?.preventDefault();
+//     setError('');
+//     if (!token) {
+//       setError('You must be logged in to create a post.');
+//       return;
+//     }
+//     if (!title.trim() || !body.trim()) {
+//       setError('Title and content are required.');
+//       return;
+//     }
+
+//     setSubmitting(true);
+//     try {
+//       const newPost = await communityService.createPost(
+//         { title: title.trim(), content: body.trim(), tags: tags.split(',').map(t => t.trim()).filter(Boolean) },
+//         token
+//       );
+//       setTitle('');
+//       setBody('');
+//       setTags('');
+//       onCreated && onCreated(newPost);
+//       onClose();
+//     } catch (err) {
+//       console.error(err);
+//       setError(err?.response?.data?.message || 'Failed to create post');
+//     } finally {
+//       setSubmitting(false);
+//     }
+//   };
+
+//   return (
+//     <Modal show={show} onHide={onClose} centered contentClassName="bg-dark text-light border-secondary">
+//       <Form onSubmit={handleSubmit}>
+//         <Modal.Header closeButton closeVariant="white" className="border-secondary">
+//           <Modal.Title style={{ color: '#00d8ff' }}>Create New Post</Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body>
+//           {error && <Alert variant="danger">{error}</Alert>}
+          
+//           <Form.Group className="mb-3" controlId="postTitle">
+//             <Form.Label className="text-light">Title</Form.Label>
+//             <Form.Control
+//               placeholder="Short descriptive title"
+//               value={title}
+//               onChange={(e) => setTitle(e.target.value)}
+//               maxLength={120}
+//               className="bg-dark text-light border-secondary"
+//             />
+//           </Form.Group>
+
+//           <Form.Group className="mb-3" controlId="postBody">
+//             <Form.Label className="text-light">Content</Form.Label>
+//             <Form.Control
+//               as="textarea"
+//               rows={6}
+//               placeholder="Write your question, explanation or discussion..."
+//               value={body}
+//               onChange={(e) => setBody(e.target.value)}
+//               className="bg-dark text-light border-secondary"
+//             />
+//           </Form.Group>
+
+//           <Form.Group controlId="postTags">
+//             <Form.Label className="text-light">Tags (comma separated)</Form.Label>
+//             <Form.Control
+//               placeholder="e.g. linked-list, javascript, debugging"
+//               value={tags}
+//               onChange={(e) => setTags(e.target.value)}
+//               className="bg-dark text-light border-secondary"
+//             />
+//             <Form.Text className="text-muted">
+//               Tags help others find your post.
+//             </Form.Text>
+//           </Form.Group>
+//         </Modal.Body>
+//         <Modal.Footer className="border-secondary">
+//           <Button variant="outline-secondary" onClick={onClose} disabled={submitting}>
+//             Cancel
+//           </Button>
+//           <Button variant="info" type="submit" disabled={submitting} className="text-dark fw-bold">
+//             {submitting ? 'Posting...' : 'Post'}
+//           </Button>
+//         </Modal.Footer>
+//       </Form>
+//     </Modal>
+//   );
+// };
+
+// export default PostForm;
+
+
+import React, { useState, useEffect } from 'react';
+import { Modal, Button, Form, Alert, Image } from 'react-bootstrap';
 import communityService from '../../services/communityService';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -112,8 +218,24 @@ const PostForm = ({ show, onClose, onCreated }) => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [tags, setTags] = useState('');
+  const [snapshot, setSnapshot] = useState(null);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  // Leer la captura si fue tomada previamente desde el Visualizador
+  useEffect(() => {
+    if (show) {
+      const savedSnapshot = localStorage.getItem("pending_canvas_snapshot");
+      if (savedSnapshot) {
+        setSnapshot(savedSnapshot);
+      }
+    }
+  }, [show]);
+
+  const handleRemoveSnapshot = () => {
+    setSnapshot(null);
+    localStorage.removeItem("pending_canvas_snapshot");
+  };
 
   const handleSubmit = async (e) => {
     e?.preventDefault();
@@ -130,12 +252,21 @@ const PostForm = ({ show, onClose, onCreated }) => {
     setSubmitting(true);
     try {
       const newPost = await communityService.createPost(
-        { title: title.trim(), content: body.trim(), tags: tags.split(',').map(t => t.trim()).filter(Boolean) },
+        { 
+          title: title.trim(), 
+          content: body.trim(), 
+          tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+          imageUrl: snapshot 
+        },
         token
       );
+      
       setTitle('');
       setBody('');
       setTags('');
+      setSnapshot(null);
+      localStorage.removeItem("pending_canvas_snapshot");
+
       onCreated && onCreated(newPost);
       onClose();
     } catch (err) {
@@ -170,25 +301,33 @@ const PostForm = ({ show, onClose, onCreated }) => {
             <Form.Label className="text-light">Content</Form.Label>
             <Form.Control
               as="textarea"
-              rows={6}
-              placeholder="Write your question, explanation or discussion..."
+              rows={5}
+              placeholder="Write your question or code snippet..."
               value={body}
               onChange={(e) => setBody(e.target.value)}
               className="bg-dark text-light border-secondary"
             />
           </Form.Group>
 
+          {/* Muestra preview de la captura si existe */}
+          {snapshot && (
+            <div className="mb-3 p-2 border border-info rounded bg-black text-center">
+              <span className="text-info small d-block mb-1">📸 Canvas Snapshot Attached</span>
+              <Image src={snapshot} fluid rounded style={{ maxHeight: '150px' }} />
+              <Button variant="link" size="sm" className="text-danger d-block mx-auto mt-1" onClick={handleRemoveSnapshot}>
+                Remove Image
+              </Button>
+            </div>
+          )}
+
           <Form.Group controlId="postTags">
             <Form.Label className="text-light">Tags (comma separated)</Form.Label>
             <Form.Control
-              placeholder="e.g. linked-list, javascript, debugging"
+              placeholder="e.g. linked-list, c-language, debugging"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               className="bg-dark text-light border-secondary"
             />
-            <Form.Text className="text-muted">
-              Tags help others find your post.
-            </Form.Text>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer className="border-secondary">

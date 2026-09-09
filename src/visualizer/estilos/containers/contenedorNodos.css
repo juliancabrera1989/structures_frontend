@@ -51,14 +51,53 @@
     flex-direction: row;
     height: 100px;
     width: 200px;
-    background-color: yellow;
+    background-color: yellow; /* 👈 Tu fondo amarillo original */
+    border: 2px solid #006600; /* 👈 Verde más oscuro */
+    border-radius: 8px; /* 👈 Bordes suavemente redondeados */
     opacity: var(--opacity-cajanodo);
     transition-property: opacity, width, height, left;
     transition-duration: 2s, 2s, 2s, 2s;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
-/* Mitad izquierda (0px a 100px): Centra el texto en su propia mitad */
+
+
+/* Marquesina suave en caso de que el texto no entre */
+.texto-marquee {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.texto-marquee.animar-marquee {
+    animation: marquesinaPausa 6s ease-in-out infinite;
+}
+
+@keyframes marquesinaPausa {
+    0%, 30% { transform: translateX(0%); }
+    50%, 80% { transform: translateX(-35%); }
+    100% { transform: translateX(0%); }
+}
+
+/* Mitad derecha (100px a 200px): Intacta */
+.circle {
+    position: absolute;
+    left: 150px;
+    top: 50%;
+    transform: translate(-2.5px, -50%); 
+    width: 5px;
+    height: 5px;
+    background: red;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+#contenedor_nodos.margin-flex > .caja-nodo {
+    margin-top: 150px;
+}
+
+
+/* Mitad izquierda: Mantiene el amarillo y la alineación centrada para textos normales */
 .valor-nodo {
     width: 100px;
     height: 100%;
@@ -66,27 +105,36 @@
     align-items: center;
     justify-content: center;
     color: black;
-    text-align: center;
+    font-family: monospace;
+    font-size: 13px;
+    font-weight: bold;
     overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis;
+    padding: 0 4px;
+    box-sizing: border-box;
+    border-right: 2px solid #006600;
 }
 
-/* Mitad derecha (100px a 200px): Centra el punto exacto a los 150px */
-.circle {
-    position: absolute;
-    left: 150px;
-    top: 50%;
-    /* El offset -2.5px garantiza que el CENTRO exacto del punto de 5px quede en x=150px, y=50px */
-    transform: translate(-2.5px, -50%); 
-    width: 5px;
-    height: 5px;
-    background: red;
-    border-radius: 50%;
-    z-index: 2; /* Para que quede visible por encima si la flecha roza el borde */
+.texto-marquee {
+    display: inline-block;
+    white-space: nowrap;
 }
 
+/* Animación cuando el texto sobrepasa los 8 caracteres */
+.texto-marquee.animar-marquee {
+    animation: marquesinaCompleta 8s ease-in-out infinite;
+}
 
-#contenedor_nodos.margin-flex > .caja-nodo {
-    margin-top: 150px;
+@keyframes marquesinaCompleta {
+    0%, 20% {
+        /* Empieza mostrando el inicio del texto recostado a la izquierda */
+        transform: translateX(35%); 
+    }
+    50%, 70% {
+        /* Se desplaza hacia la izquierda para revelar el final completo a la derecha */
+        transform: translateX(-35%); 
+    }
+    90%, 100% {
+        transform: translateX(35%); 
+    }
 }

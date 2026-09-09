@@ -27,6 +27,13 @@ const UserProfile = ({ user }) => {
               <Card.Text className="mb-0">
                 <strong className="text-secondary">Email:</strong> {decoded.email || 'No registered'}
               </Card.Text>
+              {/* 👈 Badge de Admin en el Perfil */}
+              {decoded.role === 'admin' && (
+              <Card.Text className="mt-2 mb-0">
+                <strong className="text-secondary">Role:</strong>{' '}
+                <span className="badge bg-info text-dark fw-bold">Admin</span>
+              </Card.Text>
+              )}
             </Card.Body>
           </Card>
         </Col>
@@ -36,4 +43,5 @@ const UserProfile = ({ user }) => {
 };
 
 export default UserProfile;
+
 

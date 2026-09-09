@@ -242,14 +242,26 @@ function inicializar(): void {
   DOM.guardarEstructura.removeAttribute("hidden");
   DOM.botonAgregar1erNodo.removeAttribute("hidden");
 
-  if (DOM.inicializador) {
-    DOM.inicializador.style.display = "flex";
-    DOM.inicializador.style.justifyContent = "space-between";
-    DOM.inicializador.style.alignItems = "center";
-  }
-  DOM.str.style.position = "relative";
-  DOM.nulo.style.position = "relative";
+  // if (DOM.inicializador) {
+  //   DOM.inicializador.style.display = "flex";
+  //   DOM.inicializador.style.justifyContent = "space-between";
+  //   DOM.inicializador.style.alignItems = "center";
+  // }
+  // DOM.str.style.position = "relative";
+  // DOM.nulo.style.position = "relative";
 
+
+// Solo aplicamos el flex si el contenedor está totalmente vacío
+  if (!DOM.contenedorNodos || DOM.contenedorNodos.childElementCount === 0) {
+    if (DOM.inicializador) {
+      DOM.inicializador.style.display = "flex";
+      DOM.inicializador.style.justifyContent = "space-between";
+      DOM.inicializador.style.alignItems = "center";
+    }
+    DOM.str.style.position = "relative";
+    DOM.nulo.style.position = "relative";
+  }
+  
   inicializarPuntero(1);
 
   const necesitaTransicion = 1;

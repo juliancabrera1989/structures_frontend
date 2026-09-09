@@ -66,3 +66,11 @@
   background-color: #1c2128 !important;
   color: #e6edf3 !important; /* Gris claro de alto contraste */
 }
+
+
+
+/* Forzar que el modal ocupe casi toda la pantalla */
+.modal-95w {
+  max-width: 95vw !important;
+  width: 95vw !important;
+}

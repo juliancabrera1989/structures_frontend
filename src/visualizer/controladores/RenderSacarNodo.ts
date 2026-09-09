@@ -542,7 +542,7 @@ export async function borrarNodoAlFinal(): Promise<void> {
       nodos[i].style.left = '0px';
     }
 
-    if (layout.nodosUltimaFila === 2) {
+    if (layout.nodosUltimaFila === 2 && layout.totalFilas > 1) {
       const spacer = document.createElement("div");
       spacer.classList.add("flecha-spacer-fila");
       DOM.contenedorFlechas.appendChild(spacer);
