@@ -1,18 +1,4 @@
-// import React from 'react';
-
-// const StructureVisualizer = ({ structure }) => {
-//     return (
-//         <div>
-//             <h2>Visualizing {structure.name}</h2>
-//             <pre>{JSON.stringify(structure, null, 2)}</pre>
-//         </div>
-//     );
-// };
-
-// export default StructureVisualizer;
-
 // StructureVisualizer.js
-import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
 const StructureVisualizer = ({ structure }) => {

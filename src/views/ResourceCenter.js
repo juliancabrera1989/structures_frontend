@@ -1,4 +1,3 @@
-import React from "react";
 import DocumentationList from "../components/resourceCenter/DocumentationList";
 import VideoTutorialList from "../components/resourceCenter/VideoTutorialList";
 import ExternalResourceList from "../components/resourceCenter/ExternalResourceList";

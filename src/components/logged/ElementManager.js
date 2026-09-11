@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const ElementManager = ({ dataStructure, onAdd, onRemove }) => {
     const [element, setElement] = useState('');

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Modal, Button, Nav, Tab, Card, Accordion } from "react-bootstrap";
 
 const HelpModal = ({ show, onHide }) => {

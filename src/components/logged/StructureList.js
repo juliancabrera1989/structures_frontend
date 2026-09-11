@@ -1,5 +1,3 @@
-import React from 'react';
-
 const StructureList = ({ structures, onSelect }) => {
     return (
         <div>

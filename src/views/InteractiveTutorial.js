@@ -6,7 +6,6 @@ import { initControladorBarraSuperior ,
          ejecutarAgregarPrimerNodo,
          ejecutarAgregarNodoAlComienzo,
          ejecutarAgregarNodoAlFinal,
-        // reiniciarVisualizador } from "../visualizer/controladores/ControladorBarraSuperior.ts";
         } from "../visualizer/controladores/ControladorBarraSuperior.ts";
 import {prepararDOMParaEstado1 } from "../visualizer/controladores/ControladorInicializador.ts";
 import structuresData from "../data/structuresOverviewData.json";
@@ -27,11 +26,7 @@ useEffect(() => {
   const typeParam = searchParams.get("type");
   const dataParam = searchParams.get("data"); // <--- Leemos los nodos de la URL
 
-  // setTimeout(() => {
-  //   // Caso A: Navegación interna con React Router State
-  //   if (savedType && savedNodes) {
-  //     cargarEstructuraEnLienzo(savedType, savedNodes);
-  //   } 
+
   if (typeof prepararDOMParaEstado1 === "function") {
     prepararDOMParaEstado1();
   }

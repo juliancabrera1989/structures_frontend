@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-// import { useAuth } from '../hooks/useAuth';
+import { useState } from 'react';
+
 import { useAuth } from '../context/authContext';
 import { login as loginService } from '../services/authService';
 
@@ -31,28 +31,6 @@ const Login = () => {
   };
 
   return (
-    // <div>
-    //   <h2>Login</h2>
-    //   <form onSubmit={handleSubmit}>
-    //     <input
-    //       type="email"
-    //       placeholder="Email"
-    //       value={email}
-    //       onChange={(e) => setEmail(e.target.value)}
-    //       required
-    //     />
-    //     <input
-    //       type="password"
-    //       placeholder="Password"
-    //       value={password}
-    //       onChange={(e) => setPassword(e.target.value)}
-    //       required
-    //     />
-    //     <button type="submit">Login</button>
-    //   </form>
-    //   {error && <p style={{ color: 'red' }}>{error}</p>}
-    // </div>
-
     <Container className="mt-5">
     <Row className="justify-content-center">
       <Col xs={12} md={6} lg={4}> {/* Responsive column */}

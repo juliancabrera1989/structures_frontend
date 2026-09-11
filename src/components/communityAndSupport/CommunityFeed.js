@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Spinner, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import communityService from '../../services/communityService';

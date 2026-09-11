@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Container, Form, Button, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../services/authService';

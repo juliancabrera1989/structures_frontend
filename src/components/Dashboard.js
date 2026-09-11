@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAuth } from '../context/authContext';
 import UserProfile from '../components/logged/UserProfile';
 import SavedDataStructures from '../components/logged/SavedDataStructures';

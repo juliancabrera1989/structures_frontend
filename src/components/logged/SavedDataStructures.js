@@ -1,33 +1,3 @@
-// import React from 'react';
-
-// const SavedDataStructures = ({ dataStructures }) => {
-//     console.log(dataStructures);
-
-//     if(!dataStructures || dataStructures.length === 0) {
-//         return <p>No saved data structures available. Start by creating one!</p>
-//     }
-//     return (
-//         <div>
-//             <h2>Saved Data Structures</h2>
-//             <ul>
-//                 {dataStructures.map((structure, index) => (
-//                     <li key={index}>
-//                         <h3>{structure.name}</h3>
-//                         <button>View</button>
-//                         <button>Edit</button>
-//                         <button>Delete</button>
-//                     </li>
-//                 ))}
-                
-//             </ul>
-//         </div>
-//     );
-// };
-
-// export default SavedDataStructures;
-
-
-
 import React from 'react';
 import { Table, Container, Alert } from 'react-bootstrap';
 

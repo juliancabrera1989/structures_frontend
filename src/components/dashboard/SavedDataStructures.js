@@ -1,4 +1,3 @@
-import React from 'react';
 import { Table, Container, Alert, Button } from 'react-bootstrap';
 
 const SavedDataStructures = ({ dataStructures, onLoad, onDelete }) => {
